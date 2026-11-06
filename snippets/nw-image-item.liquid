@@ -1,0 +1,65 @@
+{%- comment -%}
+  Parameters:
+  - block {Block}
+  - loading {String}
+  - onboarding {Boolean}
+  - onboarding_index {Number}
+  - animate_delay {Number} — Seconds offset for scroll animation (optional)
+{%- endcomment -%}
+
+{%- liquid
+  assign image_desktop = block.settings.image
+  assign image_mobile = block.settings.image_mobile
+  if image_mobile == blank
+    assign image_mobile = image_desktop
+  endif
+
+  assign image_alt = block.settings.image_alt
+  if image_alt == blank and image_desktop != blank
+    assign image_alt = image_desktop.alt
+  endif
+  assign image_alt = image_alt | default: '' | escape
+
+  assign image_delay = animate_delay
+  if image_delay == blank
+    assign image_delay = 0.1
+  endif
+  assign image_animate_attrs = 'data-cc-animate data-cc-animate-delay="' | append: image_delay | append: 's"'
+  assign animate_figure = animate_figure | default: true
+-%}
+
+<figure
+  class="nw-image__figure{% if animate_figure %} fade-in-up{% endif %}"
+  {%- if animate_figure -%}
+    {%- render 'animation-attrs', attrs: image_animate_attrs, always: animate_always -%}
+  {%- endif -%}
+  {%- if block != blank -%}
+    {{ block.shopify_attributes }}
+  {%- endif -%}
+>
+  {%- if onboarding or image_desktop == blank -%}
+    {%- assign placeholder_index = onboarding_index | default: 1 -%}
+    <div class="nw-image__placeholder">
+      {{- 'lifestyle-' | append: placeholder_index | placeholder_svg_tag: 'placeholder-svg' -}}
+    </div>
+  {%- else -%}
+    <img
+      class="nw-image__image nw-image__image--desktop"
+      src="{{ image_desktop | image_url: width: 1200 }}"
+      alt="{{ image_alt }}"
+      loading="{{ loading | default: 'lazy' }}"
+      width="{{ image_desktop.width }}"
+      height="{{ image_desktop.height }}"
+    >
+    {%- if image_mobile != blank -%}
+      <img
+        class="nw-image__image nw-image__image--mobile"
+        src="{{ image_mobile | image_url: width: 900 }}"
+        alt="{{ image_alt }}"
+        loading="{{ loading | default: 'lazy' }}"
+        width="{{ image_mobile.width }}"
+        height="{{ image_mobile.height }}"
+      >
+    {%- endif -%}
+  {%- endif -%}
+</figure>

@@ -1,0 +1,96 @@
+﻿:root{
+    --aos-animate-duration: 0.9s;
+    --body-color: #EBE9E2;
+    --warm-color: #DCD7CF;
+    --primary-color-light: #04022B80;
+    --cart-bg-color: #FDFCF6;
+}
+body{
+    letter-spacing: 0;
+    font-family: var(--font-body-family);
+    background-color: var(--body-color);
+}
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+    font-family: var(--font-heading-family);
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+h1,
+.h1 {
+    font-family: var(--font-heading-family);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 55px;
+    line-height: 1;
+    letter-spacing: -1%;
+    text-transform: capitalize;
+    color: var(--secondary-color);
+    margin: 0;
+    width: 100%;
+}
+
+h3,
+.h3 {
+    font-family: var(--font-heading-family);
+    font-weight: 400;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 115%;
+    letter-spacing: -1%;
+    text-transform: capitalize;
+}
+
+h2,
+.h2 {
+    font-family: var(--font-heading-family);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 70px;
+    line-height: auto;
+    letter-spacing: -1%;
+    text-transform: capitalize;
+    margin: 0;
+    width: 100%;
+}
+.drawer{
+    background-color: var(--cart-bg-color);
+}
+
+.js .cc-animate-enabled [data-cc-animate].fade-in-up{
+    transform: translateY(40px) !important;
+    opacity: 0;
+}
+.js .cc-animate-enabled [data-cc-animate].fade-in-up.cc-animate-in{
+    transform: translateY(0) !important;
+    opacity: 1;
+    transition: transform calc(var(--aos-animate-duration, 1s) * .6) cubic-bezier(.39, .575, .565, 1), opacity calc(var(--aos-animate-duration, 1s) * .6) cubic-bezier(.39, .575, .565, 1);
+}
+.swiper-pagination-bullet{
+    background-color: transparent;
+    border: 1px solid var(--body-color);
+    opacity: 1;
+}
+.swiper-pagination-bullet-active{
+    background-color: var(--body-color);
+}
+.product-block .image-cont .btn.quickbuy-toggle{
+    /* display: none; */
+}
+
+@media (max-width: 990px) {
+    h1, .h1 {
+        font-size: 38px;
+    }
+}

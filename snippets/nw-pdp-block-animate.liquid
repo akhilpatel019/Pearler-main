@@ -1,0 +1,9 @@
+{% comment %}
+  Theme editor + scroll animation attrs for main-product blocks.
+
+  Parameters:
+  - block {Object}
+  - animate_attrs {String} — passed to animation-attrs (e.g. data-cc-animate data-cc-animate-delay="0.2s")
+{% endcomment %}
+{{ block.shopify_attributes -}}
+{%- render 'animation-attrs', attrs: animate_attrs, always: true -%}

@@ -1,0 +1,61 @@
+{%- comment -%}
+  Parameters:
+  - product {Product} (required)
+  - thickness_block {Block} optional NW Thickness block from main-product
+
+  Outputs thickness label text (Feather, Core, Cloud, etc.) or nothing.
+{%- endcomment -%}
+
+{%- liquid
+  assign nw_product_thickness_label = blank
+
+  if thickness_block != blank
+    for i in (1..5)
+      case i
+        when 1
+          assign option_label = thickness_block.settings.option_1_label
+          assign option_womens_product = thickness_block.settings.option_1_womens_product
+          assign option_mens_product = thickness_block.settings.option_1_mens_product
+        when 2
+          assign option_label = thickness_block.settings.option_2_label
+          assign option_womens_product = thickness_block.settings.option_2_womens_product
+          assign option_mens_product = thickness_block.settings.option_2_mens_product
+        when 3
+          assign option_label = thickness_block.settings.option_3_label
+          assign option_womens_product = thickness_block.settings.option_3_womens_product
+          assign option_mens_product = thickness_block.settings.option_3_mens_product
+        when 4
+          assign option_label = thickness_block.settings.option_4_label
+          assign option_womens_product = thickness_block.settings.option_4_womens_product
+          assign option_mens_product = thickness_block.settings.option_4_mens_product
+        when 5
+          assign option_label = thickness_block.settings.option_5_label
+          assign option_womens_product = thickness_block.settings.option_5_womens_product
+          assign option_mens_product = thickness_block.settings.option_5_mens_product
+      endcase
+
+      if option_label != blank
+        if option_womens_product != blank and product.id == option_womens_product.id
+          assign nw_product_thickness_label = option_label
+          break
+        endif
+        if option_mens_product != blank and product.id == option_mens_product.id
+          assign nw_product_thickness_label = option_label
+          break
+        endif
+      endif
+    endfor
+  endif
+
+  if nw_product_thickness_label == blank
+    assign product_handle = product.handle | downcase
+    if product_handle contains 'feather'
+      assign nw_product_thickness_label = 'Feather'
+    elsif product_handle contains 'cloud'
+      assign nw_product_thickness_label = 'Cloud'
+    elsif product_handle contains 'core'
+      assign nw_product_thickness_label = 'Core'
+    endif
+  endif
+-%}
+{{- nw_product_thickness_label | escape -}}

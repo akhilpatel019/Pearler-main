@@ -1,0 +1,94 @@
+{%- liquid
+  assign nw_contact_loading = 'lazy'
+  if section.index == 1
+    assign nw_contact_loading = 'eager'
+  endif
+
+  assign nw_contact_focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign nw_contact_focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign nw_contact_background = 'transparent'
+  assign nw_contact_show_media = false
+
+  assign nw_contact_background_type = section.settings.background_type | default: 'solid'
+
+  case nw_contact_background_type
+    when 'image'
+      assign nw_contact_background = section.settings.background_color | default: '#EBE9E2'
+      assign nw_contact_show_media = true
+    when 'solid'
+      assign nw_contact_background = section.settings.background_color | default: '#EBE9E2'
+    when 'linear_gradient'
+      assign nw_contact_background = section.settings.background_gradient
+    when 'none'
+      assign nw_contact_background = 'transparent'
+  endcase
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-contact {
+    --nw-contact-min-height: {{ section.settings.min_height_desktop | default: 0 }}px;
+    --nw-contact-bg-fallback: {{ section.settings.background_color | default: '#EBE9E2' }};
+    --nw-contact-background: {{ nw_contact_background }};
+    --nw-contact-focal-point: {{ nw_contact_focal_point }};
+    --nw-contact-padding-top: {{ section.settings.padding_top_desktop | default: 80 }}px;
+    --nw-contact-padding-bottom: {{ section.settings.padding_bottom_desktop | default: 80 }}px;
+    --nw-contact-padding-inline: 110px;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-contact {
+      --nw-contact-min-height: {{ section.settings.min_height_mobile | default: 0 }}px;
+      --nw-contact-padding-top: {{ section.settings.padding_top_mobile | default: 48 }}px;
+      --nw-contact-padding-bottom: {{ section.settings.padding_bottom_mobile | default: 48 }}px;
+      --nw-contact-padding-inline: 29px;
+    }
+  }
+{% endstyle %}
+
+<div class="nw-contact">
+  {%- if nw_contact_show_media -%}
+    <div class="nw-contact__media-bg" aria-hidden="true">
+      {%- liquid
+        assign nw_section_image = section.settings.image
+        assign nw_section_image_mobile = section.settings.mobile_image
+      -%}
+      {%- if nw_section_image == blank -%}
+        <div class="nw-contact__media-bg-image nw-contact__media-bg-image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ nw_section_image | image_url: width: 2560 }}"
+          alt=""
+          class="nw-contact__media-bg-image nw-contact__media-bg-image--desktop"
+          loading="{{ nw_contact_loading }}"
+          width="{{ nw_section_image.width }}"
+          height="{{ nw_section_image.height }}"
+        >
+        {%- if nw_section_image_mobile != blank -%}
+          <img
+            src="{{ nw_section_image_mobile | image_url: width: 1500 }}"
+            alt=""
+            class="nw-contact__media-bg-image nw-contact__media-bg-image--mobile"
+            loading="{{ nw_contact_loading }}"
+            width="{{ nw_section_image_mobile.width }}"
+            height="{{ nw_section_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ nw_section_image | image_url: width: 1500 }}"
+            alt=""
+            class="nw-contact__media-bg-image nw-contact__media-bg-image--mobile"
+            loading="{{ nw_contact_loading }}"
+            width="{{ nw_section_image.width }}"
+            height="{{ nw_section_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="nw-contact__content">

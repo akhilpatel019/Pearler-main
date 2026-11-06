@@ -1,0 +1,176 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "heading": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Customer Help",
+            "heading_max_width": 15,
+            "title_size": 52,
+            "title_size_mobile": 32,
+            "use_h1": false
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>If talking to a real-life human is more your thing, you can reach our Customer Happiness Team via email (below).</p>",
+            "enlarge_text": true
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "disabled": true,
+      "settings": {
+        "height": "fixed",
+        "height_desktop": 400,
+        "height_mobile": 300,
+        "image_link": "",
+        "full_width": true,
+        "text_alignment": "center center",
+        "mobile_overlay_under": false,
+        "overlay_style": "shadow"
+      }
+    },
+    "main": {
+      "type": "faq-header",
+      "disabled": true,
+      "settings": {
+        "title": "FAQ",
+        "use_h1": false,
+        "text": "",
+        "show_search": true,
+        "show_index": true,
+        "index_heading": "How can we help?"
+      }
+    },
+    "faq-content-1": {
+      "type": "collapsible-tabs",
+      "blocks": {
+        "question-1": {
+          "type": "question",
+          "settings": {
+            "title": "Sizing Guide",
+            "answer": "<p>Pick your US shoe size. That’s it. Every Pearler sock is knitted to one exact size, not a range like 8-11, so it fits the way your shoe does. Women’s US 6 to 10, men’s US 8 to 13.</p>"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "title": "shipping",
+            "answer": "<ul><li><strong>Free standard shipping</strong> on orders over $99</li><li><strong>Standard:</strong> $12 under $99, 2 to 8 business days</li><li><strong>Express:</strong> $16, 1 to 4 business days</li><li>Every order ships from Melbourne within 1<strong>-2 </strong>business days</li></ul>"
+          }
+        },
+        "question_xDgWxU": {
+          "type": "question",
+          "settings": {
+            "title": "returns & exchanges",
+            "answer": "<ul><li><strong>Wrong size?</strong> We’ll swap it. Exchange unworn pairs within 30 days.</li><li><strong>Change of mind:</strong> unworn, unwashed pairs in original packaging can be returned within 30 days for a refund or store credit</li><li><strong>Faulty or damaged:</strong> let us know and we’ll replace or refund it, no questions asked</li><li>For hygiene reasons, we can’t accept worn or washed socks</li><li>To start a return or exchange, <a href=\"/pages/contact\" title=\"Contact\"><strong>contact us</strong></a> with your order number</li></ul>"
+          }
+        },
+        "question_yzQeH4": {
+          "type": "question",
+          "settings": {
+            "title": "What makes Pearler different from any other sock?",
+            "answer": "<p>Every other sock is made to fit a range of feet. Ours are made to fit yours.</p><ul><li><strong>Exact sizing:</strong> every sock is knitted to one shoe size, not a range like 8-11</li><li><strong>Three thicknesses:</strong> Feather, Core and Cloud, matched to your shoes and your day</li><li><strong>Built-in ventilation:</strong> knitted channels keep air moving, even under leather shoes</li><li><strong>3 years and 56 samples</strong> to get it right</li></ul>"
+          }
+        },
+        "question_kgdw7W": {
+          "type": "question",
+          "settings": {
+            "title": "What's the difference between Feather, Core and Cloud? ",
+            "answer": "<p>It’s all about thickness. Pick the one that suits your shoes and your day.</p><ul><li><strong>Feather:</strong> thin and sleek, for dress shoes, loafers and the office</li><li><strong>Core:</strong> our everyday sock, for sneakers and most days</li><li><strong>Cloud:</strong> extra cushioning, for long days on your feet or when comfort comes first</li></ul><p>Can’t decide? The <a href=\"/products/pearler-discovery-box\" title=\"Pearler Discovery Box Womens\"><strong>Discovery Box</strong></a> gives you one of each.</p>"
+          }
+        },
+        "question_UTNcjE": {
+          "type": "question",
+          "settings": {
+            "title": "Do you offer gift boxes?",
+            "answer": "<p>Yes. <a href=\"/products/pearler-discovery-box\" title=\"Pearler Discovery Box Womens\">The <strong>Discovery Box</strong></a> makes an easy gift.</p><ul><li>One pair each of Feather, Core and Cloud</li><li>Arrives in our navy presentation box, ready to give</li><li>Men’s and women’s, $69.95</li><li>You only need to know their shoe size</li></ul>"
+          }
+        },
+        "question_T4mQH8": {
+          "type": "question",
+          "settings": {
+            "title": "Can I buy Pearler socks in store, or online only?",
+            "answer": "<p>Online only for now, plus the odd event or pop-up. You don’t need to try them on in a store, though.</p><ul><li>Order your exact shoe size and wear them at home</li><li>If you don’t love them, you’re covered by our <strong>30-day money-back guarantee</strong></li><li>Not the right size? We’ll swap it.</li></ul>"
+          }
+        },
+        "question_DKU8Qg": {
+          "type": "question",
+          "settings": {
+            "title": "Do you ship internationally?",
+            "answer": "<p>Not yet. We currently ship Australia-wide only.</p>"
+          }
+        },
+        "question_f9CKVK": {
+          "type": "question",
+          "settings": {
+            "title": "How do I know which size to order?",
+            "answer": "<p>Order your shoe size. Each Pearler sock is knitted to one exact size, so the shoe size you wear is the sock size you get.</p><ul><li><strong>Women’s:</strong> US 6, 7, 8, 9 and 10, each made to that exact size</li><li><strong>Men’s:</strong> US 8, 9, 10, 11, 12 and 13, each made to that exact size</li><li><strong>Half size or between sizes?</strong> Size down</li><li><strong>Not sure on thickness or length?</strong> Take the <a href=\"/pages/quiz\" title=\"Quiz\">Quiz</a>. It takes under a minute.</li><li><strong>Still not right?</strong> We’ll swap it within 30 days.</li></ul>"
+          }
+        },
+        "question_8aTXJb": {
+          "type": "question",
+          "settings": {
+            "title": "What if I share socks with my partner and we're different foot sizes?",
+            "answer": "<p>That’s exactly the problem we started Pearler to fix. Shared socks stretch to fit the bigger foot, then fit nobody properly.</p><ul><li><strong>Each of you gets your own exact size</strong></li><li><strong>Your size is knitted on the sole</strong> (M11, W8), so no more mix-ups in the wash</li><li><strong>Mix men’s and women’s in one order:</strong> every pair counts toward your set pricing</li></ul>"
+          }
+        },
+        "question_rYTp9f": {
+          "type": "question",
+          "settings": {
+            "title": "Do you have only midlength socks?",
+            "answer": "<p>No, we make two lengths, both in every thickness and size.</p><ul><li><strong>Midlength:</strong> sits above the ankle bone, for pants, boots and everyday wear</li><li><strong>Ankle:</strong> sits low and hidden, for sneakers, shorts and summer</li><li><strong>Mix and match:</strong> any combination of lengths counts toward your set pricing</li></ul>"
+          }
+        }
+      },
+      "block_order": [
+        "question-1",
+        "question-2",
+        "question_xDgWxU",
+        "question_yzQeH4",
+        "question_kgdw7W",
+        "question_UTNcjE",
+        "question_T4mQH8",
+        "question_DKU8Qg",
+        "question_f9CKVK",
+        "question_8aTXJb",
+        "question_rYTp9f"
+      ],
+      "settings": {
+        "title": "Frequently Asked",
+        "heading_color": "#04022b",
+        "text_color": "#04022b",
+        "open_tab": false,
+        "enable_faq_schema": false,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "padding_top_desktop": 112,
+        "padding_bottom_desktop": 112,
+        "padding_top_mobile": 72,
+        "padding_bottom_mobile": 112
+      }
+    }
+  },
+  "order": [
+    "heading",
+    "main",
+    "faq-content-1"
+  ]
+}

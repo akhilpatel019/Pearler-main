@@ -1,0 +1,33 @@
+---
+description: Theme scroll animations for custom NW Shopify sections
+globs: sections/nw-*.liquid
+alwaysApply: false
+---
+
+# NW section animations (Symmetry / Clean Canvas)
+
+Use the theme’s default scroll animation system on every custom `nw-*` section:
+
+1. **`fade-in-up`** on animated elements (matches core theme sections).
+2. **`{% render 'animation-attrs', attrs: 'data-cc-animate …' %}`** so animations respect **Theme settings → Animations** (desktop toggle, skip first section unless `always: true`).
+3. **`always: true`** only when the section is commonly the **first section on the page** (e.g. hero) and media must animate on load.
+
+## What to animate
+
+| Element | Class | Typical delay |
+|--------|--------|----------------|
+| Section / card **images** (background or figure) | `fade-in-up` | `0.1s` |
+| **Primary text** (heading, tagline block) | `fade-in-up` | `0.2s` (+ stagger for repeats) |
+| **Secondary text / buttons** | `fade-in-up` | `0.45s` (+ stagger) |
+
+## Repeating blocks (cards, slides)
+
+- Stagger with `forloop.index` or `forloop.index0` (e.g. media `index × 0.1s`, text `0.2s` / `0.45s` + stagger).
+- Animate **image and text separately** (do not only animate the outer wrapper).
+
+## Do not
+
+- Hard-code animation only in CSS without `data-cc-animate`.
+- Rely on a single parent `fade-in-up` when both image and copy should reveal independently.
+
+Reference: `snippets/animation-attrs.liquid`, `sections/image-with-text.liquid`, `sections/nw-content.liquid`.

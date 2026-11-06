@@ -1,0 +1,21 @@
+{%- comment -%}
+  Parameters:
+  - property_key {String} line item property name
+
+  Outputs "1" when the property must be hidden from customers, otherwise nothing.
+{%- endcomment -%}
+
+{%- liquid
+  assign nw_hide_line_item_property = false
+  if property_key == blank
+    assign nw_hide_line_item_property = true
+  elsif property_key == 'Thickness' or property_key == '_source' or property_key == 'Source' or property_key == '_nw_tier_reward' or property_key == 'Free gift'
+    assign nw_hide_line_item_property = true
+  else
+    assign property_key_first = property_key | slice: 0
+    if property_key_first == '_'
+      assign nw_hide_line_item_property = true
+    endif
+  endif
+-%}
+{%- if nw_hide_line_item_property -%}1{%- endif -%}

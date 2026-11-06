@@ -1,0 +1,212 @@
+.nw-bundle {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: var(--nw-bundle-min-height, auto);
+    color: var(--nw-bundle-text-color, var(--primary-color));
+    background: var(--nw-bundle-background, var(--secondary-color));
+}
+
+.nw-bundle__media-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background-color: var(--nw-bundle-bg-fallback, var(--secondary-color));
+}
+
+.nw-bundle__media-bg-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: var(--nw-bundle-min-height, auto);
+    object-fit: cover;
+    object-position: var(--nw-bundle-focal-point, center center);
+}
+
+.nw-bundle__media-bg-image--placeholder {
+    width: 100%;
+    min-height: var(--nw-bundle-min-height, auto);
+}
+
+.nw-bundle__media-bg-image--mobile {
+    display: none;
+}
+
+.nw-bundle__content {
+    position: relative;
+    z-index: 1;
+}
+
+.nw-bundle__inner {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        'copy cta'
+        'media media';
+    gap: 132px 32px;
+    width: 100%;
+    min-height: var(--nw-bundle-min-height, auto);
+    padding-top: var(--nw-bundle-padding-top, 80px);
+    padding-bottom: var(--nw-bundle-padding-bottom, 80px);
+}
+
+.nw-bundle__copy {
+    grid-area: copy;
+    min-width: 0;
+}
+
+.nw-bundle__eyebrow {
+    margin: 0 0 42px;
+    font-family: var(--font-helvetica-family);
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 2%;
+    text-transform: uppercase;
+    color: var(--nw-bundle-text-color, var(--primary-color));
+}
+
+.nw-bundle__eyebrow > :first-child {
+    margin-top: 0;
+}
+
+.nw-bundle__eyebrow > :last-child {
+    margin-bottom: 0;
+}
+
+.nw-bundle__heading {
+    margin: 0;
+    max-width: 883px;
+    font-family: var(--font-heading-family);
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 50px;
+    letter-spacing: -0.01em;
+    color: var(--nw-bundle-text-color, var(--primary-color));
+    max-width: 650px;
+}
+
+.nw-bundle__heading p{
+    margin: 0;
+}
+
+.nw-bundle__heading > :first-child {
+    margin-top: 0;
+}
+
+.nw-bundle__heading > :last-child {
+    margin-bottom: 0;
+}
+
+.nw-bundle__cta {
+    margin-top: auto;
+}
+
+.nw-bundle__figure {
+    grid-area: media;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 60px;
+    aspect-ratio: 1504 / 952;
+    background-color: #dcd7cf;
+}
+
+.nw-bundle__figure-image,
+.nw-bundle__figure-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+}
+
+.nw-bundle__figure-image--mobile {
+    display: none;
+}
+
+.nw-bundle__figure-placeholder .placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (min-width: 750px) and (max-width: 990px) {
+    .nw-bundle__eyebrow {
+        font-size: 32px;
+    }
+
+    .nw-bundle__heading {
+        font-size: 40px;
+        line-height: 44px;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .nw-bundle__media-bg-image--desktop {
+        display: none;
+    }
+
+    .nw-bundle__media-bg-image--mobile {
+        display: block;
+    }
+
+    .nw-bundle__heading p{
+        margin: revert;
+    }
+
+    .nw-bundle__inner {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            'copy'
+            'media'
+            'cta';
+        gap: 59px;
+        padding-top: var(--nw-bundle-padding-top, 48px);
+        padding-bottom: var(--nw-bundle-padding-bottom, 48px);
+    }
+
+    .nw-bundle__eyebrow {
+        margin-bottom: 31px;
+        font-size: 22px;
+        letter-spacing: 0.02em;
+    }
+
+    .nw-bundle__heading {
+        max-width: none;
+        font-size: 30px;
+        line-height: 30px;
+    }
+
+    .nw-bundle__cta {
+        justify-self: center;
+        padding-top: 0;
+        width: 100%;
+    }
+
+    .nw-bundle__figure {
+        border-radius: 20px;
+        aspect-ratio: 362 / 265;
+    }
+
+    .nw-bundle__figure-image--desktop {
+        display: none;
+    }
+
+    .nw-bundle__figure-image--mobile {
+        display: block;
+    }
+    .nw-button-wrap{
+        display: flex;
+    }
+    .nw-bundle__cta .nw-button{
+        padding: 8px 43px;
+        max-width: 206px;
+        width: 100%;
+        margin: 0 auto;
+    }
+}

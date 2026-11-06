@@ -1,0 +1,88 @@
+{%- comment -%}
+  Parameters:
+  - product {Product}
+  - show_variants {Boolean}
+  - show_image_slider {Boolean}
+{%- endcomment -%}
+
+{%- liquid
+  assign rec_variant = product.selected_or_first_available_variant
+  assign rec_price = rec_variant.price | money
+  assign rec_image = blank
+  if product.featured_media != blank
+    assign rec_image = product.featured_media.preview_image
+  elsif rec_variant.featured_media != blank
+    assign rec_image = rec_variant.featured_media.preview_image
+  elsif rec_variant.image != blank
+    assign rec_image = rec_variant.image
+  elsif product.media.first != blank
+    assign rec_image = product.media.first.preview_image
+  endif
+
+-%}
+
+<li class="slider__item nw-cart-rec__item">
+  <div class="nw-cart-rec-card" data-product-id="{{ product.id }}">
+    <div class="nw-cart-rec-card__media{% if show_image_slider and product.media.size > 1 %} nw-cart-rec-card__media--slider{% endif %}">
+      {%- if show_image_slider and product.media.size > 1 -%}
+        <div class="nw-cart-rec-card__slides" data-nw-rec-slides>
+          {%- for media in product.media limit: 8 -%}
+            <div class="nw-cart-rec-card__slide{% if forloop.first %} is-active{% endif %}" data-nw-rec-slide>
+              {%- if media.media_type == 'image' -%}
+                {%- render 'image', image: media.preview_image, sizes: '80px', widths: '80, 160', loading: 'eager' -%}
+              {%- else -%}
+                {{ media | media_tag: class: 'nw-cart-rec-card__slide-media' }}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="nw-cart-rec-card__media-nav">
+          <button type="button" class="nw-cart-rec-card__media-btn" data-nw-rec-slide-prev aria-label="{{ 'general.slider.previous' | t }}">‹</button>
+          <button type="button" class="nw-cart-rec-card__media-btn" data-nw-rec-slide-next aria-label="{{ 'general.slider.next' | t }}">›</button>
+        </div>
+      {%- else -%}
+        {%- if rec_image != blank -%}
+          {%- render 'image', image: rec_image, sizes: '80px', widths: '80, 160', loading: 'eager' -%}
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    <div class="nw-cart-rec-card__body">
+      <p class="nw-cart-rec-card__title">{{ product.title | escape }}</p>
+
+      <div class="nw-cart-rec-card__actions">
+        <span class="nw-cart-rec-card__price theme-money" data-nw-rec-price>{{ rec_price }}</span>
+
+        {%- if show_variants and product.has_only_default_variant == false -%}
+          <label class="visually-hidden" for="nw-rec-variant-{{ product.id }}">{{ 'products.product.product_variants' | t }}</label>
+          <select
+            id="nw-rec-variant-{{ product.id }}"
+            class="nw-cart-rec-card__variant"
+            data-nw-rec-variant
+          >
+            {%- for variant in product.variants -%}
+              <option
+                value="{{ variant.id }}"
+                data-price="{{ variant.price | money | escape }}"
+                {% if variant.id == rec_variant.id %}selected{% endif %}
+                {% unless variant.available %}disabled{% endunless %}
+              >
+                {{ variant.title | escape }}
+              </option>
+            {%- endfor -%}
+          </select>
+        {%- else -%}
+          <input type="hidden" data-nw-rec-variant value="{{ rec_variant.id }}">
+        {%- endif -%}
+
+        <button
+          type="button"
+          class="nw-cart-rec-card__add"
+          data-nw-rec-add
+          aria-label="{{ 'products.product.add_to_cart' | t | escape }}"
+          {% unless rec_variant.available %}disabled{% endunless %}
+        >+</button>
+      </div>
+    </div>
+  </div>
+</li>

@@ -1,0 +1,199 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer Group",
+  "sections": {
+    "scrolling_banner_zpcFdV": {
+      "type": "scrolling-banner",
+      "blocks": {
+        "image_keEhkp": {
+          "type": "image",
+          "settings": {
+            "image_width": 100,
+            "link": ""
+          }
+        },
+        "image_Gid6mx": {
+          "type": "image",
+          "settings": {
+            "image_width": 100,
+            "link": ""
+          }
+        },
+        "image_4kAxwy": {
+          "type": "image",
+          "settings": {
+            "image_width": 100,
+            "link": ""
+          }
+        },
+        "image_tzapRT": {
+          "type": "image",
+          "settings": {
+            "image_width": 100,
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_keEhkp",
+        "image_Gid6mx",
+        "image_4kAxwy",
+        "image_tzapRT"
+      ],
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "color_scheme": "default",
+        "text_size": 50,
+        "vertical_padding": 40,
+        "speed": 20,
+        "direction": "left",
+        "font": "heading",
+        "space": 120
+      }
+    },
+    "cross-page-promos": {
+      "type": "cross-page-promos",
+      "blocks": {
+        "1478526632862": {
+          "type": "icon",
+          "settings": {
+            "icon": "truck",
+            "text": "Free shipping",
+            "link_url": ""
+          }
+        },
+        "1478526645605": {
+          "type": "icon",
+          "settings": {
+            "icon": "price_tag",
+            "text": "New styles",
+            "link_url": ""
+          }
+        },
+        "1478526647261": {
+          "type": "icon",
+          "settings": {
+            "icon": "gift",
+            "text": "Gift cards",
+            "link_url": ""
+          }
+        },
+        "1478527611164": {
+          "type": "icon",
+          "settings": {
+            "icon": "star",
+            "text": "5.0 star rating",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "1478526632862",
+        "1478526645605",
+        "1478526647261",
+        "1478527611164"
+      ],
+      "disabled": true,
+      "settings": {
+        "cross_page_promo_bg": "#fbf9f4",
+        "cross_page_promo_color": "#232323",
+        "show_on_home_page": true
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "footer_cta_xXMfmz": {
+          "type": "footer_cta",
+          "settings": {
+            "button_label": "Take The Quiz",
+            "button_link": "shopify://pages/quiz"
+          }
+        },
+        "1601374621546": {
+          "type": "menu",
+          "settings": {
+            "title": "",
+            "menu": "footer-1",
+            "link_layout": "full",
+            "column": "primary"
+          }
+        },
+        "pearler_footer_menu_002": {
+          "type": "menu",
+          "settings": {
+            "title": "",
+            "menu": "footer-2",
+            "link_layout": "full",
+            "column": "secondary"
+          }
+        },
+        "footer_follow_xdjMRG": {
+          "type": "footer_follow",
+          "settings": {
+            "title": "Follow",
+            "follow_text": "@pearlersocks",
+            "follow_link": "https://www.instagram.com/pearlersocks/",
+            "show_social_icons": false,
+            "soc_icons_large": false
+          }
+        },
+        "1601374680247": {
+          "type": "text",
+          "settings": {
+            "title": "",
+            "text": "",
+            "image": "shopify://shop_images/peraler-footer-logo.png",
+            "image_width": 700,
+            "show_social_icons": false,
+            "soc_icons_large": false,
+            "enable_follow_on_shop": false
+          }
+        },
+        "1601374580731": {
+          "type": "newsletter",
+          "settings": {
+            "title": "",
+            "text": "<p>Good socks. Better emails. Join the drawer.</p>",
+            "email_placeholder": "Email Address",
+            "submit_label": "Sign up",
+            "button_style": "inherit",
+            "show_social_icons": false,
+            "soc_icons_large": false
+          }
+        }
+      },
+      "block_order": [
+        "footer_cta_xXMfmz",
+        "1601374621546",
+        "pearler_footer_menu_002",
+        "footer_follow_xdjMRG",
+        "1601374680247",
+        "1601374580731"
+      ],
+      "settings": {
+        "default_quiz_link": "",
+        "lower_menu": "",
+        "show_powered_by": true,
+        "show_payment_icons": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true
+      }
+    }
+  },
+  "order": [
+    "scrolling_banner_zpcFdV",
+    "cross-page-promos",
+    "footer"
+  ]
+}

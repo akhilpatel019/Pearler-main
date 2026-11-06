@@ -1,0 +1,178 @@
+{%- comment -%}
+  Length storefront filter fallback (when Search & Discovery has not enabled the option).
+  Parameters:
+  - filter_context {Collection|Search}
+  - part {String} Optional. "applied" for applied-filter chips only; default renders the filter group.
+{%- endcomment -%}
+{%- liquid
+  assign nw_length_part = part | default: 'group'
+  assign nw_length_values_delim = '||'
+  assign nw_length_param_name = 'filter.v.option.length'
+
+  assign nw_length_storefront_enabled = false
+  for filter in filter_context.filters
+    assign nw_param_down = filter.param_name | downcase
+    assign nw_label_down = filter.label | downcase
+    if nw_param_down contains 'option.length' or nw_label_down contains 'length'
+      assign nw_length_storefront_enabled = true
+      break
+    endif
+  endfor
+
+  assign nw_length_active_csv = '||'
+  assign nw_st_query_parts = nil
+  if nw_length_storefront_enabled
+    for filter in filter_context.filters
+      assign nw_param_down = filter.param_name | downcase
+      if nw_param_down contains 'option.length'
+        for active_value in filter.active_values
+          assign nw_active_token = nw_length_values_delim | append: active_value.label | append: nw_length_values_delim
+          unless nw_length_active_csv contains nw_active_token
+            assign nw_length_active_csv = nw_length_active_csv | append: active_value.label | append: nw_length_values_delim
+          endunless
+        endfor
+      endif
+    endfor
+  elsif content_for_header contains '"pageurl":"'
+    assign nw_st_pageurl = content_for_header | split: '"pageurl":"' | last | split: '"' | first
+    assign nw_st_pageurl = nw_st_pageurl | replace: '\u0026', '&'
+    if nw_st_pageurl contains '?'
+      assign nw_query_string = nw_st_pageurl | split: '?' | last
+      assign nw_st_query_parts = nw_query_string | split: '&'
+      for nw_query_part in nw_st_query_parts
+        if nw_query_part contains 'filter.v.option.length='
+          assign nw_len_val = nw_query_part | split: 'filter.v.option.length=' | last | split: '&' | first | url_decode | replace: '+', ' ' | strip
+          assign nw_active_token = nw_length_values_delim | append: nw_len_val | append: nw_length_values_delim
+          unless nw_length_active_csv contains nw_active_token
+            assign nw_length_active_csv = nw_length_active_csv | append: nw_len_val | append: nw_length_values_delim
+          endunless
+        endif
+      endfor
+    endif
+  endif
+-%}
+{%- if nw_length_part == 'applied' -%}
+  {%- unless nw_length_storefront_enabled -%}
+    {%- if nw_length_active_csv != '||' and nw_length_active_csv != blank -%}
+      {%- assign nw_length_active_list = nw_length_active_csv | split: nw_length_values_delim -%}
+      {%- for nw_len_label in nw_length_active_list -%}
+        {%- if nw_len_label != blank -%}
+          {%- liquid
+            assign nw_remove_url = filter_context.url
+            assign nw_remove_has_param = false
+            if nw_st_query_parts != nil
+              assign nw_remove_url = filter_context.url | append: '?'
+              for nw_query_part in nw_st_query_parts
+                if nw_query_part == blank
+                  continue
+                endif
+                if nw_query_part contains '_fd=' or nw_query_part contains 'pb=0'
+                  continue
+                endif
+                if nw_query_part contains 'filter.v.option.length='
+                  assign nw_part_len = nw_query_part | split: 'filter.v.option.length=' | last | url_decode | replace: '+', ' ' | strip
+                  if nw_part_len == nw_len_label
+                    continue
+                  endif
+                endif
+                if nw_remove_has_param
+                  assign nw_remove_url = nw_remove_url | append: '&'
+                endif
+                assign nw_remove_url = nw_remove_url | append: nw_query_part
+                assign nw_remove_has_param = true
+              endfor
+              unless nw_remove_has_param
+                assign nw_remove_url = filter_context.url
+              endunless
+            else
+              assign nw_remove_url = filter_context.url | append: '?'
+              for rm_filter in filter_context.filters
+                for rm_value in rm_filter.active_values
+                  if rm_value.param_name != 'filter.v.availability'
+                    assign nw_encoded_val = rm_value.value | url_encode
+                    if nw_remove_has_param
+                      assign nw_remove_url = nw_remove_url | append: '&'
+                    endif
+                    assign nw_remove_url = nw_remove_url | append: rm_value.param_name | append: '=' | append: nw_encoded_val
+                    assign nw_remove_has_param = true
+                  endif
+                endfor
+              endfor
+              unless nw_remove_has_param
+                assign nw_remove_url = filter_context.url
+              endunless
+            endif
+          -%}
+          <a class="filter-group__applied-item" href="{{ nw_remove_url }}">
+            <span class="filter-group__applied-item__text">{{ nw_len_label | escape }}</span>
+            <span class="filter-group__applied-item__icon">{% render 'icon-close', stroke_width: 1.3 %}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endunless -%}
+{%- elsif nw_length_storefront_enabled -%}
+  {%- comment -%} Native Search & Discovery filter renders this group. {%- endcomment -%}
+{%- else -%}
+  {%- liquid
+    assign nw_length_option_name = 'Length'
+    assign nw_length_option = nil
+
+    for product in filter_context.products limit: 50
+      if nw_length_option != nil
+        break
+      endif
+      for option in product.options_with_values
+        assign nw_opt_name_down = option.name | downcase
+        if nw_opt_name_down contains 'length'
+          assign nw_length_option_name = option.name
+          assign nw_length_option = option
+          break
+        endif
+      endfor
+    endfor
+
+    assign nw_length_filter_group_is_button_grid = true
+    assign nw_length_collapse_filters = false
+    if section.settings.collapse_filters_method == 'all'
+      assign nw_length_collapse_filters = true
+    endif
+    if nw_length_active_csv != blank
+      assign nw_length_collapse_filters = false
+    endif
+  -%}
+  {%- if nw_length_option != nil -%}
+    <div class="filter-group filter-group--button-grid filter-group--layout-three-column">
+      <toggle-target role="button" tabindex="0" class="filter-group__heading{% if nw_length_collapse_filters %} toggle-target-toggler--is-hidden{% endif %}" data-toggle-target="#FilterGroupNwLength">
+        <div class="filter-group__heading__text">{{ nw_length_option_name | escape }}</div>
+        <span class="filter-group__heading__indicator">{% render 'icon-chevron-down', stroke_width: 1.3 %}</span>
+      </toggle-target>
+      <div id="FilterGroupNwLength" class="filter-group__items filter-group--nw-length toggle-target{% if nw_length_collapse_filters %} toggle-target--hidden{% endif %}">
+        <div class="toggle-target-container">
+          {%- for value in nw_length_option.values -%}
+            {%- liquid
+              assign nw_value_label = value.name | default: value
+              assign nw_value_is_active = false
+              assign nw_active_token = nw_length_values_delim | append: nw_value_label | append: nw_length_values_delim
+              if nw_length_active_csv contains nw_active_token
+                assign nw_value_is_active = true
+              endif
+            -%}
+            <label class="filter-group__item{% if nw_value_is_active %} filter-group__item--active{% endif %}"
+                data-tag="{{ nw_value_label | handle }}">
+              <input class="filter-group__checkbox"
+                id="Filter-{{ nw_length_param_name }}-{{ nw_value_label | handle }}"
+                type="checkbox"
+                name="{{ nw_length_param_name }}"
+                value="{{ nw_value_label | escape }}"
+                {% if nw_value_is_active %}checked{% endif %}>
+              <span class="filter-group__item__text">
+                {{ nw_value_label | escape }}
+              </span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,23 @@
+{%- if recommendations.performed and recommendations.products_count > 0 -%}
+  {%- liquid
+    assign nw_rec_show_image_slider = false
+    assign nw_rec_show_variants = false
+    if request.params.show_image_slider == 'true'
+      assign nw_rec_show_image_slider = true
+    endif
+    if request.params.show_variants == 'true'
+      assign nw_rec_show_variants = true
+    endif
+  -%}
+  <div class="related-products">
+    <ul class="product-grid nw-cart-rec__list">
+      {%- for product in recommendations.products -%}
+        {%- render 'nw-cart-drawer-recommendation',
+          product: product,
+          show_variants: nw_rec_show_variants,
+          show_image_slider: nw_rec_show_image_slider
+        -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

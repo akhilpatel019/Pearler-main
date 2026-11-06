@@ -1,0 +1,382 @@
+{{ 'nw-cta.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign overlay_opacity = section.settings.overlay_opacity | times: 0.01
+  assign overlay_color = section.settings.overlay_color | color_modify: 'alpha', overlay_opacity
+
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-cta {
+    --nw-cta-bg: {{ section.settings.background_color }};
+    --nw-cta-bg-fallback: {{ section.settings.background_color }};
+    --nw-cta-focal-point: {{ focal_point }};
+    --nw-cta-card-radius: {{ section.settings.card_border_radius }}px;
+    --nw-cta-card-radius-mobile: {{ section.settings.card_border_radius_mobile }}px;
+    --nw-cta-card-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-cta-overlay-color: {{ overlay_color }};
+    --nw-cta-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-cta-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-cta-eyebrow-color: {{ section.settings.eyebrow_color }};
+    --nw-cta-heading-color: {{ section.settings.heading_color }};
+    --nw-cta-eyebrow-color-mobile: {{ section.settings.eyebrow_color_mobile }};
+    --nw-cta-heading-color-mobile: {{ section.settings.heading_color_mobile }};
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-cta {
+      --nw-cta-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-cta-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-cta">
+  <div class="container">
+    <div class="nw-cta__card">
+      <div class="nw-cta__media fade-in" {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"', always: true -%} aria-hidden="true">
+        {%- liquid
+          assign cta_image = section.settings.image
+          assign cta_image_mobile = section.settings.mobile_image
+          assign cta_img_alt = cta_image.alt | default: '' | escape
+          assign cta_img_mobile_alt = cta_image_mobile.alt | default: cta_img_alt | escape
+        -%}
+        {%- if cta_image == blank -%}
+          <div class="nw-cta__image nw-cta__image--placeholder">
+            {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+          </div>
+        {%- else -%}
+          <img
+            src="{{ cta_image | image_url: width: 2560 }}"
+            alt="{{ cta_img_alt }}"
+            class="nw-cta__image nw-cta__image--desktop"
+            loading="{{ loading }}"
+            width="{{ cta_image.width }}"
+            height="{{ cta_image.height }}"
+          >
+          {%- if cta_image_mobile != blank -%}
+            <img
+              src="{{ cta_image_mobile | image_url: width: 1500 }}"
+              alt="{{ cta_img_mobile_alt }}"
+              class="nw-cta__image nw-cta__image--mobile"
+              loading="{{ loading }}"
+              width="{{ cta_image_mobile.width }}"
+              height="{{ cta_image_mobile.height }}"
+            >
+          {%- else -%}
+            <img
+              src="{{ cta_image | image_url: width: 1500 }}"
+              alt="{{ cta_img_alt }}"
+              class="nw-cta__image nw-cta__image--mobile"
+              loading="{{ loading }}"
+              width="{{ cta_image.width }}"
+              height="{{ cta_image.height }}"
+            >
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_overlay -%}
+        <div class="nw-cta__overlay" aria-hidden="true"></div>
+      {%- endif -%}
+
+      <div class="nw-cta__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p
+            class="nw-cta__eyebrow fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.15s"' -%}
+          >
+            {{- section.settings.eyebrow | escape -}}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <div
+            class="nw-cta__heading-wrap fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.3s"' -%}
+          >
+            <h2 class="nw-cta__heading">
+              {{- section.settings.heading | newline_to_br -}}
+            </h2>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.show_button -%}
+          <div
+            class="nw-cta__actions fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.45s"' -%}
+          >
+            {%- render 'nw-button',
+              label: section.settings.button_label,
+              url: section.settings.button_link,
+              style_desktop: section.settings.button_style_desktop,
+              style_mobile: section.settings.button_style_mobile,
+              wrap_class: 'nw-cta__button-wrap'
+            -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW CTA",
+  "class": "shopify-section--nw-cta",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Designed for"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "People who obsess over details, like things that make them feel good and make their day easier."
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color (desktop)",
+      "alpha": true,
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color (desktop)",
+      "alpha": true,
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color_mobile",
+      "label": "Eyebrow color (mobile)",
+      "alpha": true,
+      "default": "#04022B"
+    },
+    {
+      "type": "color",
+      "id": "heading_color_mobile",
+      "label": "Heading color (mobile)",
+      "alpha": true,
+      "default": "#04022B"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop now",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Button style desktop",
+      "default": "style_3",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Button style mobile",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Image (mobile)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background color",
+      "default": "#EBE9E2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show image overlay (desktop)",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#04022B",
+      "visible_if": "{{ section.settings.show_overlay }}"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 25,
+      "visible_if": "{{ section.settings.show_overlay }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Card minimum height (desktop)",
+      "min": 320,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius_mobile",
+      "label": "Card border radius mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW CTA"
+    }
+  ]
+}
+{% endschema %}

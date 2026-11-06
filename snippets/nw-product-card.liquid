@@ -1,0 +1,229 @@
+{%- comment -%}
+  Parameters:
+  - product {Product} — Required unless onboarding is true
+  - onboarding {Boolean} — Placeholder card for theme editor
+  - onboarding_index {Number} — Placeholder image index (1–3)
+  - variant_options {String} — Optional option values to pick a variant
+  - custom_title {String} — Optional title with [Option name] tokens for the card variant
+{%- endcomment -%}
+
+{%- if onboarding -%}
+  <article class="nw-product-card">
+    <div class="nw-product-card__media">
+      <div class="nw-product-card__image nw-product-card__image--placeholder">
+        {%- assign placeholder_index = onboarding_index | default: 1 -%}
+        {{- 'product-' | append: placeholder_index | placeholder_svg_tag: 'placeholder-svg' -}}
+      </div>
+    </div>
+    <div class="nw-product-card__footer">
+      <span class="nw-product-card__title">{{ 'onboarding.product_title' | t }}</span>
+    </div>
+  </article>
+{%- else -%}
+  {%- liquid
+    assign card_variant = nil
+
+    if variant_options != blank
+      assign vo_parts = variant_options | strip | newline_to_br | strip_newlines | split: '<br />'
+      if vo_parts.size == 1
+        assign vo_single = vo_parts[0] | strip
+        if vo_single contains ','
+          assign vo_parts = vo_single | split: ','
+        endif
+      endif
+
+      assign vo_1 = ''
+      assign vo_2 = ''
+      assign vo_3 = ''
+      assign vo_slot = 0
+      for part in vo_parts
+        assign part_trim = part | strip
+        if part_trim == blank
+          continue
+        endif
+        assign vo_slot = vo_slot | plus: 1
+        case vo_slot
+          when 1
+            assign vo_1 = part_trim
+          when 2
+            assign vo_2 = part_trim
+          when 3
+            assign vo_3 = part_trim
+        endcase
+      endfor
+
+      for variant in product.variants
+        assign option_match = true
+        if vo_1 != blank and variant.option1 != vo_1
+          assign option_match = false
+        endif
+        if option_match and vo_2 != blank and variant.option2 != vo_2
+          assign option_match = false
+        endif
+        if option_match and vo_3 != blank and variant.option3 != vo_3
+          assign option_match = false
+        endif
+        if option_match
+          assign card_variant = variant
+          break
+        endif
+      endfor
+    endif
+
+    if card_variant == nil
+      assign card_variant = product.selected_or_first_available_variant
+      for v in product.variants
+        if v.available
+          assign card_variant = v
+          break
+        endif
+      endfor
+    endif
+
+    assign card_image = card_variant.featured_media
+    if card_image == blank
+      assign card_image = product.featured_media
+    endif
+
+    assign variant_label = card_variant.options | join: ' / '
+    if variant_label == blank
+      assign variant_label = card_variant.title
+    endif
+
+    assign card_url = product.url | append: '?variant=' | append: card_variant.id
+
+    assign color_option = nil
+    for product_option in product.options_with_values
+      assign option_name_down = product_option.name | downcase
+      if option_name_down == 'color' or option_name_down == 'colour'
+        assign color_option = product_option
+        break
+      endif
+    endfor
+
+    assign color_option_key = nil
+    if color_option != blank
+      assign color_option_key = 'option' | append: color_option.position
+    endif
+  -%}
+
+  <article class="nw-product-card" data-nw-product-card>
+    <a class="nw-product-card__media" href="{{ card_url }}" data-nw-product-card-media>
+      {%- if card_image != blank -%}
+        <img
+          src="{{ card_image | image_url: width: 800 }}"
+          alt="{{ card_image.alt | default: variant_label | escape }}"
+          width="{{ card_image.width }}"
+          height="{{ card_image.height }}"
+          loading="lazy"
+          class="nw-product-card__image"
+          data-nw-product-card-image
+        >
+      {%- else -%}
+        <div class="nw-product-card__image nw-product-card__image--placeholder" data-nw-product-card-image-placeholder>
+          {{- 'product-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- endif -%}
+    </a>
+
+    <div class="nw-product-card__footer">
+      <a class="nw-product-card__title" href="{{ card_url }}" data-nw-product-card-title>
+        {%- if custom_title != blank -%}
+          {%- render 'nw-product-custom-title', custom_title: custom_title, product: product, current_variant: card_variant -%}
+        {%- else -%}
+          {{- variant_label | escape -}}
+        {%- endif -%}
+      </a>
+
+      {%- if color_option != blank -%}
+        <div class="nw-product-card__swatches" aria-label="{{ color_option.name | escape }}" data-nw-product-card-swatches>
+          {%- for value in color_option.values -%}
+            {%- liquid
+              assign swatch_variant = nil
+              for v in product.variants
+                unless v.available
+                  continue
+                endunless
+                if v[color_option_key] != value.name
+                  continue
+                endif
+                assign option_match = true
+                for product_option in product.options_with_values
+                  if product_option.position == color_option.position
+                    continue
+                  endif
+                  assign other_option_key = 'option' | append: product_option.position
+                  if v[other_option_key] != card_variant[other_option_key]
+                    assign option_match = false
+                    break
+                  endif
+                endfor
+                if option_match
+                  assign swatch_variant = v
+                  break
+                endif
+              endfor
+
+              if swatch_variant == nil
+                continue
+              endif
+
+              assign is_active = false
+              if swatch_variant.id == card_variant.id
+                assign is_active = true
+              endif
+
+              assign swatch_label = swatch_variant.options | join: ' / '
+              if swatch_label == blank
+                assign swatch_label = swatch_variant.title
+              endif
+
+              assign swatch_display_title = swatch_label
+              if custom_title != blank
+                capture swatch_display_title_capture
+                  render 'nw-product-custom-title', custom_title: custom_title, product: product, current_variant: swatch_variant
+                endcapture
+                assign swatch_display_title = swatch_display_title_capture | strip
+              endif
+
+              assign swatch_image = swatch_variant.featured_media
+              if swatch_image == blank
+                assign swatch_image = product.featured_media
+              endif
+
+              assign swatch_image_src = ''
+              if swatch_image != blank
+                assign swatch_image_src = swatch_image | image_url: width: 800
+              endif
+
+              assign swatch_style = ''
+              if value.swatch.color
+                assign swatch_style = '--nw-product-card-swatch-color: rgb(' | append: value.swatch.color.rgb | append: ');'
+              elsif value.name == 'White' or value.name == 'white'
+                assign swatch_style = '--nw-product-card-swatch-color: #fff;'
+              elsif value.name == 'Black' or value.name == 'black'
+                assign swatch_style = '--nw-product-card-swatch-color: #04022B;'
+              else
+                assign swatch_style = '--nw-product-card-swatch-color: #ccc;'
+              endif
+            -%}
+            <button
+              type="button"
+              class="nw-product-card__swatch{% if is_active %} nw-product-card__swatch--active{% endif %}"
+              style="{{ swatch_style }}"
+              title="{{ value.name | escape }}"
+              aria-label="{{ value.name | escape }}"
+              data-nw-product-card-swatch
+              data-variant-id="{{ swatch_variant.id }}"
+              data-variant-label="{{ swatch_label | escape }}"
+              data-variant-display-title="{{ swatch_display_title | escape }}"
+              data-variant-url="{{ product.url }}?variant={{ swatch_variant.id }}"
+              data-image-src="{{ swatch_image_src }}"
+              {% if is_active %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}
+            ></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </article>
+{%- endif -%}

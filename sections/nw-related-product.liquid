@@ -1,0 +1,565 @@
+{{ 'nw-section-header.css' | asset_url | stylesheet_tag }}
+{{ 'nw-related-product.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  assign context_product = product
+  if context_product == blank and section.settings.context_product != blank
+    assign context_product = section.settings.context_product
+  endif
+
+  assign max_products = section.settings.max_products
+  assign product_source = section.settings.product_source
+  assign use_blocks = false
+  assign use_dynamic = false
+  if product_source == 'blocks'
+    assign use_blocks = true
+  elsif product_source == 'dynamic'
+    assign use_dynamic = true
+  endif
+
+  assign related_metafield = blank
+  assign related_products_list = blank
+  assign related_product_single = blank
+  assign products_count = 0
+
+  if use_blocks
+    for block in section.blocks
+      if block.type == 'related_product' and block.settings.product != blank
+        assign products_count = products_count | plus: 1
+      endif
+    endfor
+  elsif use_dynamic
+    if recommendations.performed and recommendations.products_count > 0
+      assign related_products_list = recommendations.products
+      assign products_count = recommendations.products_count
+    endif
+  elsif context_product != blank
+    assign related_metafield_key = section.settings.related_metafield_key | default: 'related_products' | strip
+    if related_metafield_key == blank
+      assign related_metafield_key = 'related_products'
+    endif
+
+    assign related_metafield = context_product.metafields.custom[related_metafield_key]
+    if related_metafield == blank and related_metafield_key != 'related_product'
+      assign related_metafield = context_product.metafields.custom.related_product
+    endif
+
+    if related_metafield != blank
+      assign related_metafield_value = related_metafield.value
+
+      if related_metafield.type == 'product_reference' and related_metafield_value != blank
+        assign related_product_single = related_metafield_value
+        assign products_count = 1
+      elsif related_metafield_value != blank
+        assign related_products_list = related_metafield_value
+        for related_item in related_products_list
+          if related_item != blank
+            assign products_count = products_count | plus: 1
+          endif
+        endfor
+
+        if products_count == 0 and related_metafield_value.id != blank
+          assign related_product_single = related_metafield_value
+          assign products_count = 1
+          assign related_products_list = blank
+        endif
+      endif
+    endif
+  endif
+
+  assign show_section = false
+  if request.design_mode
+    assign show_section = true
+  elsif use_dynamic
+    if context_product != blank or recommendations.performed
+      assign show_section = true
+    endif
+  elsif use_blocks and products_count > 0
+    assign show_section = true
+  elsif products_count > 0
+    assign show_section = true
+  endif
+
+  assign recommendations_url = nil
+  assign load_recommendations_client = false
+  if use_dynamic and context_product != blank
+    assign recommendations_url = routes.product_recommendations_url | append: '?section_id=' | append: section.id | append: '&limit=' | append: max_products | append: '&product_id=' | append: context_product.id
+    if recommendations.performed == false or products_count == 0
+      assign load_recommendations_client = true
+    endif
+  endif
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-related-product {
+    --nw-related-product-bg-fallback: {{ section.settings.background_color }};
+    --nw-related-product-background: {{ section_background }};
+    --nw-related-product-focal-point: {{ focal_point }};
+    --nw-related-product-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-related-product-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-related-product-text-color: {{ section.settings.text_color }};
+    --nw-section-header-color: {{ section.settings.text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-related-product {
+      --nw-related-product-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-related-product-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+{%- if show_section -%}
+  <section
+    class="nw-related-product"
+    data-nw-related-product-root
+  >
+    {%- if show_media -%}
+      <div
+        class="nw-related-product__media-bg fade-in-up"
+        aria-hidden="true"
+        {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"' -%}
+      >
+        {%- liquid
+          assign section_image = section.settings.image
+          assign section_image_mobile = section.settings.mobile_image
+        -%}
+        {%- if section_image == blank -%}
+          <div class="nw-related-product__media-bg-image nw-related-product__media-bg-image--placeholder">
+            {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+          </div>
+        {%- else -%}
+          <img
+            src="{{ section_image | image_url: width: 2560 }}"
+            alt=""
+            class="nw-related-product__media-bg-image nw-related-product__media-bg-image--desktop"
+            loading="{{ loading }}"
+            width="{{ section_image.width }}"
+            height="{{ section_image.height }}"
+          >
+          {%- if section_image_mobile != blank -%}
+            <img
+              src="{{ section_image_mobile | image_url: width: 1500 }}"
+              alt=""
+              class="nw-related-product__media-bg-image nw-related-product__media-bg-image--mobile"
+              loading="{{ loading }}"
+              width="{{ section_image_mobile.width }}"
+              height="{{ section_image_mobile.height }}"
+            >
+          {%- else -%}
+            <img
+              src="{{ section_image | image_url: width: 1500 }}"
+              alt=""
+              class="nw-related-product__media-bg-image nw-related-product__media-bg-image--mobile"
+              loading="{{ loading }}"
+              width="{{ section_image.width }}"
+              height="{{ section_image.height }}"
+            >
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="nw-related-product__content">
+      <div class="nw-related-product__inner">
+        {%- render 'nw-section-header', heading: section.settings.heading, animate_delay: '0.15s' -%}
+
+        <div
+          class="nw-related-product__grid"
+          {%- if load_recommendations_client and recommendations_url != blank -%}
+            data-url="{{ recommendations_url }}"
+            data-section-id="{{ section.id }}"
+          {%- endif -%}
+        >
+          {%- if use_blocks -%}
+            {%- assign card_index = 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'related_product' and card_index < max_products -%}
+                {%- assign block_product = block.settings.product -%}
+                {%- if block_product != blank -%}
+                  {%- assign card_index = card_index | plus: 1 -%}
+                  <div class="nw-related-product__grid-item" {{ block.shopify_attributes }}>
+                    {%- render 'nw-related-product-card',
+                      product: block_product,
+                      card_index: card_index,
+                      variant_options: block.settings.variant_options,
+                      custom_title: block.settings.custom_title,
+                      custom_description: block.settings.custom_description,
+                      show_price: block.settings.show_price,
+                      show_quantity: block.settings.show_quantity
+                    -%}
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- elsif related_product_single != blank -%}
+            <div class="nw-related-product__grid-item">
+              {%- render 'nw-related-product-card', product: related_product_single, card_index: 1 -%}
+            </div>
+          {%- elsif related_products_list != blank -%}
+            {%- assign card_index = 0 -%}
+            {%- for related_product in related_products_list limit: max_products -%}
+              {%- if related_product != blank -%}
+                {%- assign card_index = card_index | plus: 1 -%}
+                <div class="nw-related-product__grid-item">
+                  {%- render 'nw-related-product-card',
+                    product: related_product,
+                    card_index: card_index,
+                    use_first_variant: use_dynamic
+                  -%}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- elsif request.design_mode and use_dynamic and products_count == 0 and load_recommendations_client -%}
+            <p class="nw-related-product__editor-note">
+              Loading dynamic related products for “{{ context_product.title | escape }}”…
+              If nothing appears, Shopify may have no related products yet — use
+              <strong>Search &amp; Discovery</strong> or switch to <strong>Custom products (section blocks)</strong>.
+            </p>
+          {%- elsif request.design_mode and use_dynamic and products_count == 0 -%}
+            <p class="nw-related-product__editor-note">
+              No dynamic related products returned for “{{ context_product.title | escape }}”.
+              Configure related products in <strong>Search &amp; Discovery</strong>, or use
+              <strong>Custom products (section blocks)</strong>.
+            </p>
+          {%- elsif request.design_mode and products_count == 0 and use_dynamic == false and use_blocks == false and context_product != blank -%}
+            <p class="nw-related-product__editor-note">
+              No products from <strong>custom.related_products</strong> on “{{ context_product.title | escape }}”.
+              Confirm the metafield type is a product list (or single product reference) and that
+              <strong>Storefront API access</strong> is enabled for that metafield definition.
+            </p>
+          {%- elsif request.design_mode and products_count == 0 and use_dynamic == false and use_blocks -%}
+            <p class="nw-related-product__editor-note">
+              Add <strong>Related product</strong> blocks and choose a product for each card. Use
+              <strong>Variant options</strong> to pick which variant to display (one value per line, in product option order).
+            </p>
+          {%- elsif request.design_mode and products_count == 0 and use_dynamic == false -%}
+            {%- for i in (1..4) -%}
+              <div class="nw-related-product__grid-item">
+                {%- render 'nw-related-product-card', onboarding: true, onboarding_index: i, card_index: i -%}
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% javascript %}
+  var loadNwRelatedProductRecommendations = function (scope) {
+    var root = scope || document;
+    root.querySelectorAll('.nw-related-product__grid[data-url]').forEach(function (grid) {
+      if (grid.getAttribute('data-nw-related-loaded') === 'true') {
+        return;
+      }
+
+      var url = grid.getAttribute('data-url');
+      if (!url) {
+        return;
+      }
+
+      var sectionId = grid.getAttribute('data-section-id');
+      var request = new XMLHttpRequest();
+      request.open('GET', url);
+      request.onload = function () {
+        if (request.status < 200 || request.status >= 300) {
+          return;
+        }
+
+        var container = document.createElement('div');
+        container.innerHTML = request.response;
+
+        var fetchedGrid = container.querySelector('.nw-related-product__grid');
+        if (!fetchedGrid && sectionId) {
+          var sectionWrapper = container.querySelector('#shopify-section-' + sectionId);
+          if (sectionWrapper) {
+            fetchedGrid = sectionWrapper.querySelector('.nw-related-product__grid');
+          }
+        }
+
+        if (!fetchedGrid) {
+          return;
+        }
+
+        grid.innerHTML = fetchedGrid.innerHTML;
+        grid.removeAttribute('data-url');
+        grid.setAttribute('data-nw-related-loaded', 'true');
+
+        if (typeof window.nwRefreshAnimateOnScroll === 'function') {
+          window.nwRefreshAnimateOnScroll();
+        }
+
+        var isDesignMode = window.Shopify && window.Shopify.designMode;
+        if (grid.children.length === 0 && !isDesignMode) {
+          var sectionEl = grid.closest('.shopify-section');
+          if (sectionEl) {
+            sectionEl.remove();
+          }
+        }
+      };
+      request.send();
+    });
+  };
+
+  loadNwRelatedProductRecommendations();
+
+  document.addEventListener('shopify:section:load', function (event) {
+    loadNwRelatedProductRecommendations(event.target);
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "NW Related Product",
+  "class": "shopify-section--nw-related-product",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "YOU MAY ALSO LIKE"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#04022B"
+    },
+    {
+      "type": "select",
+      "id": "product_source",
+      "label": "Product data source",
+      "default": "metafield",
+      "options": [
+        {
+          "value": "metafield",
+          "label": "Product metafield (custom.related_products)"
+        },
+        {
+          "value": "blocks",
+          "label": "Custom products (section blocks)"
+        },
+        {
+          "value": "dynamic",
+          "label": "Dynamic related product"
+        }
+      ]
+    },
+    {
+      "type": "product",
+      "id": "context_product",
+      "label": "Context product",
+      "info": "Required on non-product templates. On product pages, uses the current product. Metafield custom.related_products must have Storefront API access enabled in Shopify admin."
+    },
+    {
+      "type": "text",
+      "id": "related_metafield_key",
+      "label": "Related products metafield key",
+      "default": "related_products",
+      "info": "Namespace is custom (custom.related_products). Enable Storefront API access on this metafield in Shopify admin.",
+      "visible_if": "{{ section.settings.product_source == 'metafield' }}"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Maximum products",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "linear_gradient",
+          "label": "Linear gradient"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "related_product",
+      "name": "Related product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "textarea",
+          "id": "variant_options",
+          "label": "Variant options",
+          "info": "One option value per line, in the same order as the product options (e.g. Size, then Length, then Color). You can also use comma-separated values on one line. Leave blank to use the first available variant."
+        },
+        {
+          "type": "textarea",
+          "id": "custom_title",
+          "label": "Custom title",
+          "info": "Optional. Plain text or tokens matching product option names, e.g. [Length] / [Color]. Uses the variant selected above. Leave blank to show the product title."
+        },
+        {
+          "type": "textarea",
+          "id": "custom_description",
+          "label": "Custom description",
+          "info": "Optional. Overrides the variant or product description metafield when set."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show price",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantity",
+          "label": "Show quantity",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Related Product",
+      "blocks": [
+        {
+          "type": "related_product"
+        },
+        {
+          "type": "related_product"
+        },
+        {
+          "type": "related_product"
+        },
+        {
+          "type": "related_product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

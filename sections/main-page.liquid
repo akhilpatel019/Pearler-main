@@ -1,0 +1,210 @@
+{%- liquid
+  assign page_section_background = section.settings.background_color | default: '#EBE9E2'
+  assign page_section_bg_image_desktop = ''
+  assign page_section_bg_image_mobile = ''
+
+  case section.settings.background_type
+    when 'solid'
+      assign page_section_background = section.settings.background_color | default: '#EBE9E2'
+    when 'linear_gradient'
+      assign page_section_background = section.settings.background_gradient
+    when 'none'
+      assign page_section_background = 'transparent'
+    when 'image'
+      assign page_section_background = section.settings.background_color | default: '#EBE9E2'
+      if section.settings.image != blank
+        assign page_section_bg_image_desktop = section.settings.image | image_url: width: 2560
+      endif
+      if section.settings.mobile_image != blank
+        assign page_section_bg_image_mobile = section.settings.mobile_image | image_url: width: 1500
+      elsif section.settings.image != blank
+        assign page_section_bg_image_mobile = section.settings.image | image_url: width: 1500
+      endif
+  endcase
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --nw-policies-min-height: {{ section.settings.min_height_desktop | default: 0 }}px;
+    --nw-policies-padding-top: {{ section.settings.padding_top_desktop | default: 80 }}px;
+    --nw-policies-padding-bottom: {{ section.settings.padding_bottom_desktop | default: 80 }}px;
+    --nw-policies-padding-inline: 110px;
+    min-height: var(--nw-policies-min-height);
+    {%- if page_section_bg_image_desktop != blank -%}
+    background-color: {{ page_section_background }};
+    background-image: url({{ page_section_bg_image_desktop | json }});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    {%- else -%}
+    background: {{ page_section_background }};
+    {%- endif -%}
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} {
+      --nw-policies-min-height: {{ section.settings.min_height_mobile | default: 0 }}px;
+      --nw-policies-padding-top: {{ section.settings.padding_top_mobile | default: 48 }}px;
+      --nw-policies-padding-bottom: {{ section.settings.padding_bottom_mobile | default: 48 }}px;
+      --nw-policies-padding-inline: 29px;
+      {%- if page_section_bg_image_mobile != blank -%}
+      background-image: url({{ page_section_bg_image_mobile | json }});
+      {%- endif -%}
+    }
+  }
+{% endstyle %}
+
+<div class="container{% unless section.settings.full_width %} container--reading-width{% endunless %}">
+  {%- liquid
+    assign page_content_anim_delay = '0.35s'
+    if section.settings.show_page_title == false
+      assign page_content_anim_delay = '0.2s'
+    endif
+    assign page_content_anim_attrs = 'data-cc-animate data-cc-animate-delay="' | append: page_content_anim_delay | append: '"'
+  -%}
+
+  {%- if section.settings.show_page_title -%}
+    <div
+      class="page-header fade-in-up"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"', always: true -%}
+    >
+      <h1 class="majortitle">{{ page.title }}</h1>
+    </div>
+  {%- endif -%}
+
+  <div
+    class="rte cf fade-in-up"
+    {%- render 'animation-attrs', attrs: page_content_anim_attrs, always: true -%}
+  >
+    {{- page.content -}}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Page",
+  "class": "page-section-spacing section-main-page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_page_title",
+      "label": "Show the default page heading",
+      "info": "If hidden, you should provide a primary page heading (h1 tag) in another section with h1 capability (e.g. image with overlay text, or background video) for SEO purposes.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "solid", "label": "Solid color" },
+        { "value": "linear_gradient", "label": "Linear gradient" },
+        { "value": "none", "label": "None" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ]
+}
+{% endschema %}

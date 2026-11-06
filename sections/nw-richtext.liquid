@@ -1,0 +1,722 @@
+{{ 'nw-section-header.css' | asset_url | stylesheet_tag }}
+{{ 'nw-richtext.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  case section.settings.content_font_family
+    when 'body'
+      assign content_font_family = 'var(--font-body-family)'
+    when 'heading_italic'
+      assign content_font_family = 'var(--font-heading-family-italic)'
+    when 'helvetica'
+      assign content_font_family = 'var(--font-helvetica-family)'
+    else
+      assign content_font_family = 'var(--font-heading-family)'
+  endcase
+
+  case section.settings.subheading_font_family
+    when 'body'
+      assign subheading_font_family = 'var(--font-body-family)'
+    when 'heading_italic'
+      assign subheading_font_family = 'var(--font-heading-family-italic)'
+    when 'helvetica'
+      assign subheading_font_family = 'var(--font-helvetica-family)'
+    when 'heading'
+      assign subheading_font_family = 'var(--font-heading-family)'
+    else
+      assign subheading_font_family = 'var(--font-helvetica-family)'
+  endcase
+
+  assign content_letter_spacing_desktop = section.settings.content_letter_spacing_desktop | divided_by: 100.0
+  assign content_letter_spacing_mobile = section.settings.content_letter_spacing_mobile | divided_by: 100.0
+  assign subheading_letter_spacing_desktop = section.settings.subheading_letter_spacing_desktop | divided_by: 100.0
+  assign subheading_letter_spacing_mobile = section.settings.subheading_letter_spacing_mobile | divided_by: 100.0
+
+  assign content_text_align = section.settings.content_text_align
+  if content_text_align == blank
+    assign content_text_align = 'center'
+  endif
+
+  assign subheading_text_transform = section.settings.subheading_text_transform
+  if subheading_text_transform == blank
+    assign subheading_text_transform = 'uppercase'
+  endif
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-richtext {
+    --nw-richtext-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-richtext-bg-fallback: {{ section.settings.background_color }};
+    --nw-richtext-background: {{ section_background }};
+    --nw-richtext-focal-point: {{ focal_point }};
+    --nw-richtext-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-richtext-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-richtext-text-color: {{ section.settings.text_color }};
+    --nw-section-header-color: {{ section.settings.text_color }};
+    --nw-richtext-content-max-width: {{ section.settings.content_max_width_desktop }}px;
+    --nw-richtext-content-max-width-mobile: {{ section.settings.content_max_width_mobile }}px;
+    --nw-richtext-content-text-align: {{ content_text_align }};
+    --nw-richtext-content-font-family: {{ content_font_family }};
+    --nw-richtext-content-font-size: {{ section.settings.content_font_size_desktop }}px;
+    --nw-richtext-content-font-size-mobile: {{ section.settings.content_font_size_mobile }}px;
+    --nw-richtext-content-line-height: {{ section.settings.content_line_height_desktop }}px;
+    --nw-richtext-subheading-font-family: {{ subheading_font_family }};
+    --nw-richtext-subheading-font-size: {{ section.settings.subheading_font_size_desktop }}px;
+    --nw-richtext-subheading-font-size-mobile: {{ section.settings.subheading_font_size_mobile }}px;
+    --nw-richtext-subheading-line-height: {{ section.settings.subheading_line_height_desktop }}px;
+    --nw-richtext-subheading-line-height-mobile: {{ section.settings.subheading_line_height_mobile }}px;
+    --nw-richtext-subheading-letter-spacing: {{ subheading_letter_spacing_desktop }}em;
+    --nw-richtext-subheading-letter-spacing-mobile: {{ subheading_letter_spacing_mobile }}em;
+    --nw-richtext-subheading-text-transform: {{ subheading_text_transform }};
+    --nw-richtext-subheading-gap: {{ section.settings.subheading_gap_desktop }}px;
+    --nw-richtext-subheading-gap-mobile: {{ section.settings.subheading_gap_mobile }}px;
+    --nw-richtext-content-line-height-mobile: {{ section.settings.content_line_height_mobile }}px;
+    --nw-richtext-content-letter-spacing: {{ content_letter_spacing_desktop }}em;
+    --nw-richtext-content-letter-spacing-mobile: {{ content_letter_spacing_mobile }}em;
+    --nw-richtext-cta-gap: {{ section.settings.button_gap_desktop }}px;
+    --nw-richtext-cta-gap-mobile: {{ section.settings.button_gap_mobile }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-richtext {
+      --nw-richtext-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-richtext-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-richtext-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-richtext">
+  {%- if show_media -%}
+    <div
+      class="nw-richtext__media-bg fade-in-up"
+      aria-hidden="true"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"' -%}
+    >
+      {%- liquid
+        assign section_image = section.settings.image
+        assign section_image_mobile = section.settings.mobile_image
+      -%}
+      {%- if section_image == blank -%}
+        <div class="nw-richtext__media-bg-image nw-richtext__media-bg-image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ section_image | image_url: width: 2560 }}"
+          alt=""
+          class="nw-richtext__media-bg-image nw-richtext__media-bg-image--desktop"
+          loading="{{ loading }}"
+          width="{{ section_image.width }}"
+          height="{{ section_image.height }}"
+        >
+        {%- if section_image_mobile != blank -%}
+          <img
+            src="{{ section_image_mobile | image_url: width: 1500 }}"
+            alt=""
+            class="nw-richtext__media-bg-image nw-richtext__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image_mobile.width }}"
+            height="{{ section_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ section_image | image_url: width: 1500 }}"
+            alt=""
+            class="nw-richtext__media-bg-image nw-richtext__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image.width }}"
+            height="{{ section_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  <div class="container">
+    <div class="nw-richtext__content">
+      <div class="nw-richtext__inner">
+        {%- if section.settings.show_line -%}
+          {%- render 'nw-section-header', heading: section.settings.line_heading, animate_delay: '0.15s' -%}
+        {%- endif -%}
+  
+        {%- if section.settings.content != blank -%}
+          <div
+            class="nw-richtext__body rte fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"' -%}
+          >
+            <h2>{{- section.settings.content | newline_to_br  -}}</h2>
+          </div>
+        {%- endif -%}
+  
+        {%- if section.settings.subheading != blank -%}
+          <div
+            class="nw-richtext__subheading rte fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.35s"' -%}
+          >
+            {{- section.settings.subheading -}}
+          </div>
+        {%- endif -%}
+  
+        {%- if section.settings.show_button -%}
+          <div
+            class="nw-richtext__cta fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.45s"' -%}
+          >
+            {%- render 'nw-button',
+              label: section.settings.button_label,
+              url: section.settings.button_link,
+              style_desktop: section.settings.button_style_desktop,
+              style_mobile: section.settings.button_style_mobile
+            -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Richtext",
+  "class": "shopify-section--nw-richtext",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_line",
+      "label": "Show line",
+      "default": false,
+      "info": "Shows a section heading with horizontal rule (Figma header style)."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "line_heading",
+      "label": "Line heading",
+      "default": "YOU MAY ALSO LIKE",
+      "visible_if": "{{ section.settings.show_line }}"
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Heading",
+      "default": "Can't decide which pair is right for you?"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "info": "<p>Optional rich text below the heading. Leave empty to hide.</p>"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#04022B"
+    },
+    {
+      "type": "header",
+      "content": "Subheading typography"
+    },
+    {
+      "type": "select",
+      "id": "subheading_font_family",
+      "label": "Font family",
+      "default": "helvetica",
+      "options": [
+        {
+          "value": "heading",
+          "label": "Heading (Francisco Serial)"
+        },
+        {
+          "value": "heading_italic",
+          "label": "Heading italic (Antonia)"
+        },
+        {
+          "value": "body",
+          "label": "Body (Neue Haas Grotesk)"
+        },
+        {
+          "value": "helvetica",
+          "label": "Helvetica"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_desktop",
+      "label": "Font size desktop",
+      "min": 12,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_mobile",
+      "label": "Font size mobile",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "subheading_line_height_desktop",
+      "label": "Line height desktop",
+      "min": 12,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subheading_line_height_mobile",
+      "label": "Line height mobile",
+      "min": 12,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "select",
+      "id": "subheading_text_transform",
+      "label": "Text transform",
+      "default": "uppercase",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "subheading_letter_spacing_desktop",
+      "label": "Letter spacing desktop (×0.01em)",
+      "min": -20,
+      "max": 40,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "subheading_letter_spacing_mobile",
+      "label": "Letter spacing mobile (×0.01em)",
+      "min": -20,
+      "max": 40,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "subheading_gap_desktop",
+      "label": "Space above subheading desktop",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "subheading_gap_mobile",
+      "label": "Space above subheading mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "header",
+      "content": "Heading typography"
+    },
+    {
+      "type": "select",
+      "id": "content_font_family",
+      "label": "Font family",
+      "default": "heading",
+      "options": [
+        {
+          "value": "heading",
+          "label": "Heading (Francisco Serial)"
+        },
+        {
+          "value": "heading_italic",
+          "label": "Heading italic (Antonia)"
+        },
+        {
+          "value": "body",
+          "label": "Body (Neue Haas Grotesk)"
+        },
+        {
+          "value": "helvetica",
+          "label": "Helvetica"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "content_font_size_desktop",
+      "label": "Font size desktop",
+      "min": 14,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_font_size_mobile",
+      "label": "Font size mobile",
+      "min": 14,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "content_line_height_desktop",
+      "label": "Line height desktop",
+      "min": 14,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "content_line_height_mobile",
+      "label": "Line height mobile",
+      "min": 14,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "content_letter_spacing_desktop",
+      "label": "Letter spacing desktop (×0.01em)",
+      "min": -20,
+      "max": 40,
+      "step": 1,
+      "default": -1
+    },
+    {
+      "type": "range",
+      "id": "content_letter_spacing_mobile",
+      "label": "Letter spacing mobile (×0.01em)",
+      "min": -20,
+      "max": 40,
+      "step": 1,
+      "default": -1
+    },
+    {
+      "type": "select",
+      "id": "content_text_align",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "content_max_width_desktop",
+      "label": "Content max width desktop",
+      "min": 260,
+      "max": 1360,
+      "step": 11,
+      "unit": "px",
+      "default": 447
+    },
+    {
+      "type": "range",
+      "id": "content_max_width_mobile",
+      "label": "Content max width mobile",
+      "min": 260,
+      "max": 500,
+      "step": 4,
+      "unit": "px",
+      "default": 340
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Take The Quiz",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Button style desktop",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Button style mobile",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "button_gap_desktop",
+      "label": "Space above button desktop",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40,
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "range",
+      "id": "button_gap_mobile",
+      "label": "Space above button mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 40,
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "linear_gradient",
+          "label": "Linear gradient"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Richtext"
+    }
+  ]
+}
+{% endschema %}

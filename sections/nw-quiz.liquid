@@ -1,0 +1,1813 @@
+{{ 'nw-button.css' | asset_url | stylesheet_tag }}
+{{ 'nw-quiz.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nw-quiz.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign step_count = section.settings.step_count | default: 5
+  assign active_step_number = 1
+  assign first_step_number = 1
+  assign has_quiz_blocks = false
+  for block in section.blocks
+    if block.type == 'quiz_step_1' or block.type == 'quiz_step_2' or block.type == 'quiz_step_3' or block.type == 'quiz_step_4' or block.type == 'quiz_step_5' or block.type == 'quiz_step_6'
+      assign has_quiz_blocks = true
+      break
+    endif
+  endfor
+
+  assign section_background = 'transparent'
+  assign show_card_media = false
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_card_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-quiz {
+    --nw-quiz-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-quiz-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-quiz-card-radius: {{ section.settings.card_border_radius }}px;
+    --nw-quiz-card-radius-mobile: {{ section.settings.card_border_radius_mobile }}px;
+    --nw-quiz-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-quiz-min-height-mobile: {{ section.settings.min_height_mobile }}px;
+    --nw-quiz-background: {{ section_background }};
+    --nw-quiz-bg-fallback: {{ section.settings.background_color }};
+    --nw-quiz-focal-point: {{ focal_point }};
+    --nw-quiz-text-color: {{ section.settings.text_color }};
+    --nw-quiz-heading-color: {{ section.settings.heading_color }};
+    --nw-quiz-progress-color: {{ section.settings.progress_color }};
+    --nw-quiz-progress-marker-color: {{ section.settings.progress_marker_color }};
+    --nw-quiz-rule-color: {{ section.settings.rule_color }};
+    --nw-quiz-nav-border-color: {{ section.settings.nav_border_color }};
+    --nw-quiz-option-border-color: {{ section.settings.option_border_color }};
+    --nw-quiz-option-radius: {{ section.settings.option_border_radius }}px;
+    --nw-quiz-option-radius-mobile: {{ section.settings.option_border_radius_mobile }}px;
+    --nw-quiz-option-min-height: {{ section.settings.option_min_height_desktop }}px;
+    --nw-quiz-option-min-height-mobile: {{ section.settings.option_min_height_mobile }}px;
+    --nw-quiz-options-gap: {{ section.settings.options_gap_desktop }}px;
+    --nw-quiz-options-gap-mobile: {{ section.settings.options_gap_mobile }}px;
+    --nw-quiz-inner-padding-top: {{ section.settings.inner_padding_top_desktop }}px;
+    --nw-quiz-inner-padding-bottom: {{ section.settings.inner_padding_bottom_desktop }}px;
+    --nw-quiz-inner-padding-inline: {{ section.settings.inner_padding_inline_desktop }}px;
+    --nw-quiz-inner-padding-top-mobile: {{ section.settings.inner_padding_top_mobile }}px;
+    --nw-quiz-inner-padding-bottom-mobile: {{ section.settings.inner_padding_bottom_mobile }}px;
+    --nw-quiz-inner-padding-inline-mobile: {{ section.settings.inner_padding_inline_mobile }}px;
+    --nw-quiz-noise-opacity: {{ section.settings.noise_opacity | times: 0.01 }};
+    --nw-quiz-padding-bottom-mobile: {{ section.settings.step_max_width }}px;
+    --nw-quiz-padding-top-mobile: {{ section.settings.step_max_width_mobile }}px;
+  }
+{% endstyle %}
+
+<section
+  class="nw-quiz nw-step-{{ active_step_number }}"
+  data-nw-quiz
+  data-active-step="{{ active_step_number }}"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+>
+  <div class="container">
+    <div class="nw-quiz__card">
+      {%- if show_card_media -%}
+        <div class="nw-quiz__media-bg fade-in-up" aria-hidden="true" {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"' -%}>
+          {%- liquid
+            assign card_image = section.settings.image
+            assign card_image_mobile = section.settings.mobile_image
+          -%}
+          {%- if card_image == blank -%}
+            <div class="nw-quiz__media-bg-image nw-quiz__media-bg-image--placeholder">
+              {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+            </div>
+          {%- else -%}
+            <img
+              src="{{ card_image | image_url: width: 2560 }}"
+              alt=""
+              class="nw-quiz__media-bg-image nw-quiz__media-bg-image--desktop"
+              loading="{{ loading }}"
+              width="{{ card_image.width }}"
+              height="{{ card_image.height }}"
+            >
+            {%- if card_image_mobile != blank -%}
+              <img
+                src="{{ card_image_mobile | image_url: width: 1500 }}"
+                alt=""
+                class="nw-quiz__media-bg-image nw-quiz__media-bg-image--mobile"
+                loading="{{ loading }}"
+                width="{{ card_image_mobile.width }}"
+                height="{{ card_image_mobile.height }}"
+              >
+            {%- else -%}
+              <img
+                src="{{ card_image | image_url: width: 1500 }}"
+                alt=""
+                class="nw-quiz__media-bg-image nw-quiz__media-bg-image--mobile"
+                loading="{{ loading }}"
+                width="{{ card_image.width }}"
+                height="{{ card_image.height }}"
+              >
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="nw-quiz__card-inner">
+        <ol class="nw-quiz__progress" aria-label="{{ section.settings.progress_aria_label | escape }}">
+          {%- for i in (1..step_count) -%}
+            {%- liquid
+              assign step_label_key = 'step_' | append: i | append: '_label'
+              assign step_label = section.settings[step_label_key]
+              assign progress_class = ''
+            -%}
+            <li class="nw-quiz__progress-item {{ progress_class }}" data-nw-quiz-progress-step="{{ i }}">
+              <span class="nw-quiz__progress-label">{{ step_label | escape }}</span>
+              <span class="nw-quiz__progress-marker" aria-hidden="true"></span>
+            </li>
+          {%- endfor -%}
+        </ol>
+
+        <hr class="nw-quiz__rule" aria-hidden="true">
+
+        <div class="nw-quiz__main">
+          <div class="nw-quiz__step-intro" data-nw-quiz-step-intro>
+            {%- if has_quiz_blocks == false -%}
+              <div class="nw-quiz__step-header nw-step-1 is-active" data-nw-quiz-step-header data-nw-quiz-step="1">
+                <h2 class="nw-quiz__step-heading">Select Your Style</h2>
+              </div>
+            {%- else -%}
+              {%- assign quiz_step_order = 'quiz_step_1,quiz_step_2,quiz_step_3,quiz_step_4,quiz_step_5,quiz_step_6' | split: ',' -%}
+              {%- for step_type_name in quiz_step_order -%}
+                {%- for block in section.blocks -%}
+                  {%- if block.type != step_type_name -%}
+                    {%- continue -%}
+                  {%- endif -%}
+                  {%- liquid
+                    assign step_active = false
+                    if step_type_name == 'quiz_step_1'
+                      assign step_active = true
+                    endif
+                  -%}
+                  {%- render 'nw-quiz-render-block', block: block, step_active: step_active, part: 'header' -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+
+          <div class="nw-quiz__body" data-nw-quiz-body>
+            {%- if section.settings.show_desktop_nav -%}
+              <button
+                type="button"
+                class="nw-quiz__nav nw-quiz__nav--prev"
+                data-nw-quiz-prev
+                aria-label="{{ section.settings.prev_button_label | escape }}"
+                disabled
+              >
+                <span class="icon icon--small has-ltr-icon">{% render 'icon-chevron-left', stroke_width: 1.2 %}</span>
+              </button>
+              <button
+                type="button"
+                class="nw-quiz__nav nw-quiz__nav--next"
+                data-nw-quiz-next
+                aria-label="{{ section.settings.next_button_label | escape }}"
+                disabled
+              >
+                <span class="icon icon--small has-ltr-icon">{% render 'icon-chevron-right', stroke_width: 1.2 %}</span>
+              </button>
+            {%- endif -%}
+
+            {%- if has_quiz_blocks == false -%}
+              <div class="nw-quiz__step nw-step-1 is-active" data-nw-quiz-step="1" data-step-type="choices">
+                <ul class="nw-quiz__options" role="list">
+                  <li>
+                    <button type="button" class="nw-quiz__option" disabled>
+                      <div class="nw-quiz__option-label rte"><p>Option</p></div>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            {%- else -%}
+              {%- for step_type_name in quiz_step_order -%}
+                {%- for block in section.blocks -%}
+                  {%- if block.type != step_type_name -%}
+                    {%- continue -%}
+                  {%- endif -%}
+                  {%- liquid
+                    assign step_active = false
+                    if step_type_name == 'quiz_step_1'
+                      assign step_active = true
+                    endif
+                  -%}
+                  {%- render 'nw-quiz-render-block', block: block, step_active: step_active, part: 'content' -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- if section.settings.show_mobile_back -%}
+          <div class="nw-quiz__footer">
+            <button
+              type="button"
+              class="nw-button nw-button--d-style_3 nw-button--m-style_3"
+              data-nw-quiz-back 
+              disabled
+            >
+              {{- section.settings.back_button_label | escape -}}
+            </button>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Quiz",
+  "class": "shopify-section--nw-quiz",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Progress labels"
+    },
+    {
+      "type": "paragraph",
+      "content": "Step numbers stay fixed in these settings. Each quiz step block supplies the body for its matching progress number."
+    },
+    {
+      "type": "range",
+      "id": "step_count",
+      "label": "Number of progress steps",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "step_1_label",
+      "label": "Step 1 label",
+      "default": "01"
+    },
+    {
+      "type": "text",
+      "id": "step_2_label",
+      "label": "Step 2 label",
+      "default": "02"
+    },
+    {
+      "type": "text",
+      "id": "step_3_label",
+      "label": "Step 3 label",
+      "default": "03"
+    },
+    {
+      "type": "text",
+      "id": "step_4_label",
+      "label": "Step 4 label",
+      "default": "04"
+    },
+    {
+      "type": "text",
+      "id": "step_5_label",
+      "label": "Step 5 label",
+      "default": "05"
+    },
+    {
+      "type": "text",
+      "id": "step_6_label",
+      "label": "Step 6 label",
+      "default": "06"
+    },
+    {
+      "type": "text",
+      "id": "step_7_label",
+      "label": "Step 7 label",
+      "default": "07"
+    },
+    {
+      "type": "text",
+      "id": "step_8_label",
+      "label": "Step 8 label",
+      "default": "08"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Product quiz"
+    },
+    {
+      "type": "text",
+      "id": "progress_aria_label",
+      "label": "Progress bar accessibility label",
+      "default": "Quiz progress"
+    },
+    {
+      "type": "header",
+      "content": "Navigation (design)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_desktop_nav",
+      "label": "Show desktop arrow controls",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_back",
+      "label": "Show mobile back button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "back_button_label",
+      "label": "Mobile back button label",
+      "default": "BACK"
+    },
+    {
+      "type": "text",
+      "id": "prev_button_label",
+      "label": "Previous arrow label",
+      "default": "Previous step"
+    },
+    {
+      "type": "text",
+      "id": "next_button_label",
+      "label": "Next arrow label",
+      "default": "Next step"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "linear_gradient",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "linear_gradient",
+          "label": "Linear gradient"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Card background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Card background image (mobile)",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#4b5362",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(145deg, rgba(75, 83, 98, 1) 0%, rgba(58, 66, 79, 1) 45%, rgba(109, 124, 145, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "range",
+      "id": "noise_opacity",
+      "label": "Background texture opacity",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "%",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "progress_color",
+      "label": "Inactive step number",
+      "default": "rgba(255, 255, 255, 0.55)"
+    },
+    {
+      "type": "color",
+      "id": "progress_marker_color",
+      "label": "Inactive step marker",
+      "default": "rgba(255, 255, 255, 0.45)"
+    },
+    {
+      "type": "color",
+      "id": "rule_color",
+      "label": "Divider line",
+      "default": "rgba(255, 255, 255, 0.35)"
+    },
+    {
+      "type": "color",
+      "id": "nav_border_color",
+      "label": "Arrow border",
+      "default": "rgba(255, 255, 255, 0.55)"
+    },
+    {
+      "type": "color",
+      "id": "option_border_color",
+      "label": "Option card border",
+      "default": "rgba(255, 255, 255, 0.55)"
+    },
+    {
+      "type": "header",
+      "content": "Layout — desktop"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum card height",
+      "min": 400,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "default": 1030
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "options_gap_desktop",
+      "label": "Gap between options",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "option_min_height_desktop",
+      "label": "Option min height",
+      "min": 160,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "option_border_radius",
+      "label": "Option corner radius",
+      "min": 8,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "inner_padding_top_desktop",
+      "label": "Inner padding top",
+      "min": 16,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "inner_padding_bottom_desktop",
+      "label": "Inner padding bottom",
+      "min": 16,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "inner_padding_inline_desktop",
+      "label": "Inner padding left/right",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 108
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Section padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Section padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Layout — mobile"
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum card height",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 560
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius_mobile",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "options_gap_mobile",
+      "label": "Gap between options",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "option_min_height_mobile",
+      "label": "Option min height",
+      "min": 120,
+      "max": 360,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "option_border_radius_mobile",
+      "label": "Option corner radius",
+      "min": 8,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 33
+    },
+    {
+      "type": "range",
+      "id": "inner_padding_top_mobile",
+      "label": "Inner padding top",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "inner_padding_bottom_mobile",
+      "label": "Inner padding bottom",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "inner_padding_inline_mobile",
+      "label": "Inner padding left/right",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Section padding top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Section padding bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quiz_step_1",
+      "name": "Step 1 — Style",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Select Your Style"
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_desktop",
+          "label": "Content max width (desktop)",
+          "min": 0,
+          "max": 1400,
+          "step": 20,
+          "unit": "px",
+          "default": 860,
+          "info": "0 = full width."
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_mobile",
+          "label": "Content max width (mobile)",
+          "min": 0,
+          "max": 800,
+          "step": 20,
+          "unit": "px",
+          "default": 0,
+          "info": "0 = full width."
+        },
+        {
+          "type": "checkbox",
+          "id": "option_images_mobile_only",
+          "label": "Show option images on mobile only",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Mens option"
+        },
+        {
+          "type": "product",
+          "id": "option_1_product",
+          "label": "Product",
+          "info": "Fallback shop link on the final step when Mens is selected and no collection is set."
+        },
+        {
+          "type": "collection",
+          "id": "option_1_collection",
+          "label": "Collection",
+          "info": "Final step shop link when Mens is selected. Collection is used first; product is used only if collection is blank."
+        },
+        {
+          "type": "richtext",
+          "id": "option_1_label",
+          "label": "Label",
+          "default": "<p>MENS</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_1_value",
+          "label": "Value",
+          "default": "mens"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_1_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_1_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_1_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "option_1_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Womens option"
+        },
+        {
+          "type": "product",
+          "id": "option_2_product",
+          "label": "Product",
+          "info": "Fallback shop link on the final step when Womens is selected and no collection is set."
+        },
+        {
+          "type": "collection",
+          "id": "option_2_collection",
+          "label": "Collection",
+          "info": "Final step shop link when Womens is selected. Collection is used first; product is used only if collection is blank."
+        },
+        {
+          "type": "richtext",
+          "id": "option_2_label",
+          "label": "Label",
+          "default": "<p>WOMENS</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_2_value",
+          "label": "Value",
+          "default": "womens"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_2_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_2_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_2_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "option_2_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "quiz_step_2",
+      "name": "Step 2 — Shoe size",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Select Your Shoe Size"
+        },
+        {
+          "type": "header",
+          "content": "Women's Size"
+        },
+        {
+          "type": "richtext",
+          "id": "option_1_label",
+          "label": "Size 1",
+          "default": "<p>US 6</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_1_value",
+          "label": "Size 1 value",
+          "default": "us-6"
+        },
+        {
+          "type": "richtext",
+          "id": "option_2_label",
+          "label": "Size 2",
+          "default": "<p>US 7</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_2_value",
+          "label": "Size 2 value",
+          "default": "us-7"
+        },
+        {
+          "type": "richtext",
+          "id": "option_3_label",
+          "label": "Size 3",
+          "default": "<p>US 8</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_3_value",
+          "label": "Size 3 value",
+          "default": "us-8"
+        },
+        {
+          "type": "richtext",
+          "id": "option_4_label",
+          "label": "Size 4",
+          "default": "<p>US 9</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_4_value",
+          "label": "Size 4 value",
+          "default": "us-9"
+        },
+        {
+          "type": "richtext",
+          "id": "option_5_label",
+          "label": "Size 5",
+          "default": "<p>US 10</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_5_value",
+          "label": "Size 5 value",
+          "default": "us-10"
+        },
+        {
+          "type": "header",
+          "content": "Men's Size"
+        },
+        {
+          "type": "richtext",
+          "id": "mens_option_1_label",
+          "label": "Size 1",
+          "default": "<p>US 8</p>"
+        },
+        {
+          "type": "text",
+          "id": "mens_option_1_value",
+          "label": "Size 1 value",
+          "default": "8"
+        },
+        {
+          "type": "richtext",
+          "id": "mens_option_2_label",
+          "label": "Size 2",
+          "default": "<p>US 9</p>"
+        },
+        {
+          "type": "text",
+          "id": "mens_option_2_value",
+          "label": "Size 2 value",
+          "default": "9"
+        },
+        {
+          "type": "richtext",
+          "id": "mens_option_3_label",
+          "label": "Size 3",
+          "default": "<p>US 10</p>"
+        },
+        {
+          "type": "text",
+          "id": "mens_option_3_value",
+          "label": "Size 3 value",
+          "default": "10"
+        },
+        {
+          "type": "richtext",
+          "id": "mens_option_4_label",
+          "label": "Size 4",
+          "default": "<p>US 11</p>"
+        },
+        {
+          "type": "text",
+          "id": "mens_option_4_value",
+          "label": "Size 4 value",
+          "default": "11"
+        },
+        {
+          "type": "richtext",
+          "id": "mens_option_5_label",
+          "label": "Size 5",
+          "default": "<p>US 12</p>"
+        },
+        {
+          "type": "text",
+          "id": "mens_option_5_value",
+          "label": "Size 5 value",
+          "default": "12"
+        },
+        {
+          "type": "richtext",
+          "id": "mens_option_6_label",
+          "label": "Size 6",
+          "default": "<p>US 13</p>"
+        },
+        {
+          "type": "text",
+          "id": "mens_option_6_value",
+          "label": "Size 6 value",
+          "default": "13"
+        }
+      ]
+    },
+    {
+      "type": "quiz_step_3",
+      "name": "Step 3 — Pain points",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Heading",
+          "default": "What Annoys You Most About Your Current Socks?"
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_desktop",
+          "label": "Content max width (desktop)",
+          "min": 0,
+          "max": 1400,
+          "step": 20,
+          "unit": "px",
+          "default": 720,
+          "info": "0 = full width."
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_mobile",
+          "label": "Content max width (mobile)",
+          "min": 0,
+          "max": 800,
+          "step": 20,
+          "unit": "px",
+          "default": 0,
+          "info": "0 = full width."
+        },
+        {
+          "type": "richtext",
+          "id": "option_1_label",
+          "label": "Option 1",
+          "default": "<p>THEY SLIP AND FALL DOWN</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_1_value",
+          "label": "Option 1 value",
+          "default": "slip"
+        },
+        {
+          "type": "richtext",
+          "id": "option_2_label",
+          "label": "Option 2",
+          "default": "<p>THEY FEEL THIN AND UNCOMFORTABLE</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_2_value",
+          "label": "Option 2 value",
+          "default": "thin"
+        },
+        {
+          "type": "richtext",
+          "id": "option_3_label",
+          "label": "Option 3",
+          "default": "<p>THEY HAVE STRETCHED AND DON'T FIT WELL</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_3_value",
+          "label": "Option 3 value",
+          "default": "stretched"
+        },
+        {
+          "type": "richtext",
+          "id": "option_4_label",
+          "label": "Option 4",
+          "default": "<p>THEY MAKE MY FEET SWEAT</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_4_value",
+          "label": "Option 4 value",
+          "default": "sweat"
+        }
+      ]
+    },
+    {
+      "type": "quiz_step_4",
+      "name": "Step 4 — Typical week",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "What Does A Typical Week Involve For You?"
+        },
+        {
+          "type": "text",
+          "id": "instruction",
+          "label": "Instruction",
+          "default": "(SELECT TOP 3)"
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_desktop",
+          "label": "Content max width (desktop)",
+          "min": 0,
+          "max": 1400,
+          "step": 20,
+          "unit": "px",
+          "default": 980,
+          "info": "0 = full width."
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_mobile",
+          "label": "Content max width (mobile)",
+          "min": 0,
+          "max": 800,
+          "step": 20,
+          "unit": "px",
+          "default": 0,
+          "info": "0 = full width."
+        },
+        {
+          "type": "richtext",
+          "id": "option_1_label",
+          "label": "Option 1",
+          "default": "<p>WORKING IN THE OFFICE</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_1_value",
+          "label": "Option 1 value",
+          "default": "office"
+        },
+        {
+          "type": "text",
+          "id": "option_1_reco_heading",
+          "label": "Step 6 recommendation heading",
+          "default": "Working In The Office?"
+        },
+        {
+          "type": "select",
+          "id": "option_1_reco_type",
+          "label": "Recommendation type (Step 6)",
+          "options": [
+            { "value": "feather", "label": "Feather" },
+            { "value": "core", "label": "Core" },
+            { "value": "cloud", "label": "Cloud" }
+          ],
+          "default": "feather"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_1_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_1_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_1_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "option_1_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "option_2_label",
+          "label": "Option 2",
+          "default": "<p>ON MY FEET ALL DAY</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_2_value",
+          "label": "Option 2 value",
+          "default": "on-feet"
+        },
+        {
+          "type": "text",
+          "id": "option_2_reco_heading",
+          "label": "Step 6 recommendation heading",
+          "default": "On Your Feet All Day?"
+        },
+        {
+          "type": "select",
+          "id": "option_2_reco_type",
+          "label": "Recommendation type (Step 6)",
+          "options": [
+            { "value": "feather", "label": "Feather" },
+            { "value": "core", "label": "Core" },
+            { "value": "cloud", "label": "Cloud" }
+          ],
+          "default": "core"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_2_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_2_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_2_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "option_2_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "option_3_label",
+          "label": "Option 3",
+          "default": "<p>GOLF AND GYM ARE MY THING</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_3_value",
+          "label": "Option 3 value",
+          "default": "golf-gym"
+        },
+        {
+          "type": "text",
+          "id": "option_3_reco_heading",
+          "label": "Step 6 recommendation heading",
+          "default": "Golf & Gym?"
+        },
+        {
+          "type": "select",
+          "id": "option_3_reco_type",
+          "label": "Recommendation type (Step 6)",
+          "options": [
+            { "value": "feather", "label": "Feather" },
+            { "value": "core", "label": "Core" },
+            { "value": "cloud", "label": "Cloud" }
+          ],
+          "default": "feather"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_3_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_3_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_3_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "option_3_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "option_4_label",
+          "label": "Option 4",
+          "default": "<p>MUM MODE AND NEVER STOP</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_4_value",
+          "label": "Option 4 value",
+          "default": "mum-mode"
+        },
+        {
+          "type": "text",
+          "id": "option_4_reco_heading",
+          "label": "Step 6 recommendation heading",
+          "default": "Mum Mode?"
+        },
+        {
+          "type": "select",
+          "id": "option_4_reco_type",
+          "label": "Recommendation type (Step 6)",
+          "options": [
+            { "value": "feather", "label": "Feather" },
+            { "value": "core", "label": "Core" },
+            { "value": "cloud", "label": "Cloud" }
+          ],
+          "default": "core"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_4_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_4_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_4_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "option_4_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "option_5_label",
+          "label": "Option 5",
+          "default": "<p>TRAVEL AND LONG DAYS</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_5_value",
+          "label": "Option 5 value",
+          "default": "travel"
+        },
+        {
+          "type": "text",
+          "id": "option_5_reco_heading",
+          "label": "Step 6 recommendation heading",
+          "default": "Long Or Travel Days?"
+        },
+        {
+          "type": "select",
+          "id": "option_5_reco_type",
+          "label": "Recommendation type (Step 6)",
+          "options": [
+            { "value": "feather", "label": "Feather" },
+            { "value": "core", "label": "Core" },
+            { "value": "cloud", "label": "Cloud" }
+          ],
+          "default": "cloud"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_5_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_5_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_5_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "option_5_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "option_6_label",
+          "label": "Option 6",
+          "default": "<p>REST AND RECOVER IS A MUST</p>"
+        },
+        {
+          "type": "text",
+          "id": "option_6_value",
+          "label": "Option 6 value",
+          "default": "rest"
+        },
+        {
+          "type": "text",
+          "id": "option_6_reco_heading",
+          "label": "Step 6 recommendation heading",
+          "default": "Rest And Recover?"
+        },
+        {
+          "type": "select",
+          "id": "option_6_reco_type",
+          "label": "Recommendation type (Step 6)",
+          "options": [
+            { "value": "feather", "label": "Feather" },
+            { "value": "core", "label": "Core" },
+            { "value": "cloud", "label": "Cloud" }
+          ],
+          "default": "cloud"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_6_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "option_6_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_6_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "option_6_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "quiz_step_5",
+      "name": "Step 5 — Pearler result",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "You're A Pearler [size]",
+          "info": "Use [size] for the Step 2 “Size value” field (e.g. us-8)."
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_desktop",
+          "label": "Content max width (desktop)",
+          "min": 0,
+          "max": 1400,
+          "step": 20,
+          "unit": "px",
+          "default": 640,
+          "info": "0 = full width."
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_mobile",
+          "label": "Content max width (mobile)",
+          "min": 0,
+          "max": 800,
+          "step": 20,
+          "unit": "px",
+          "default": 0,
+          "info": "0 = full width."
+        },
+        {
+          "type": "text",
+          "id": "secondary_button_label",
+          "label": "Pill button label",
+          "default": "WHAT THIS MEANS FOR YOU"
+        },
+        {
+          "type": "image_picker",
+          "id": "result_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "result_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "result_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "result_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "quiz_step_6",
+      "name": "Step 6 — Perfect match",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Here's You Perfect Match"
+        },
+        {
+          "type": "text",
+          "id": "mobile_eyebrow",
+          "label": "Mobile eyebrow",
+          "default": "WE RECOMMEND"
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_desktop",
+          "label": "Content max width (desktop)",
+          "min": 0,
+          "max": 1400,
+          "step": 20,
+          "unit": "px",
+          "default": 1200,
+          "info": "0 = full width."
+        },
+        {
+          "type": "range",
+          "id": "content_max_width_mobile",
+          "label": "Content max width (mobile)",
+          "min": 0,
+          "max": 800,
+          "step": 20,
+          "unit": "px",
+          "default": 0,
+          "info": "0 = full width."
+        },
+        {
+          "type": "header",
+          "content": "Mens — recommendation 1"
+        },
+        {
+          "type": "text",
+          "id": "mens_reco_1_heading",
+          "label": "Default heading",
+          "default": "Working In The Office?"
+        },
+        {
+          "type": "text",
+          "id": "mens_reco_1_label",
+          "label": "Card label",
+          "default": "Feather"
+        },
+        {
+          "type": "product",
+          "id": "mens_reco_1_product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "mens_reco_1_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "mens_reco_1_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "mens_reco_1_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "mens_reco_1_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Mens — recommendation 2"
+        },
+        {
+          "type": "text",
+          "id": "mens_reco_2_heading",
+          "label": "Default heading",
+          "default": "Golf & Gym?"
+        },
+        {
+          "type": "text",
+          "id": "mens_reco_2_label",
+          "label": "Card label",
+          "default": "Core"
+        },
+        {
+          "type": "product",
+          "id": "mens_reco_2_product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "mens_reco_2_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "mens_reco_2_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "mens_reco_2_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "mens_reco_2_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Mens — recommendation 3"
+        },
+        {
+          "type": "text",
+          "id": "mens_reco_3_heading",
+          "label": "Default heading",
+          "default": "Long Or Travel Days?"
+        },
+        {
+          "type": "text",
+          "id": "mens_reco_3_label",
+          "label": "Card label",
+          "default": "Clout"
+        },
+        {
+          "type": "product",
+          "id": "mens_reco_3_product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "mens_reco_3_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "mens_reco_3_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "mens_reco_3_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "mens_reco_3_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Womens — recommendation 1"
+        },
+        {
+          "type": "text",
+          "id": "womens_reco_1_heading",
+          "label": "Default heading",
+          "default": "Working In The Office?"
+        },
+        {
+          "type": "text",
+          "id": "womens_reco_1_label",
+          "label": "Card label",
+          "default": "Feather"
+        },
+        {
+          "type": "product",
+          "id": "womens_reco_1_product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "womens_reco_1_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "womens_reco_1_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "womens_reco_1_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "womens_reco_1_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Womens — recommendation 2"
+        },
+        {
+          "type": "text",
+          "id": "womens_reco_2_heading",
+          "label": "Default heading",
+          "default": "Golf & Gym?"
+        },
+        {
+          "type": "text",
+          "id": "womens_reco_2_label",
+          "label": "Card label",
+          "default": "Core"
+        },
+        {
+          "type": "product",
+          "id": "womens_reco_2_product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "womens_reco_2_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "womens_reco_2_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "womens_reco_2_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "womens_reco_2_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Womens — recommendation 3"
+        },
+        {
+          "type": "text",
+          "id": "womens_reco_3_heading",
+          "label": "Default heading",
+          "default": "Long Or Travel Days?"
+        },
+        {
+          "type": "text",
+          "id": "womens_reco_3_label",
+          "label": "Card label",
+          "default": "Clout"
+        },
+        {
+          "type": "product",
+          "id": "womens_reco_3_product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "womens_reco_3_image",
+          "label": "Image (desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "womens_reco_3_image_mobile",
+          "label": "Image (mobile)"
+        },
+        {
+          "type": "checkbox",
+          "id": "womens_reco_3_show_image_desktop",
+          "label": "Show image on desktop",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "womens_reco_3_show_image_mobile",
+          "label": "Show image on mobile",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Shop button label",
+          "default": "SHOP THE COLLECTION"
+        },
+        {
+          "type": "select",
+          "id": "button_style_desktop",
+          "label": "Button style desktop",
+          "default": "style_3",
+          "options": [
+            { "value": "style_1", "label": "Style 1" },
+            { "value": "style_2", "label": "Style 2" },
+            { "value": "style_3", "label": "Style 3" },
+            { "value": "style_4", "label": "Style 4" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style_mobile",
+          "label": "Button style mobile",
+          "default": "style_3",
+          "options": [
+            { "value": "style_1", "label": "Style 1" },
+            { "value": "style_2", "label": "Style 2" },
+            { "value": "style_3", "label": "Style 3" },
+            { "value": "style_4", "label": "Style 4" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Quiz",
+      "settings": {
+        "step_count": 5
+      },
+      "blocks": [
+        { "type": "quiz_step_1" },
+        { "type": "quiz_step_2" },
+        { "type": "quiz_step_3" },
+        { "type": "quiz_step_4" },
+        { "type": "quiz_step_5" },
+        { "type": "quiz_step_6" }
+      ]
+    }
+  ]
+
+}
+{% endschema %}

@@ -1,0 +1,21 @@
+{%- comment -%}
+  Parameters:
+  - heading {String} — Eyebrow / section title text
+  - animate_delay {String} — Optional, default "0.1s"
+  - class {String} — Optional extra classes on the wrapper
+{%- endcomment -%}
+
+{%- liquid
+  assign header_delay = animate_delay | default: '0.1s'
+  assign header_animate_attrs = 'data-cc-animate data-cc-animate-delay="' | append: header_delay | append: '"'
+-%}
+
+<div
+  class="nw-section-header fade-in-up {% if class != blank %} {{ class }}{% endif %}"
+  {%- render 'animation-attrs', attrs: header_animate_attrs -%}
+>
+  {%- if heading != blank -%}
+    <p class="nw-section-header__eyebrow " >{{ heading | escape }}</p>
+  {%- endif -%}
+  <hr class="nw-section-header__rule" aria-hidden="true">
+</div>

@@ -1,0 +1,30 @@
+{% comment %}
+  Replaces [Option name] tokens in custom_title with the current variant option values.
+
+  Parameters:
+  - custom_title {String}
+  - product {Object}
+  - current_variant {Object} — may be blank
+{% endcomment %}
+{%- liquid
+  assign nw_title_out = custom_title
+  assign nw_title_out = nw_title_out | replace: '&nbsp;', ' ' | replace: '&#160;', ' ' | replace: '&#xa0;', ' ' | replace: '&#xA0;', ' '
+  for option in product.options_with_values
+    assign nw_placeholder = '[' | append: option.name | append: ']'
+    assign nw_opt_value = ''
+    if current_variant
+      case option.position
+        when 1
+          assign nw_opt_value = current_variant.option1
+        when 2
+          assign nw_opt_value = current_variant.option2
+        when 3
+          assign nw_opt_value = current_variant.option3
+      endcase
+    endif
+    assign nw_opt_value = nw_opt_value | replace: '&nbsp;', ' ' | replace: '&#160;', ' ' | replace: '&#xa0;', ' ' | replace: '&#xA0;', ' '
+    assign nw_title_out = nw_title_out | replace: nw_placeholder, nw_opt_value
+  endfor
+  assign nw_title_out = nw_title_out | replace: '&nbsp;', ' ' | replace: '&#160;', ' ' | replace: '&#xa0;', ' ' | replace: '&#xA0;', ' '
+-%}
+{{- nw_title_out | escape -}}

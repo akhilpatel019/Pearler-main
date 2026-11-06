@@ -1,0 +1,55 @@
+{%- liquid
+  assign img_desktop = image_desktop
+  assign img_mobile = image_mobile
+  if img_mobile == blank
+    assign img_mobile = img_desktop
+  endif
+
+  assign show_desktop = true
+  assign show_mobile = true
+  if show_image_desktop == false
+    assign show_desktop = false
+  endif
+  if show_image_mobile == false
+    assign show_mobile = false
+  endif
+
+  assign has_desktop_src = false
+  assign has_mobile_src = false
+  if img_desktop != blank
+    assign has_desktop_src = true
+  endif
+  if img_mobile != blank
+    assign has_mobile_src = true
+  endif
+-%}
+
+{%- if has_desktop_src or has_mobile_src -%}
+  <span
+    class="nw-quiz__option-media"
+    aria-hidden="true"
+    data-nw-quiz-show-desktop="{% if show_desktop %}true{% else %}false{% endif %}"
+    data-nw-quiz-show-mobile="{% if show_mobile %}true{% else %}false{% endif %}"
+  >
+    {%- if has_desktop_src -%}
+      <img
+        src="{{ img_desktop | image_url: width: 900 }}"
+        alt=""
+        class="nw-quiz__option-image nw-quiz__option-image--desktop"
+        loading="lazy"
+        width="{{ img_desktop.width }}"
+        height="{{ img_desktop.height }}"
+      >
+    {%- endif -%}
+    {%- if has_mobile_src -%}
+      <img
+        src="{{ img_mobile | image_url: width: 700 }}"
+        alt=""
+        class="nw-quiz__option-image nw-quiz__option-image--mobile"
+        loading="lazy"
+        width="{{ img_mobile.width }}"
+        height="{{ img_mobile.height }}"
+      >
+    {%- endif -%}
+  </span>
+{%- endif -%}

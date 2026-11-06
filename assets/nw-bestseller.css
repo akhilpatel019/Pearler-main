@@ -1,0 +1,128 @@
+.nw-bestseller {
+    background-color: var(--nw-bestseller-bg, var(--secondary-color));
+    color: var(--nw-bestseller-text, var(--primary-color));
+    padding: var(--nw-bestseller-padding-top, 56px) 0px var(--nw-bestseller-padding-bottom, 56px);
+    overflow: hidden;
+}
+
+.nw-bestseller__slider {
+    overflow: hidden;
+    margin-inline: -40px;
+    padding-inline: 40px;
+}
+
+.nw-bestseller__slider .swiper-slide {
+    height: auto;
+}
+
+.nw-bestseller__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 119px;
+}
+
+.nw-bestseller__actions .nw-button-wrap {
+    flex: 1 1 auto;
+}
+
+.nw-bestseller__actions .nw-button {
+    width: 100%;
+    min-width: 0;
+}
+
+.nw-bestseller__feature {
+    margin-top: 90px;
+    border-radius: 50px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--primary-color) 6%, var(--secondary-color));
+}
+
+.nw-bestseller__feature-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.nw-bestseller__feature-image--mobile {
+    display: none;
+}
+.nw-bestseller-inner{
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (max-width: 1199px) {
+
+    .nw-bestseller__slider {
+        margin-inline: -32px;
+        padding-inline: 32px;
+    }
+    .nw-bestseller__actions{
+        margin-top: 99px;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+
+    .nw-bestseller__slider {
+        margin-inline: -28px;
+        padding-inline: 28px;
+    }
+    .nw-bestseller__actions{
+        margin-top: 61px;
+    }
+    .nw-product-card__footer{
+        margin-top: 16px;
+    }
+    .nw-bestseller__feature{
+        margin-top: 70px;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .nw-bestseller {
+        padding: var(--nw-bestseller-padding-top, 40px) 0px var(--nw-bestseller-padding-bottom, 40px);
+    }
+    .nw-bestseller .container{
+        padding-inline: 0px;
+    }
+
+    .nw-bestseller__slider {
+        margin-inline: -20px;
+        order:3;
+        padding-inline: 40px;
+    }
+
+    .nw-bestseller__actions {
+        margin-top: 61px;
+        order: 4;
+        padding: 0 20px;
+        gap: 11px;
+    }
+
+    .nw-bestseller__actions .nw-button-wrap {
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    .nw-bestseller__feature {
+        margin-top: 0px;
+        margin-bottom: 64px;
+        border-radius: 0px;
+        order: 1;
+    }
+
+    .nw-bestseller__feature-image--desktop {
+        display: none;
+    }
+
+    .nw-bestseller__feature-image--mobile {
+        display: block;
+    }
+    .nw-section-header{
+        order:2;
+        padding: 0 20px;
+    }
+}

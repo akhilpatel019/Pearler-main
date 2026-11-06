@@ -1,0 +1,400 @@
+{%- liquid
+  if step_number == blank
+    assign step_number = step.settings.step_number | default: step_index
+  endif
+  if progress_indicator == blank
+    assign progress_indicator = step.settings.progress_indicator | default: step_number
+  endif
+  if step_type == blank
+    assign step_type = step.settings.step_type | default: 'choices'
+  endif
+  if choice_layout == blank
+    assign choice_layout = step.settings.choice_layout | default: 'cards'
+  endif
+  if option_count == blank
+    assign option_count = step.settings.option_count | default: 2
+  endif
+  if option_count < 2
+    assign option_count = 2
+  endif
+  if option_count > 6
+    assign option_count = 6
+  endif
+
+  assign step_class = 'nw-quiz__step nw-step-' | append: step_number
+  if step_active
+    assign step_class = step_class | append: ' is-active'
+  endif
+
+  case step_type
+    when 'pearler_result'
+      assign step_class = step_class | append: ' nw-quiz__step--pearler'
+    when 'recommendations'
+      assign step_class = step_class | append: ' nw-quiz__step--recommendations'
+    when 'result'
+      assign step_class = step_class | append: ' nw-quiz__step--result'
+  endcase
+
+  assign options_modifier = ''
+  if step.settings.option_images_mobile_only
+    assign options_modifier = options_modifier | append: ' nw-quiz__options--mobile-images'
+  endif
+
+  if choice_layout == 'pills'
+    assign options_modifier = options_modifier | append: ' nw-quiz__options--pills'
+  elsif choice_layout == 'grid'
+    assign options_modifier = options_modifier | append: ' nw-quiz__options--grid'
+  else
+    assign options_modifier = options_modifier | append: ' nw-quiz__options--cards'
+  endif
+
+  if step_type == 'choices_multi'
+    assign options_modifier = options_modifier | append: ' nw-quiz__options--multi'
+  endif
+
+  if grid_columns == blank
+    assign grid_columns = step.settings.grid_columns | default: 3 | plus: 0
+  else
+    assign grid_columns = grid_columns | plus: 0
+  endif
+  if grid_columns < 2
+    assign grid_columns = 2
+  endif
+  if grid_columns > 3
+    assign grid_columns = 3
+  endif
+
+  if multi_max == blank
+    assign multi_max = step.settings.multi_max | default: 3
+  endif
+
+  if hide_option_images == blank
+    assign hide_option_images = false
+  endif
+
+  assign step_max_width_desktop = step.settings.content_max_width_desktop | default: 0 | plus: 0
+  assign step_max_width_mobile = step.settings.content_max_width_mobile | default: 0 | plus: 0
+  assign step_style = ''
+  if step_max_width_desktop > 0
+    assign step_style = step_style | append: '--nw-quiz-step-max-width: ' | append: step_max_width_desktop | append: 'px;'
+  endif
+  if step_max_width_mobile > 0
+    assign step_style = step_style | append: '--nw-quiz-step-max-width-mobile: ' | append: step_max_width_mobile | append: 'px;'
+  endif
+-%}
+
+<div
+  class="{{ step_class }}"
+  data-nw-quiz-step="{{ step_number }}"
+  data-progress-step="{{ progress_indicator }}"
+  data-step-type="{{ step_type }}"
+  {% if step_type == 'choices_multi' %}
+    data-multi-max="{{ multi_max }}"
+  {% endif %}
+  data-step-block-id="{{ step.id }}"
+  {% if step_style != blank %}
+    style="{{ step_style }}"
+  {% endif %}
+  {{ step.shopify_attributes }}
+>
+  {%- if step_type == 'pearler_result' -%}
+    <div class="nw-quiz__pearler fade-in-up" {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.25s"' -%}>
+      {%- if step.settings.secondary_button_label != blank -%}
+        <button
+          type="button"
+          class="nw-quiz__pill-button"
+          data-nw-quiz-pearler-continue
+        >
+          {{- step.settings.secondary_button_label | escape -}}
+        </button>
+      {%- endif -%}
+
+      {%- if step.settings.result_image != blank or step.settings.result_image_mobile != blank -%}
+        <div class="nw-quiz__pearler-media">
+          {%- render 'nw-quiz-option-images',
+            image_desktop: step.settings.result_image,
+            image_mobile: step.settings.result_image_mobile,
+            show_image_desktop: step.settings.result_show_image_desktop,
+            show_image_mobile: step.settings.result_show_image_mobile
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  {%- elsif step_type == 'recommendations' -%}
+    <div class="nw-quiz__recommendations fade-in-up" data-nw-quiz-reco-root {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.25s"' -%}>
+      <div class="nw-quiz__reco-mobile">
+        <h3 class="nw-quiz__reco-mobile-heading" data-nw-quiz-reco-live-heading></h3>
+        <p class="nw-quiz__reco-mobile-eyebrow">{{ step.settings.mobile_eyebrow | default: 'WE RECOMMEND' | escape }}</p>
+        <div class="swiper nw-quiz__reco-swiper" data-nw-quiz-reco-swiper>
+          <div class="swiper-wrapper" data-nw-quiz-reco-swiper-wrapper></div>
+          <div class="swiper-pagination nw-quiz__reco-pagination"></div>
+        </div>
+      </div>
+
+      <div class="nw-quiz__reco-desktop">
+        {%- render 'nw-quiz-reco-set', gender: 'mens', step: step -%}
+        {%- render 'nw-quiz-reco-set', gender: 'womens', step: step -%}
+      </div>
+
+      {%- if step.settings.button_label != blank -%}
+        <div class="nw-quiz__result-actions">
+          <a
+            href="#"
+            class="nw-button nw-button--d-{{ step.settings.button_style_desktop }} nw-button--m-{{ step.settings.button_style_mobile }} nw-quiz__result-button"
+            data-nw-quiz-result-link
+          >
+            {{- step.settings.button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+
+  {%- elsif step_type == 'result' -%}
+    <div class="nw-quiz__result fade-in-up" {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.25s"' -%}>
+      {%- if step.settings.subheading != blank -%}
+        <p class="nw-quiz__result-subheading">{{ step.settings.subheading | escape }}</p>
+      {%- endif -%}
+
+      {%- if step.settings.result_image != blank -%}
+        <div class="nw-quiz__result-media">
+          <img
+            src="{{ step.settings.result_image | image_url: width: 1200 }}"
+            alt=""
+            loading="lazy"
+            width="{{ step.settings.result_image.width }}"
+            height="{{ step.settings.result_image.height }}"
+          >
+        </div>
+      {%- endif -%}
+
+      {%- if step.settings.body != blank -%}
+        <div class="nw-quiz__result-body rte">{{ step.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if step.settings.button_label != blank -%}
+        <div class="nw-quiz__result-actions">
+          <a
+            href="#"
+            class="nw-button nw-button--d-{{ step.settings.button_style_desktop }} nw-button--m-{{ step.settings.button_style_mobile }} nw-quiz__result-button"
+            data-nw-quiz-result-link
+          >
+            {{- step.settings.button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+
+  {%- else -%}
+    {%- if step_number == 2 -%}
+      <div
+        class="nw-quiz__step2-size-groups fade-in-up"
+        data-nw-quiz-step2-sizes
+        {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.25s"' -%}
+      >
+      {%- assign size_group_list = 'womens,mens' | split: ',' -%}
+    {%- else -%}
+      <ul
+        class="nw-quiz__options{{ options_modifier }} fade-in-up"
+        role="list"
+        style="--nw-quiz-options-columns: {{ option_count }}; --nw-quiz-grid-columns: {{ grid_columns }};"
+        {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.25s"' -%}
+      >
+      {%- assign size_group_list = 'default' | split: ',' -%}
+    {%- endif -%}
+      {%- assign options_rendered = 0 -%}
+      {%- for size_group in size_group_list -%}
+        {%- liquid
+          assign settings_prefix = ''
+          assign pass_option_count = option_count
+          assign shoe_size_gender = ''
+          assign group_options_columns = option_count
+          if size_group == 'womens'
+            assign pass_option_count = 5
+            assign shoe_size_gender = 'womens'
+            assign group_options_columns = 5
+          elsif size_group == 'mens'
+            assign settings_prefix = 'mens_'
+            assign pass_option_count = 6
+            assign shoe_size_gender = 'mens'
+            assign group_options_columns = 6
+          endif
+        -%}
+        {%- if step_number == 2 -%}
+          <div
+            class="nw-quiz__size-group"
+            data-shoe-size-gender="{{ shoe_size_gender }}"
+            {% if shoe_size_gender == 'mens' %}hidden{% endif %}
+          >
+            <ul
+              class="nw-quiz__options{{ options_modifier }}"
+              role="list"
+              style="--nw-quiz-options-columns: {{ group_options_columns }}; --nw-quiz-grid-columns: {{ grid_columns }};"
+            >
+        {%- endif -%}
+      {%- for option_index in (1..6) -%}
+        {%- if option_index > pass_option_count -%}
+          {%- break -%}
+        {%- endif -%}
+        {%- liquid
+          assign product_setting_key = settings_prefix | append: 'option_' | append: option_index | append: '_product'
+          assign collection_setting_key = settings_prefix | append: 'option_' | append: option_index | append: '_collection'
+          assign label_setting_key = settings_prefix | append: 'option_' | append: option_index | append: '_label'
+          assign image_setting_key = settings_prefix | append: 'option_' | append: option_index | append: '_image'
+          assign image_mobile_setting_key = settings_prefix | append: 'option_' | append: option_index | append: '_image_mobile'
+          assign show_desktop_key = settings_prefix | append: 'option_' | append: option_index | append: '_show_image_desktop'
+          assign show_mobile_key = settings_prefix | append: 'option_' | append: option_index | append: '_show_image_mobile'
+          assign reco_heading_key = settings_prefix | append: 'option_' | append: option_index | append: '_reco_heading'
+          assign reco_type_key = settings_prefix | append: 'option_' | append: option_index | append: '_reco_type'
+          assign value_setting_key = settings_prefix | append: 'option_' | append: option_index | append: '_value'
+
+          assign option_product = step.settings[product_setting_key]
+          assign option_collection = step.settings[collection_setting_key]
+          assign option_label = step.settings[label_setting_key]
+          assign option_image = step.settings[image_setting_key]
+          assign option_image_mobile = step.settings[image_mobile_setting_key]
+          assign option_show_desktop = step.settings[show_desktop_key]
+          assign option_show_mobile = step.settings[show_mobile_key]
+          assign option_reco_heading = step.settings[reco_heading_key]
+          assign option_reco_type = step.settings[reco_type_key]
+          assign option_value = step.settings[value_setting_key]
+
+          assign option_label_plain = option_label | strip_html | strip
+
+          if option_label_plain == blank and option_product != blank
+            assign option_label = option_product.title
+            assign option_label_plain = option_label
+          elsif option_label_plain == blank and option_collection != blank
+            assign option_label = option_collection.title
+            assign option_label_plain = option_label
+          endif
+
+          if option_product == blank and option_collection == blank and option_label_plain == blank
+            continue
+          endif
+
+          if option_image == blank and option_product != blank and option_product.featured_image != blank
+            assign option_image = option_product.featured_image
+          elsif option_image == blank and option_collection != blank
+            if option_collection.featured_image != blank
+              assign option_image = option_collection.featured_image
+            elsif option_collection.image != blank
+              assign option_image = option_collection.image
+            endif
+          endif
+
+          assign option_shop_url = ''
+          if option_collection != blank
+            assign option_shop_url = option_collection.url
+          elsif option_product != blank
+            assign option_shop_url = option_product.url
+          endif
+
+          assign option_has_image = false
+          unless hide_option_images
+            assign option_show_desktop_on = true
+            assign option_show_mobile_on = true
+            if option_show_desktop == false
+              assign option_show_desktop_on = false
+            endif
+            if option_show_mobile == false
+              assign option_show_mobile_on = false
+            endif
+            if option_image != blank or option_image_mobile != blank
+              if option_show_desktop_on or option_show_mobile_on
+                assign option_has_image = true
+              endif
+            endif
+          endunless
+
+          if option_value == blank
+            if option_product != blank
+              assign option_value = option_product.handle
+            else
+              assign option_value = option_label_plain | handleize
+            endif
+          endif
+
+          assign option_aria_label = option_label_plain
+          if option_product != blank
+            assign option_aria_label = option_label_plain | append: ', ' | append: option_product.title
+          elsif option_collection != blank
+            assign option_aria_label = option_label_plain | append: ', ' | append: option_collection.title
+          endif
+        -%}
+        {%- assign options_rendered = options_rendered | plus: 1 -%}
+        <li>
+          <button
+            type="button"
+            class="nw-quiz__option{% if option_has_image %} has-image{% endif %}"
+            data-nw-quiz-option
+            data-option-index="{{ option_index }}"
+            data-option-value="{{ option_value | escape }}"
+            {% if shoe_size_gender != blank %}
+              data-shoe-size-gender="{{ shoe_size_gender }}"
+            {% endif %}
+            {% if option_reco_heading != blank %}
+              data-reco-heading="{{ option_reco_heading | escape }}"
+            {% endif %}
+            {% if option_reco_type != blank %}
+              data-reco-type="{{ option_reco_type | escape }}"
+            {% endif %}
+            {% if step_number == 2 and option_value != blank %}
+              data-shoe-size-value="{{ option_value | escape }}"
+            {% endif %}
+            {% if step_type == 'choices_multi' %}
+              data-nw-quiz-option-multi
+            {% endif %}
+            {% if option_product != blank %}
+              data-product-id="{{ option_product.id }}"
+            {% endif %}
+            {% if option_shop_url != blank %}
+              data-product-url="{{ option_shop_url }}"
+            {% endif %}
+            aria-label="{{ option_aria_label | escape }}"
+          >
+            {%- if option_has_image -%}
+              {%- render 'nw-quiz-option-images',
+                image_desktop: option_image,
+                image_mobile: option_image_mobile,
+                show_image_desktop: option_show_desktop,
+                show_image_mobile: option_show_mobile
+              -%}
+            {%- elsif request.design_mode and choice_layout == 'cards' and hide_option_images == false -%}
+              <span class="nw-quiz__option-media nw-quiz__option-media--placeholder" aria-hidden="true">
+                {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+              </span>
+            {%- endif -%}
+            {%- if option_label_plain != blank -%}
+              <div class="nw-quiz__option-label rte">{{ option_label }}</div>
+            {%- endif -%}
+          </button>
+        </li>
+      {%- endfor -%}
+        {%- if step_number == 2 -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if options_rendered == 0 and request.design_mode -%}
+        {%- for placeholder_index in (1..option_count) -%}
+          <li>
+            <button type="button" class="nw-quiz__option" disabled>
+              {%- unless choice_layout == 'pills' -%}
+                <span class="nw-quiz__option-media nw-quiz__option-media--placeholder" aria-hidden="true">
+                  {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+                </span>
+              {%- endunless -%}
+              <span class="nw-quiz__option-label">Option</span>
+            </button>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    {%- if step_number == 2 -%}
+      </div>
+    {%- else -%}
+    </ul>
+    {%- endif -%}
+  {%- endif -%}
+</div>

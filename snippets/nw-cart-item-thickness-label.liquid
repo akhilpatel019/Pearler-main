@@ -1,0 +1,29 @@
+{%- comment -%}
+  Parameters:
+  - item {LineItem} - Cart line item.
+
+  Renders the NW thickness line (Feather, Core, Cloud, etc.) when known.
+{%- endcomment -%}
+
+{%- liquid
+  assign nw_thickness_label = blank
+
+  for property in item.properties
+    if property.first == 'Thickness' and property.last != blank
+      assign nw_thickness_label = property.last
+      break
+    endif
+  endfor
+
+  if nw_thickness_label == blank
+    capture nw_thickness_label
+      render 'nw-product-thickness-label', product: item.product
+    endcapture
+    assign nw_thickness_label = nw_thickness_label | strip
+  endif
+-%}
+{%- if nw_thickness_label != blank -%}
+  <div class="cart-item__variant">
+    <span class="cart-item__variant-value">{{ nw_thickness_label | escape_once }}</span>
+  </div>
+{%- endif -%}

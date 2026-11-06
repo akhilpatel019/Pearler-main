@@ -1,0 +1,457 @@
+{{ 'nw-bundle.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  assign bundle_product = section.settings.product
+  assign bundle_image_desktop = section.settings.bundle_image
+  assign bundle_image_mobile = section.settings.bundle_image_mobile
+  assign bundle_image_alt = section.settings.heading | strip_html | default: section.settings.eyebrow | strip_html | escape
+
+  if bundle_image_desktop == blank and bundle_product != blank
+    if bundle_product.featured_media != blank
+      assign bundle_image_desktop = bundle_product.featured_media.preview_image
+    elsif bundle_product.featured_image != blank
+      assign bundle_image_desktop = bundle_product.featured_image
+    endif
+  endif
+
+  if bundle_image_mobile == blank
+    assign bundle_image_mobile = bundle_image_desktop
+  endif
+
+  if bundle_image_desktop != blank
+    assign bundle_image_alt = bundle_image_desktop.alt | default: bundle_image_alt
+  endif
+
+  if bundle_product != blank
+    assign bundle_image_alt = bundle_image_alt | default: bundle_product.title | escape
+  endif
+
+  assign button_url = section.settings.button_link
+  if button_url == blank and bundle_product != blank
+    assign button_url = bundle_product.url
+  endif
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-bundle {
+    --nw-bundle-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-bundle-bg-fallback: {{ section.settings.background_color }};
+    --nw-bundle-background: {{ section_background }};
+    --nw-bundle-focal-point: {{ focal_point }};
+    --nw-bundle-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-bundle-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-bundle-text-color: {{ section.settings.text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-bundle {
+      --nw-bundle-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-bundle-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-bundle-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-bundle">
+  {%- if show_media -%}
+    <div
+      class="nw-bundle__media-bg fade-in-up"
+      aria-hidden="true"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.1s"' -%}
+    >
+      {%- liquid
+        assign section_image = section.settings.image
+        assign section_image_mobile = section.settings.mobile_image
+      -%}
+      {%- if section_image == blank -%}
+        <div class="nw-bundle__media-bg-image nw-bundle__media-bg-image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ section_image | image_url: width: 2560 }}"
+          alt=""
+          class="nw-bundle__media-bg-image nw-bundle__media-bg-image--desktop"
+          loading="{{ loading }}"
+          width="{{ section_image.width }}"
+          height="{{ section_image.height }}"
+        >
+        {%- if section_image_mobile != blank -%}
+          <img
+            src="{{ section_image_mobile | image_url: width: 1500 }}"
+            alt=""
+            class="nw-bundle__media-bg-image nw-bundle__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image_mobile.width }}"
+            height="{{ section_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ section_image | image_url: width: 1500 }}"
+            alt=""
+            class="nw-bundle__media-bg-image nw-bundle__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image.width }}"
+            height="{{ section_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="container">
+    <div class="nw-bundle__content">
+      <div class="nw-bundle__inner">
+      <div class="nw-bundle__copy">
+        {%- if section.settings.eyebrow != blank -%}
+          <div
+            class="nw-bundle__eyebrow fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.2s"' -%}
+          >
+            {{ section.settings.eyebrow }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <div
+            class="nw-bundle__heading rte fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.28s"' -%}
+          >
+            {{- section.settings.heading -}}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_button -%}
+        <div
+          class="nw-bundle__cta fade-in-up"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.45s"' -%}
+        >
+          {%- render 'nw-button',
+            label: section.settings.button_label,
+            url: button_url,
+            style_desktop: section.settings.button_style_desktop,
+            style_mobile: section.settings.button_style_mobile
+          -%}
+        </div>
+      {%- endif -%}
+
+      <figure class="nw-bundle__figure{% if bundle_image_desktop == blank %} fade-in-up{% endif %}"
+        {%- if bundle_image_desktop == blank -%}
+          {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.35s"' -%}
+        {%- endif -%}
+      >
+        {%- if bundle_image_desktop == blank -%}
+          <div class="nw-bundle__figure-placeholder">
+            {{- 'product-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+          </div>
+        {%- else -%}
+          <img
+            class="nw-bundle__figure-image nw-bundle__figure-image--desktop fade-in-up"
+            src="{{ bundle_image_desktop | image_url: width: 1600 }}"
+            alt="{{ bundle_image_alt }}"
+            loading="{{ loading }}"
+            width="{{ bundle_image_desktop.width }}"
+            height="{{ bundle_image_desktop.height }}"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.35s"' -%}
+          >
+          {%- if bundle_image_mobile != blank -%}
+            <img
+              class="nw-bundle__figure-image nw-bundle__figure-image--mobile fade-in-up"
+              src="{{ bundle_image_mobile | image_url: width: 800 }}"
+              alt="{{ bundle_image_alt }}"
+              loading="{{ loading }}"
+              width="{{ bundle_image_mobile.width }}"
+              height="{{ bundle_image_mobile.height }}"
+              {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.35s"' -%}
+            >
+          {%- else -%}
+            <img
+              class="nw-bundle__figure-image nw-bundle__figure-image--mobile fade-in-up"
+              src="{{ bundle_image_desktop | image_url: width: 800 }}"
+              alt="{{ bundle_image_alt }}"
+              loading="{{ loading }}"
+              width="{{ bundle_image_desktop.width }}"
+              height="{{ bundle_image_desktop.height }}"
+              {%- render 'animation-attrs', attrs: 'data-cc-animate="fade-in-up" data-cc-animate-delay="0.35s"' -%}
+            >
+          {%- endif -%}
+        {%- endif -%}
+      </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Bundle",
+  "class": "shopify-section--nw-bundle",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "THE COMPLETE SET"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Can’t choose? Try three.</p><p>Feather, Core & Cloud available</p><p>in 1 Box Set—</p>"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#04022B"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Bundle product"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_image",
+      "label": "Custom bundle image",
+      "info": "Overrides the selected product featured image when set."
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_image_mobile",
+      "label": "Custom bundle image mobile",
+      "info": "Optional. Uses the custom desktop image when empty."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop The Bundle",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Leave blank to use the selected product URL.",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Button style desktop",
+      "default": "style_1",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Button style mobile",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "linear_gradient",
+          "label": "Linear gradient"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Bundle"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,528 @@
+{{ 'nw-card.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign section_has_card_video_modal = false
+  for block in section.blocks
+    if block.settings.media_type == 'video' and block.settings.main_video != blank
+      assign section_has_card_video_modal = true
+      break
+    endif
+  endfor
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+-%}
+
+{%- if section_has_card_video_modal -%}
+  <script src="{{ 'nw-card.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-card {
+    --nw-card-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-card-bg-fallback: {{ section.settings.background_color }};
+    --nw-card-background: {{ section_background }};
+    --nw-card-focal-point: {{ focal_point }};
+    --nw-card-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-card-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-card {
+      --nw-card-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-card-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-card-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-card">
+  {%- if show_media -%}
+    <div
+      class="nw-card__media-bg fade-in-up"
+      aria-hidden="true"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"' -%}
+    >
+      {%- liquid
+        assign section_image = section.settings.image
+        assign section_image_mobile = section.settings.mobile_image
+        assign section_img_alt = section_image.alt | default: '' | escape
+        assign section_img_mobile_alt = section_image_mobile.alt | default: section_img_alt | escape
+      -%}
+      {%- if section_image == blank -%}
+        <div class="nw-card__media-bg-image nw-card__media-bg-image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ section_image | image_url: width: 2560 }}"
+          alt=""
+          class="nw-card__media-bg-image nw-card__media-bg-image--desktop"
+          loading="lazy"
+          width="{{ section_image.width }}"
+          height="{{ section_image.height }}"
+        >
+        {%- if section_image_mobile != blank -%}
+          <img
+            src="{{ section_image_mobile | image_url: width: 1500 }}"
+            alt=""
+            class="nw-card__media-bg-image nw-card__media-bg-image--mobile"
+            loading="lazy"
+            width="{{ section_image_mobile.width }}"
+            height="{{ section_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ section_image | image_url: width: 1500 }}"
+            alt=""
+            class="nw-card__media-bg-image nw-card__media-bg-image--mobile"
+            loading="lazy"
+            width="{{ section_image.width }}"
+            height="{{ section_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="nw-card__content">
+    <div class="nw-card__inner">
+      {%- if section.blocks.size > 0 -%}
+        <div class="nw-card__grid">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign card_media_delay = forloop.index | times: 0.1 | append: 's'
+              assign card_media_anim = 'data-cc-animate data-cc-animate-delay="' | append: card_media_delay | append: '"'
+              assign tagline_delay_frac = forloop.index0 | times: 10 | plus: 20
+              assign tagline_anim_delay = '0.' | append: tagline_delay_frac | append: 's'
+              assign tagline_anim = 'data-cc-animate data-cc-animate-delay="' | append: tagline_anim_delay | append: '"'
+              assign heading_delay_frac = forloop.index0 | times: 10 | plus: 45
+              assign heading_anim_delay = '0.' | append: heading_delay_frac | append: 's'
+              assign heading_anim = 'data-cc-animate data-cc-animate-delay="' | append: heading_anim_delay | append: '"'
+              assign card_media_type = block.settings.media_type | default: 'image'
+              assign card_href = block.settings.link
+              assign card_image = block.settings.image
+              assign teaser_video = block.settings.teaser_video
+              assign main_video = block.settings.main_video
+              assign has_main_video = false
+              assign has_teaser_video = false
+              assign use_card_link = false
+
+              if card_media_type == 'video'
+                if main_video != blank
+                  assign has_main_video = true
+                endif
+                if teaser_video != blank
+                  assign has_teaser_video = true
+                endif
+                if card_href != blank and has_main_video == false and has_teaser_video == false
+                  assign use_card_link = true
+                endif
+              elsif card_href != blank
+                assign use_card_link = true
+              endif
+              assign card_img_alt = card_image.alt | default: block.settings.heading | default: block.settings.tagline | escape
+              assign overlay_color = block.settings.overlay_color 
+              assign card_video_modal_label = block.settings.heading | default: block.settings.tagline | default: 'Video' | strip_html | escape
+            -%}
+            <div
+              id="block-id-{{ block.id }}"
+              class="nw-card__cell"
+              style="--nw-card-tagline-color: {{ block.settings.tagline_color }}; --nw-card-heading-color: {{ block.settings.heading_color }};{% if block.settings.show_image_overlay %} --nw-card-image-overlay: {{ overlay_color }};{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              {%- capture nw_card_figure -%}
+                <div class="nw-card__figure">
+                  <div
+                    class="nw-card__figure-media fade-in-up"
+                    {%- render 'animation-attrs', attrs: card_media_anim -%}
+                  >
+                    {%- if card_media_type == 'video' and teaser_video != blank -%}
+                      {{
+                        teaser_video
+                        | video_tag:
+                          class: 'nw-card__figure-video',
+                          autoplay: true,
+                          muted: true,
+                          loop: true,
+                          playsinline: true,
+                          controls: false,
+                          preload: 'metadata',
+                          image_size: '1728x'
+                      }}
+                    {%- endif -%}
+                    {%- if card_image != blank -%}
+                      <img
+                        class="nw-card__figure-image{% if card_media_type == 'video' and teaser_video != blank %} nw-card__figure-image--under-video{% endif %}"
+                        src="{{ card_image | image_url: width: 1728 }}"
+                        alt="{{ card_img_alt }}"
+                        loading="lazy"
+                        width="{{ card_image.width }}"
+                        height="{{ card_image.height }}"
+                      >
+                    {%- elsif card_media_type == 'image' or teaser_video == blank -%}
+                      <div class="nw-card__figure-placeholder">
+                        {{- 'product-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+                      </div>
+                    {%- endif -%}
+                    {%- if block.settings.show_image_overlay -%}
+                      <div class="nw-card__image-overlay" aria-hidden="true"></div>
+                    {%- endif -%}
+                  </div>
+                  {%- if block.settings.tagline != blank or block.settings.heading != blank -%}
+                    <div class="nw-card__overlay">
+                      {%- if block.settings.tagline != blank -%}
+                        <p
+                          class="nw-card-tagline fade-in-up"
+                          {%- render 'animation-attrs', attrs: tagline_anim -%}
+                        >
+                          {{- block.settings.tagline | newline_to_br -}}
+                        </p>
+                      {%- endif -%}
+                      {%- if block.settings.heading != blank -%}
+                        <p
+                          class="nw-card-heading fade-in-up"
+                          {%- render 'animation-attrs', attrs: heading_anim -%}
+                        >
+                          {{- block.settings.heading | escape -}}
+                        </p>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endcapture -%}
+
+              {%- if has_main_video -%}
+                <modal-opener class="nw-card__modal-opener" data-modal="nw-card-video-{{ block.id }}">
+                  <button
+                    type="button"
+                    class="nw-card__item nw-card__item--video-trigger"
+                    aria-haspopup="dialog"
+                    aria-label="{{ card_video_modal_label }}"
+                  >
+                    {{- nw_card_figure -}}
+                  </button>
+                </modal-opener>
+              {%- elsif use_card_link -%}
+                <a class="nw-card__item" href="{{ card_href }}">
+                  {{- nw_card_figure -}}
+                </a>
+              {%- else -%}
+                <div class="nw-card__item">
+                  {{- nw_card_figure -}}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section_has_card_video_modal -%}
+    <div class="nw-card__video-modals">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.media_type == 'video' and block.settings.main_video != blank -%}
+          {%- liquid
+            assign card_video_modal_label = block.settings.heading | default: block.settings.tagline | default: 'Video' | strip_html | escape
+          -%}
+          <modal-dialog
+            class="modal nw-card__video-modal"
+            id="nw-card-video-{{ block.id }}"
+            role="dialog"
+            aria-label="{{ card_video_modal_label }}"
+            aria-modal="true"
+            tabindex="-1"
+          >
+            <div class="modal__window nw-card__video-modal-window bg-theme-bg text-theme-text has-motion">
+              <button type="button" class="modal__close-btn absolute js-close-modal">
+                {% render 'icon-close' %}
+                <span class="visually-hidden">{{ 'accessibility.close' | t }}</span>
+              </button>
+              <div class="modal__content nw-card__video-modal-content">
+                {{
+                  block.settings.main_video
+                  | video_tag:
+                    class: 'nw-card__modal-video',
+                    controls: true,
+                    autoplay: false,
+                    playsinline: true,
+                    muted: true,
+                    loop: false,
+                    preload: 'auto'
+                }}
+              </div>
+            </div>
+          </modal-dialog>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "NW Card",
+  "class": "shopify-section--nw-card",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "linear_gradient",
+          "label": "Linear gradient"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "tagline",
+          "label": "Tagline",
+          "default": "The Pearler Airmap\nSystem"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "OUR TECHNOLOGY"
+        },
+        {
+          "type": "color",
+          "id": "tagline_color",
+          "label": "Tagline color",
+          "alpha": true,
+          "default": "#04022B"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color",
+          "alpha": true,
+          "default": "#04022B"
+        },
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "Card media",
+          "default": "image",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.media_type == 'image' or block.settings.media_type == 'video' }}"
+        },
+        {
+          "type": "header",
+          "content": "Image or video overlay"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_image_overlay",
+          "label": "Show overlay on image or video",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay color",
+          "alpha": true,
+          "default": "#04022B",
+          "visible_if": "{{ block.settings.show_image_overlay }}"
+        },
+        {
+          "type": "header",
+          "content": "Video",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
+        },
+        {
+          "type": "video",
+          "id": "teaser_video",
+          "label": "Teaser video",
+          "info": "Loops muted on the card. Optional card image can be used as a poster.",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
+        },
+        {
+          "type": "video",
+          "id": "main_video",
+          "label": "Main video",
+          "info": "Opens in a popup when the card is clicked. When set, the card link is ignored.",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Card link",
+          "info": "Image cards: link when set. Video cards: link only when teaser and main video are both empty."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Card",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "tagline": "The Pearler Airmap\nSystem",
+            "heading": "OUR TECHNOLOGY"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "tagline": "Find Your Perfect Pair",
+            "heading": "TAKE THE QUIZ"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

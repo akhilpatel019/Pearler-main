@@ -1,0 +1,51 @@
+{%- comment -%}
+  Step heading + instruction (outside nw-quiz__body).
+  @param step - block
+  @param step_number
+  @param step_active
+{%- endcomment -%}
+
+{%- liquid
+  assign header_class = 'nw-quiz__step-header nw-step-' | append: step_number
+  if step_active
+    assign header_class = header_class | append: ' is-active'
+  endif
+
+  assign step_max_width_desktop = step.settings.content_max_width_desktop | default: 0 | plus: 0
+  assign step_max_width_mobile = step.settings.content_max_width_mobile | default: 0 | plus: 0
+  assign header_style = ''
+  if step_max_width_desktop > 0
+    assign header_style = header_style | append: '--nw-quiz-step-max-width: ' | append: step_max_width_desktop | append: 'px;'
+  endif
+  if step_max_width_mobile > 0
+    assign header_style = header_style | append: '--nw-quiz-step-max-width-mobile: ' | append: step_max_width_mobile | append: 'px;'
+  endif
+-%}
+
+<div
+  class="{{ header_class }}"
+  data-nw-quiz-step-header
+  data-nw-quiz-step="{{ step_number }}"
+  {% if header_style != blank %}
+    style="{{ header_style }}"
+  {% endif %}
+>
+  {%- if step.settings.heading != blank -%}
+    <h2
+      class="nw-quiz__step-heading fade-in-up"
+      {%- if step_number == 5 -%}
+        data-nw-quiz-pearler-heading
+        data-heading-template="{{ step.settings.heading | escape }}"
+      {%- endif -%}
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.15s"' -%}
+    >
+      {{- step.settings.heading | escape | newline_to_br -}}
+    </h2>
+  {%- endif -%}
+
+  {%- if step.settings.instruction != blank -%}
+    <p class="nw-quiz__step-instruction fade-in-up" {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"' -%}>
+      {{- step.settings.instruction | escape -}}
+    </p>
+  {%- endif -%}
+</div>

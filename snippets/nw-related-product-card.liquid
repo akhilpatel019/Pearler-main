@@ -1,0 +1,263 @@
+{%- comment -%}
+  Parameters:
+  - product {Product}
+  - onboarding {Boolean}
+  - onboarding_index {Number}
+  - card_index {Number} — Stagger index for scroll animations (optional)
+  - variant_options {String} — Optional option values (one per line) to pick a variant
+  - use_first_variant {Boolean} — When true, use the product's first variant if variant_options is blank
+  - custom_title {String} — Optional title; supports [Option name] tokens for the card variant
+  - custom_description {String} — Optional description; overrides metafield description
+  - show_price {Boolean} — Show price in footer (default on when omitted)
+  - show_quantity {Boolean} — Show “1 Pair” in footer label (default on when omitted)
+{%- endcomment -%}
+
+{%- liquid
+  assign animate_card = false
+  if card_index != blank and card_index > 0
+    assign animate_card = true
+    assign title_anim_delay = card_index | times: 0.08 | plus: 0.2
+    assign media_anim_delay = card_index | times: 0.08 | plus: 0.28
+    assign footer_anim_delay = card_index | times: 0.08 | plus: 0.45
+    assign title_anim_attrs = 'data-cc-animate data-cc-animate-delay="' | append: title_anim_delay | append: 's"'
+    assign media_anim_attrs = 'data-cc-animate data-cc-animate-delay="' | append: media_anim_delay | append: 's"'
+    assign footer_anim_attrs = 'data-cc-animate data-cc-animate-delay="' | append: footer_anim_delay | append: 's"'
+  endif
+-%}
+
+{%- if onboarding -%}
+  <article class="nw-related-product-card">
+    <h3
+      class="nw-related-product-card__title{% if animate_card %} fade-in-up{% endif %}"
+      {%- if animate_card -%}
+        {%- render 'animation-attrs', attrs: title_anim_attrs -%}
+      {%- endif -%}
+    >
+      {{ 'onboarding.product.title' | t }}
+    </h3>
+    <a
+      class="nw-related-product-card__media{% if animate_card %} fade-in-up{% endif %}"
+      href="#"
+      {%- if animate_card -%}
+        {%- render 'animation-attrs', attrs: media_anim_attrs -%}
+      {%- endif -%}
+    >
+      <div class="nw-related-product-card__image nw-related-product-card__image--placeholder">
+        {%- assign placeholder_index = onboarding_index | default: 1 -%}
+        {{- 'product-' | append: placeholder_index | placeholder_svg_tag: 'placeholder-svg' -}}
+      </div>
+    </a>
+
+    <div class="nw-related-product-card__description-wrap"></div>
+
+    <div
+      class="nw-related-product-card__bottom{% if animate_card %} fade-in-up{% endif %}"
+      {%- if animate_card -%}
+        {%- render 'animation-attrs', attrs: footer_anim_attrs -%}
+      {%- endif -%}
+    >
+      <hr class="nw-related-product-card__rule" aria-hidden="true">
+      <div class="nw-related-product-card__footer">
+        <p class="nw-related-product-card__price">1 Pair / {{ 1999 | money }}</p>
+        <span class="nw-related-product-card__add" aria-hidden="true">+</span>
+      </div>
+    </div>
+  </article>
+{%- else -%}
+  {%- liquid
+    assign card_variant = nil
+
+    if variant_options != blank
+      assign vo_parts = variant_options | strip | newline_to_br | strip_newlines | split: '<br />'
+      if vo_parts.size == 1
+        assign vo_single = vo_parts[0] | strip
+        if vo_single contains ','
+          assign vo_parts = vo_single | split: ','
+        endif
+      endif
+
+      assign vo_1 = ''
+      assign vo_2 = ''
+      assign vo_3 = ''
+      assign vo_slot = 0
+      for part in vo_parts
+        assign part_trim = part | strip
+        if part_trim == blank
+          continue
+        endif
+        assign vo_slot = vo_slot | plus: 1
+        case vo_slot
+          when 1
+            assign vo_1 = part_trim
+          when 2
+            assign vo_2 = part_trim
+          when 3
+            assign vo_3 = part_trim
+        endcase
+      endfor
+
+      for variant in product.variants
+        assign option_match = true
+        if vo_1 != blank and variant.option1 != vo_1
+          assign option_match = false
+        endif
+        if option_match and vo_2 != blank and variant.option2 != vo_2
+          assign option_match = false
+        endif
+        if option_match and vo_3 != blank and variant.option3 != vo_3
+          assign option_match = false
+        endif
+        if option_match
+          assign card_variant = variant
+          break
+        endif
+      endfor
+    endif
+
+    if card_variant == nil and use_first_variant and product.variants.size > 0
+      assign card_variant = product.variants.first
+    endif
+
+    if card_variant == nil
+      assign card_variant = product.selected_or_first_available_variant
+      for v in product.variants
+        if v.available
+          assign card_variant = v
+          break
+        endif
+      endfor
+    endif
+
+    assign card_image = card_variant.featured_media
+    if card_image == blank
+      assign card_image = product.featured_media
+    endif
+
+    assign card_url = card_variant.url | default: product.url
+
+    assign show_card_price = true
+    assign show_card_quantity = true
+    if show_price == false
+      assign show_card_price = false
+    endif
+    if show_quantity == false
+      assign show_card_quantity = false
+    endif
+
+    assign card_description_metafield = blank
+    assign card_description_plain = blank
+    if custom_description != blank
+      assign card_description_plain = custom_description
+    else
+      assign variant_short_description = card_variant.metafields.custom.short_description
+      assign card_description_metafield = variant_short_description
+      if variant_short_description != blank
+        if variant_short_description.type == 'single_line_text_field' or variant_short_description.type == 'multi_line_text_field'
+          if variant_short_description.value == blank
+            assign card_description_metafield = blank
+          endif
+        endif
+      endif
+      if card_description_metafield == blank
+        assign card_description_metafield = product.metafields.custom.description
+        if card_description_metafield == blank
+          assign card_description_metafield = product.metafields.custom.descripiton
+        endif
+      endif
+    endif
+
+    assign product_quantity = 1
+    assign variant_price = card_variant.price | money
+    assign price_label = blank
+    if show_card_quantity and show_card_price
+      assign price_label = product_quantity | append: ' Pair / ' | append: variant_price
+    elsif show_card_quantity
+      assign price_label = product_quantity | append: ' Pair'
+    elsif show_card_price
+      assign price_label = variant_price
+    endif
+  -%}
+
+  <article class="nw-related-product-card">
+    <div class="nw-related-product-card-head">
+
+      <h3
+        class="nw-related-product-card__title{% if animate_card %} fade-in-up{% endif %}"
+        {%- if animate_card -%}
+          {%- render 'animation-attrs', attrs: title_anim_attrs -%}
+        {%- endif -%}
+      >
+        <a href="{{ card_url }}">
+          {%- if custom_title != blank -%}
+            {%- render 'nw-product-custom-title', custom_title: custom_title, product: product, current_variant: card_variant -%}
+          {%- else -%}
+            {{- product.title | escape -}}
+          {%- endif -%}
+        </a>
+      </h3>
+  
+      <a
+        class="nw-related-product-card__media{% if animate_card %} fade-in-up{% endif %}"
+        href="{{ card_url }}"
+        {%- if animate_card -%}
+          {%- render 'animation-attrs', attrs: media_anim_attrs -%}
+        {%- endif -%}
+      >
+        {%- if card_image != blank -%}
+          <img
+            class="nw-related-product-card__image"
+            src="{{ card_image | image_url: width: 800 }}"
+            alt="{{ card_image.alt | default: product.title | escape }}"
+            loading="lazy"
+            width="{{ card_image.width }}"
+            height="{{ card_image.height }}"
+          >
+        {%- else -%}
+          <div class="nw-related-product-card__image nw-related-product-card__image--placeholder">
+            {{- 'product-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+          </div>
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- if card_description_plain != blank or card_description_metafield != blank -%}
+      <div class="nw-related-product-card__description-wrap fade-in-up" {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"', always: true -%}>
+        <div class="nw-related-product-card__description rte">
+          {%- if card_description_plain != blank -%}
+            {{- card_description_plain | escape | newline_to_br -}}
+          {%- else -%}
+            {%- case card_description_metafield.type -%}
+              {%- when 'single_line_text_field', 'multi_line_text_field' -%}
+                {{- card_description_metafield.value | escape -}}
+              {%- else -%}
+                {{- card_description_metafield | metafield_tag -}}
+            {%- endcase -%}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div
+      class="nw-related-product-card__bottom{% if animate_card %} fade-in-up{% endif %}"
+      {%- if animate_card -%}
+        {%- render 'animation-attrs', attrs: footer_anim_attrs -%}
+      {%- endif -%}
+    >
+      <hr class="nw-related-product-card__rule" aria-hidden="true">
+
+      <div class="nw-related-product-card__footer">
+        {%- if price_label != blank -%}
+          <p class="nw-related-product-card__price">{{ price_label }}</p>
+        {%- endif -%}
+
+        <a
+          class="nw-related-product-card__add nw-related-product-card__add--link"
+          href="{{ card_url }}"
+          aria-label="{{ product.title | escape }}"
+        >
+          <span aria-hidden="true">+</span>
+        </a>
+      </div>
+    </div>
+  </article>
+{%- endif -%}

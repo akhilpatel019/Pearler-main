@@ -1,0 +1,34 @@
+.nw-section-header {
+    margin-bottom: 30px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.nw-section-header__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-body-family);
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--nw-section-header-color, var(--primary-color));
+}
+
+.nw-section-header__rule {
+    display: block;
+    width: 100%;
+    height: 0;
+    margin: 0;
+    border: 0;
+    border-top: 1.5px solid var(--primary-color);
+}
+
+
+@media screen and (max-width: 749px) {
+    .nw-section-header {
+        margin-bottom: 20px;
+    }
+    .nw-section-header__eyebrow{
+        font-size: 15px;
+    }
+}

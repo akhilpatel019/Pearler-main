@@ -1,0 +1,19 @@
+{%- liquid
+  assign button_label = label | default: block.settings.button_label | default: section.settings.button_label
+  assign button_link = url | default: block.settings.button_link | default: section.settings.button_link
+  assign style_desktop = style_desktop | default: block.settings.button_style_desktop | default: section.settings.button_style_desktop | default: 'style_1'
+  assign style_mobile = style_mobile | default: block.settings.button_style_mobile | default: section.settings.button_style_mobile | default: 'style_2'
+  assign button_class = class | default: ''
+  assign wrap_class = wrap_class | default: ''
+-%}
+
+{%- if button_label != blank -%}
+  <div class="nw-button-wrap{% if wrap_class != blank %} {{ wrap_class }}{% endif %}">
+    <a
+      class="nw-button nw-button--d-{{ style_desktop }} nw-button--m-{{ style_mobile }}{% if button_class != blank %} {{ button_class }}{% endif %}"
+      href="{% if button_link != blank %}{{ button_link }}{% else %}#{% endif %}"
+    >
+      {{- button_label | escape -}}
+    </a>
+  </div>
+{%- endif -%}

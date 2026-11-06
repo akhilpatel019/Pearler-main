@@ -1,0 +1,80 @@
+{%- comment -%}
+  Renders one quiz screen from a typed block (quiz_step_1 … quiz_step_6).
+  @param {object} block - Section block
+  @param {boolean} step_active - Whether this step is initially visible
+{%- endcomment -%}
+
+{%- liquid
+  assign step_number = 0
+  assign progress_indicator = 0
+  assign step_type = 'choices'
+  assign choice_layout = 'cards'
+  assign option_count = 2
+  assign grid_columns = 3
+  assign multi_max = 3
+  assign hide_option_images = false
+
+  case block.type
+    when 'quiz_step_1'
+      assign step_number = 1
+      assign progress_indicator = 1
+      assign step_type = 'choices'
+      assign choice_layout = 'cards'
+      assign option_count = 2
+    when 'quiz_step_2'
+      assign step_number = 2
+      assign progress_indicator = 2
+      assign step_type = 'choices'
+      assign choice_layout = 'pills'
+      assign option_count = 5
+    when 'quiz_step_3'
+      assign step_number = 3
+      assign progress_indicator = 3
+      assign step_type = 'choices'
+      assign choice_layout = 'cards'
+      assign option_count = 4
+      assign hide_option_images = true
+    when 'quiz_step_4'
+      assign step_number = 4
+      assign progress_indicator = 4
+      assign step_type = 'choices_multi'
+      assign choice_layout = 'grid'
+      assign option_count = 6
+      assign grid_columns = 3
+      assign multi_max = 3
+    when 'quiz_step_5'
+      assign step_number = 5
+      assign progress_indicator = 5
+      assign step_type = 'pearler_result'
+    when 'quiz_step_6'
+      assign step_number = 6
+      assign progress_indicator = 5
+      assign step_type = 'recommendations'
+  endcase
+-%}
+
+{%- liquid
+  assign render_part = part | default: 'content'
+-%}
+
+{%- if render_part == 'header' -%}
+  {%- render 'nw-quiz-step-header',
+    step: block,
+    step_number: step_number,
+    step_active: step_active
+  -%}
+{%- else -%}
+  {%- render 'nw-quiz-step',
+    step: block,
+    step_index: step_number,
+    step_active: step_active,
+    step_number: step_number,
+    progress_indicator: progress_indicator,
+    step_type: step_type,
+    choice_layout: choice_layout,
+    option_count: option_count,
+    grid_columns: grid_columns,
+    multi_max: multi_max,
+    hide_option_images: hide_option_images
+  -%}
+{%- endif -%}

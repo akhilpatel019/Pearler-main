@@ -1,0 +1,321 @@
+{{ 'nw-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign overlay_opacity = section.settings.overlay_opacity | times: 0.01
+  assign overlay_color = section.settings.overlay_color | color_modify: 'alpha', overlay_opacity
+
+  assign loading = 'lazy'
+  assign fetchpriority = nil
+  if section.index == 1
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-hero {
+    --nw-hero-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-hero-bg-color: {{ section.settings.background_color }};
+    --nw-hero-overlay-color: {{ overlay_color }};
+    --nw-hero-focal-point: {{ focal_point }};
+    --nw-hero-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-hero-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-hero-heading-color: {{ section.settings.heading_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-hero {
+      --nw-hero-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-hero-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-hero-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-hero" aria-label="Hero banner">
+  <div
+    class="nw-hero__media "
+  >
+    {%- liquid
+      assign hero_image = section.settings.image
+      assign hero_image_mobile = section.settings.mobile_image
+      assign hero_img_widths = '750, 1100, 1500, 1920, 2560, 3200'
+      assign hero_img_mobile_widths = '750, 1100, 1500'
+      assign hero_img_sizes = '100vw'
+      assign hero_img_alt = hero_image.alt | default: '' | escape
+      assign hero_img_mobile_alt = hero_image_mobile.alt | default: hero_img_alt | escape
+    -%}
+    {%- if hero_image == blank -%}
+      <div class="nw-hero__image nw-hero__image--placeholder">
+        {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+      </div>
+    {%- else -%}
+      {%- if hero_image != blank -%}
+        <img src="{{ hero_image | image_url }}" alt="{{ hero_img_alt }}" width="" height="" class="nw-hero__image nw-hero__image--desktop" loading="{{ loading }}" fetchpriority="{{ fetchpriority }}" >
+      {%- endif -%}
+      {%- if hero_image_mobile != blank -%}
+        <img src="{{ hero_image_mobile | image_url }}" alt="{{ hero_img_mobile_alt }}" width="" height="" class="nw-hero__image nw-hero__image--mobile" loading="{{ loading }}" fetchpriority="{{ fetchpriority }}" >
+        {%- else -%}
+        <img src="{{ hero_image | image_url }}" alt="{{ hero_img_alt }}" width="" height="" class="nw-hero__image nw-hero__image--mobile" loading="{{ loading }}" fetchpriority="{{ fetchpriority }}" >
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+
+  <div class="nw-hero__content">
+    {%- if section.settings.show_overlay -%}
+      <div class="nw-hero__overlay" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="nw-hero__inner">
+    {%- if section.settings.heading != blank -%}
+      <div
+        class="nw-hero__heading-wrap"
+      >
+        {%- if section.index == 1 -%}
+          <h1 class="nw-hero__heading">
+        {%- else -%}
+          <h2 class="nw-hero__heading">
+        {%- endif -%}
+            {{ section.settings.heading | newline_to_br }}
+        {%- if section.index == 1 -%}
+          </h1>
+        {%- else -%}
+          </h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_button -%}
+      <div
+        class="nw-hero__button-wrap "
+      >
+        {%- render 'nw-button',
+          label: section.settings.button_label,
+          url: section.settings.button_link,
+          style_desktop: section.settings.button_style_desktop,
+          style_mobile: section.settings.button_style_mobile
+        -%}
+      </div>
+    {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Hero",
+  "class": "shopify-section--nw-hero",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#04022B"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show overlay",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#04022B"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your size, yours *exactly.*"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "alpha": true,
+      "default": "#EBE9E2"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Find My Perfect Sock",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Button style desktop",
+      "default": "style_3",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Button style mobile",
+      "default": "style_4",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 400,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 400,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Hero"
+    }
+  ]
+}
+{% endschema %}

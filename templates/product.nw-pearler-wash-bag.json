@@ -1,0 +1,318 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "custom_title": ""
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_installments": false,
+            "show_tax_and_shipping": false,
+            "enable_product_reviews_by_price": true
+          }
+        },
+        "vendor": {
+          "type": "vendor",
+          "disabled": true,
+          "settings": {}
+        },
+        "divider": {
+          "type": "divider",
+          "disabled": true,
+          "settings": {}
+        },
+        "variant-picker": {
+          "type": "variant-picker",
+          "disabled": true,
+          "settings": {
+            "show_single": false,
+            "selector_style": "listed",
+            "dynamic_availability": "show",
+            "enable_size_chart": false,
+            "size_chart_label": "Size guide",
+            "size_chart_variant": "Size",
+            "size_chart_source": "page",
+            "size_chart_page": ""
+          }
+        },
+        "buy-buttons": {
+          "type": "buy-buttons",
+          "settings": {
+            "show_quantity_selector": true,
+            "button_style_desktop": "style_1",
+            "button_style_mobile": "style_1",
+            "button_footer_text": "30 Day Money-Back Guarantee",
+            "enable_payment_button": false,
+            "show_backorder_text": false,
+            "show_pickup_availability": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {
+            "show_in_tab": false,
+            "open_tab": false,
+            "icon": ""
+          }
+        },
+        "accordion_ccxKBL": {
+          "type": "accordion",
+          "settings": {
+            "title": "Description",
+            "icon": "",
+            "content": "{{ product.description }}",
+            "page": "",
+            "custom_liquid": "",
+            "open": false,
+            "variant_content": false
+          }
+        },
+        "accordion_p7wcxa": {
+          "type": "accordion",
+          "disabled": true,
+          "settings": {
+            "title": "Our Technology",
+            "icon": "",
+            "content": "<p><strong>THE AIRMAP SYSTEM</strong><br/><br/>Airflow, mapped into every pair.</p><p>Most socks trap heat. Pearler socks have ventilation channels knitted in, so air keeps moving around your foot, even inside a leather shoe. Extra panels absorb sweat where your foot needs it most, so you stay dry from the first meeting to the last.</p><p><strong>AND TWO MORE THINGS YOU WON’T FIND IN ANOTHER SOCK</strong></p><p><strong>Exact sizing.</strong> Made in your size, not a size range. Your size is printed on the sole, under the P. No bunching, no slipping, no stretching out.</p><p><strong>Three thicknesses.</strong> Feather, Core and Cloud, so you choose the cushioning your day needs.</p>",
+            "page": "",
+            "custom_liquid": "",
+            "open": false,
+            "variant_content": false
+          }
+        },
+        "accordion_appihx": {
+          "type": "accordion",
+          "disabled": true,
+          "settings": {
+            "title": "Materials / Care",
+            "icon": "",
+            "content": "<ul><li><strong>Materials</strong><br/><br/>- 66% cotton, 20% polyester, 10% nylon, 3% spandex.<br/>- Designed in Australia. Made in China.</li></ul><p></p><ul><li><strong>Care</strong><br/><br/>- Cold machine wash with like colours.<br/>- Do not bleach, soak or rub.<br/>- Do not tumble dry. Dry in shade.<br/>- Cool iron.<br/>- Do not dry clean.</li></ul>",
+            "page": "",
+            "custom_liquid": "",
+            "open": false,
+            "variant_content": false
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "vendor",
+        "divider",
+        "variant-picker",
+        "buy-buttons",
+        "description",
+        "accordion_ccxKBL",
+        "accordion_p7wcxa",
+        "accordion_appihx"
+      ],
+      "settings": {
+        "show_breadcrumbs": false,
+        "select_first_variant": false,
+        "show_location_underneath": false,
+        "inventory_transfers_enable": true,
+        "enable_sticky_columns": true,
+        "enable_sticky_atc": false,
+        "sticky_atc_position": "end",
+        "sticky_atc_mobile": true,
+        "sticky_atc_behavior": "add_to_cart",
+        "sticky_atc_button_style": "secondary",
+        "gallery_size": "medium",
+        "gallery_layout": "carousel-under",
+        "hide_product_thumbnails": true,
+        "show_gallery_arrows": true,
+        "show_gallery_dots": true,
+        "collage_highlight_on_variant_change": true,
+        "enable_zoom": false,
+        "show_alt_text": false,
+        "alt_text_icon": "",
+        "show_variant_media_label": true,
+        "enable_video_autoplay": false,
+        "enable_video_looping": false,
+        "enable_media_grouping": false,
+        "media_grouping_option": "Color,Colour,Couleur,Farbe"
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "title": "You may also like",
+        "show_vendor": false,
+        "grid": 4
+      }
+    },
+    "nw_cta_XLUy36": {
+      "type": "nw-cta",
+      "name": "NW CTA",
+      "settings": {
+        "eyebrow": "Designed for",
+        "heading": "People who obsess over details, like things that make them feel good and make their day easier.",
+        "eyebrow_color": "#04022b",
+        "heading_color": "#04022b",
+        "eyebrow_color_mobile": "#04022b",
+        "heading_color_mobile": "#04022b",
+        "show_button": false,
+        "button_label": "Shop now",
+        "button_link": "",
+        "button_style_desktop": "style_3",
+        "button_style_mobile": "style_2",
+        "image": "shopify://shop_images/cta-desktop-2.png",
+        "mobile_image": "shopify://shop_images/cta-mobile-2.png",
+        "background_color": "#ebe9e2",
+        "show_overlay": false,
+        "overlay_color": "#04022b",
+        "overlay_opacity": 25,
+        "min_height_desktop": 520,
+        "card_border_radius": 50,
+        "card_border_radius_mobile": 30,
+        "padding_top_desktop": 0,
+        "padding_bottom_desktop": 0,
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 0
+      }
+    },
+    "nw_related_product_qqG9Lx": {
+      "type": "nw-related-product",
+      "blocks": {
+        "related_product_WrRemD": {
+          "type": "related_product",
+          "settings": {
+            "product": "women-sock-feather",
+            "variant_options": "6\nAnkle \nWhite",
+            "custom_title": "[Length] / [Color]",
+            "custom_description": "",
+            "show_price": true,
+            "show_quantity": true
+          }
+        },
+        "related_product_bQhitr": {
+          "type": "related_product",
+          "settings": {
+            "product": "women-sock-feather",
+            "variant_options": "6, Midlength, Black",
+            "custom_title": "[Length] / [Color]",
+            "custom_description": "",
+            "show_price": true,
+            "show_quantity": true
+          }
+        },
+        "related_product_CLx3Kw": {
+          "type": "related_product",
+          "settings": {
+            "product": "pearler-discovery-box",
+            "variant_options": "",
+            "custom_title": "Pearler Discovery Box",
+            "custom_description": "",
+            "show_price": true,
+            "show_quantity": true
+          }
+        },
+        "related_product_JAdcbB": {
+          "type": "related_product",
+          "settings": {
+            "product": "pearler-wash-bag",
+            "variant_options": "",
+            "custom_title": "",
+            "custom_description": "",
+            "show_price": true,
+            "show_quantity": true
+          }
+        }
+      },
+      "block_order": [
+        "related_product_WrRemD",
+        "related_product_bQhitr",
+        "related_product_CLx3Kw",
+        "related_product_JAdcbB"
+      ],
+      "name": "NW Related Product",
+      "settings": {
+        "heading": "YOU MAY ALSO LIKE",
+        "text_color": "#04022b",
+        "product_source": "blocks",
+        "context_product": "",
+        "related_metafield_key": "related_products",
+        "max_products": 4,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "padding_top_desktop": 120,
+        "padding_bottom_desktop": 120,
+        "padding_top_mobile": 120,
+        "padding_bottom_mobile": 92
+      }
+    },
+    "nw_richtext_9fTgYn": {
+      "type": "nw-richtext",
+      "name": "NW Richtext",
+      "settings": {
+        "show_line": false,
+        "line_heading": "YOU MAY ALSO LIKE",
+        "content": "Can't decide \nwhich pair is right for you?",
+        "subheading": "",
+        "text_color": "#04022b",
+        "subheading_font_family": "helvetica",
+        "subheading_font_size_desktop": 40,
+        "subheading_font_size_mobile": 22,
+        "subheading_line_height_desktop": 48,
+        "subheading_line_height_mobile": 26,
+        "subheading_text_transform": "uppercase",
+        "subheading_letter_spacing_desktop": 2,
+        "subheading_letter_spacing_mobile": 2,
+        "subheading_gap_desktop": 52,
+        "subheading_gap_mobile": 44,
+        "content_font_family": "heading",
+        "content_font_size_desktop": 40,
+        "content_font_size_mobile": 30,
+        "content_line_height_desktop": 45,
+        "content_line_height_mobile": 30,
+        "content_letter_spacing_desktop": -1,
+        "content_letter_spacing_mobile": -3,
+        "content_text_align": "center",
+        "content_max_width_desktop": 469,
+        "content_max_width_mobile": 352,
+        "show_button": true,
+        "button_label": "Take The Quiz",
+        "button_link": "shopify://pages/quiz",
+        "button_style_desktop": "style_2",
+        "button_style_mobile": "style_2",
+        "button_gap_desktop": 40,
+        "button_gap_mobile": 40,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 112,
+        "padding_bottom_desktop": 188,
+        "padding_top_mobile": 100,
+        "padding_bottom_mobile": 200
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products",
+    "nw_cta_XLUy36",
+    "nw_related_product_qqG9Lx",
+    "nw_richtext_9fTgYn"
+  ]
+}

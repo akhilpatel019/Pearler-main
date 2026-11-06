@@ -1,0 +1,440 @@
+{{ 'nw-story.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  assign story_image = section.settings.story_image
+  assign story_image_mobile = section.settings.story_image_mobile
+  if story_image_mobile == blank
+    assign story_image_mobile = story_image
+  endif
+
+  assign story_image_alt = section.settings.story_image_alt
+  if story_image_alt == blank and story_image != blank
+    assign story_image_alt = story_image.alt
+  endif
+  assign story_image_alt = story_image_alt | default: '' | escape
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-story {
+    --nw-story-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-story-bg-fallback: {{ section.settings.background_color }};
+    --nw-story-background: {{ section_background }};
+    --nw-story-focal-point: {{ focal_point }};
+    --nw-story-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-story-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-story-text-color: {{ section.settings.text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-story {
+      --nw-story-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-story-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-story-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-story">
+  {%- if show_media -%}
+    <div
+      class="nw-story__media-bg fade-in-up"
+      aria-hidden="true"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"' -%}
+    >
+      {%- liquid
+        assign section_image = section.settings.image
+        assign section_image_mobile = section.settings.mobile_image
+      -%}
+      {%- if section_image == blank -%}
+        <div class="nw-story__media-bg-image nw-story__media-bg-image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ section_image | image_url: width: 2560 }}"
+          alt=""
+          class="nw-story__media-bg-image nw-story__media-bg-image--desktop"
+          loading="{{ loading }}"
+          width="{{ section_image.width }}"
+          height="{{ section_image.height }}"
+        >
+        {%- if section_image_mobile != blank -%}
+          <img
+            src="{{ section_image_mobile | image_url: width: 1500 }}"
+            alt=""
+            class="nw-story__media-bg-image nw-story__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image_mobile.width }}"
+            height="{{ section_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ section_image | image_url: width: 1500 }}"
+            alt=""
+            class="nw-story__media-bg-image nw-story__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image.width }}"
+            height="{{ section_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="nw-story__content">
+    <div class="nw-story__inner">
+      <div class="nw-story__layout">
+        <div class="nw-story__column nw-story__column--left">
+          {%- if section.settings.text_column_left != blank -%}
+            <div
+              class="nw-story__text rte fade-in-up"
+              {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"' -%}
+            >
+              {{- section.settings.text_column_left -}}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="nw-story__column nw-story__column--middle">
+          {%- if section.settings.text_column_right != blank -%}
+            <div
+              class="nw-story__text rte fade-in-up"
+              {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.28s"' -%}
+            >
+              {{- section.settings.text_column_right -}}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.show_button -%}
+            <div
+              class="nw-story__cta fade-in-up"
+              {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.45s"' -%}
+            >
+              {%- render 'nw-button',
+                label: section.settings.button_label,
+                url: section.settings.button_link,
+                style_desktop: section.settings.button_style_desktop,
+                style_mobile: section.settings.button_style_mobile
+              -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <figure
+          class="nw-story__figure fade-in-up"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.35s"' -%}
+        >
+          {%- if story_image == blank -%}
+            <div class="nw-story__image nw-story__image--placeholder">
+              {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+            </div>
+          {%- else -%}
+            <img
+              class="nw-story__image nw-story__image--desktop"
+              src="{{ story_image | image_url: width: 800 }}"
+              alt="{{ story_image_alt }}"
+              loading="{{ loading }}"
+              width="{{ story_image.width }}"
+              height="{{ story_image.height }}"
+            >
+            {%- if story_image_mobile != blank -%}
+              <img
+                class="nw-story__image nw-story__image--mobile"
+                src="{{ story_image_mobile | image_url: width: 700 }}"
+                alt="{{ story_image_alt }}"
+                loading="{{ loading }}"
+                width="{{ story_image_mobile.width }}"
+                height="{{ story_image_mobile.height }}"
+              >
+            {%- endif -%}
+          {%- endif -%}
+        </figure>
+      </div>
+
+      <div class="nw-story__mobile-stack">
+        {%- if section.settings.text_column_left != blank or section.settings.text_column_right != blank -%}
+          <div
+            class="nw-story__text rte fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"' -%}
+          >
+            {%- if section.settings.text_column_left != blank -%}
+              {{- section.settings.text_column_left -}}
+            {%- endif -%}
+            {%- if section.settings.text_column_right != blank -%}
+              {{- section.settings.text_column_right -}}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <figure
+          class="nw-story__figure fade-in-up"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.35s"' -%}
+        >
+          {%- if story_image == blank -%}
+            <div class="nw-story__image nw-story__image--placeholder">
+              {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+            </div>
+          {%- else -%}
+            <img
+              class="nw-story__image"
+              src="{{ story_image_mobile | image_url: width: 700 }}"
+              alt="{{ story_image_alt }}"
+              loading="{{ loading }}"
+              width="{{ story_image_mobile.width }}"
+              height="{{ story_image_mobile.height }}"
+            >
+          {%- endif -%}
+        </figure>
+
+        {%- if section.settings.show_button -%}
+          <div
+            class="nw-story__cta fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.45s"' -%}
+          >
+            {%- render 'nw-button',
+              label: section.settings.button_label,
+              url: section.settings.button_link,
+              style_desktop: section.settings.button_style_desktop,
+              style_mobile: section.settings.button_style_mobile
+            -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Story",
+  "class": "shopify-section--nw-story",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "text_column_left",
+      "label": "Text column left",
+      "default": "<p>That reaction sent them looking into the category properly. What they found was a gap nobody had bothered to close.</p><p>Together they bring more than 15 years of e-commerce experience, and 9 years as hands-on parents living the missing-sock, mismatched-drawer, low-key family sock wars chaos that most households will recognise instantly.</p><p>Before having children, Liz spent a decade as a physiotherapist and Pilates instructor. She used that genuine, technical understanding of foot biomechanics to lead development of the Pearler sock, and more specifically the AirMap System. Not a marketing approximation of it.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text_column_right",
+      "label": "Text column right",
+      "default": "<p>Three manufacturers told them it couldn't be done, because that's not how the sock industry works. Two more started on the idea, then said it was too hard. Then they found the team, locally in Melbourne, who said YES.</p><p>Three years and 56 samples later, here we are.</p>"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#04022B"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image_mobile",
+      "label": "Image mobile",
+      "info": "Optional. Uses desktop image when empty."
+    },
+    {
+      "type": "text",
+      "id": "story_image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Button style desktop",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        { "value": "style_1", "label": "Solid navy" },
+        { "value": "style_2", "label": "Outline navy" },
+        { "value": "style_3", "label": "Outline cream" },
+        { "value": "style_4", "label": "Solid cream" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Button style mobile",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        { "value": "style_1", "label": "Solid navy" },
+        { "value": "style_2", "label": "Outline navy" },
+        { "value": "style_3", "label": "Outline cream" },
+        { "value": "style_4", "label": "Solid cream" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "solid", "label": "Solid color" },
+        { "value": "linear_gradient", "label": "Linear gradient" },
+        { "value": "none", "label": "None" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Story"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,743 @@
+{{ 'nw-section-header.css' | asset_url | stylesheet_tag }}
+{{ 'nw-find.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'nw-find.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  assign slide_count = section.blocks.size
+  if slide_count < 1
+    assign slide_count = 1
+  endif
+
+  assign section_dom_id = section.settings.custom_id | strip
+  if section_dom_id != blank
+    assign section_dom_id = section_dom_id | remove_first: '#'
+  endif
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-find {
+    --nw-find-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-find-bg-fallback: {{ section.settings.background_color }};
+    --nw-find-background: {{ section_background }};
+    --nw-find-focal-point: {{ focal_point }};
+    --nw-find-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-find-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-find-text-color: {{ section.settings.text_color }};
+    --nw-section-header-color: {{ section.settings.text_color }};
+  }
+
+  {%- if section_dom_id != blank -%}
+    #shopify-section-{{ section.id }} .nw-find {
+      scroll-margin-top: calc(var(--theme-sticky-header-height, 0px) + 24px);
+    }
+  {%- endif -%}
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-find {
+      --nw-find-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-find-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-find-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section
+  class="nw-find"
+  {%- if section_dom_id != blank -%}
+    id="{{ section_dom_id | escape }}"
+  {%- endif -%}
+  data-nw-find
+  data-transition-duration="{{ section.settings.transition_duration }}"
+  data-autoplay="{% if section.settings.enable_autoplay %}true{% else %}false{% endif %}"
+  data-autoplay-delay="{{ section.settings.autoplay_delay }}"
+>
+  {%- if show_media -%}
+    <div
+      class="nw-find__media-bg fade-in-up"
+      aria-hidden="true"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"' -%}
+    >
+      {%- liquid
+        assign section_image = section.settings.image
+        assign section_image_mobile = section.settings.mobile_image
+      -%}
+      {%- if section_image == blank -%}
+        <div class="nw-find__media-bg-image nw-find__media-bg-image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ section_image | image_url: width: 2560 }}"
+          alt=""
+          class="nw-find__media-bg-image nw-find__media-bg-image--desktop"
+          loading="{{ loading }}"
+          width="{{ section_image.width }}"
+          height="{{ section_image.height }}"
+        >
+        {%- if section_image_mobile != blank -%}
+          <img
+            src="{{ section_image_mobile | image_url: width: 1500 }}"
+            alt=""
+            class="nw-find__media-bg-image nw-find__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image_mobile.width }}"
+            height="{{ section_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ section_image | image_url: width: 1500 }}"
+            alt=""
+            class="nw-find__media-bg-image nw-find__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image.width }}"
+            height="{{ section_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="container">
+    <div class="nw-find__content">
+      <div class="nw-find__inner">
+      {%- if section.settings.heading != blank -%}
+        <div
+          class="nw-section-header fade-in-up"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.15s"' -%}
+        >
+          <div class="nw-section-header__eyebrow">{{ section.settings.heading }}</div>
+          <hr class="nw-section-header__rule" aria-hidden="true">
+        </div>
+      {%- endif -%}
+
+      <div class="nw-find__layout">
+        <div
+          class="nw-find__figure fade-in-up"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"' -%}
+         >
+          <div class="swiper nw-find__slider" data-nw-find-slider>
+            <div class="swiper-wrapper">
+              {%- if section.blocks.size > 0 -%}
+                {%- for block in section.blocks -%}
+                  {%- liquid
+                    assign slide_image = block.settings.image
+                    assign slide_image_mobile = block.settings.image_mobile
+                    assign slide_alt = slide_image.alt | default: block.settings.label | escape
+                  -%}
+                  <div class="swiper-slide">
+                    <div class="nw-find__slide-media">
+                      {%- if slide_image == blank -%}
+                        <div class="nw-find__slide-placeholder">
+                          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+                        </div>
+                      {%- else -%}
+                        <picture>
+                          {%- if slide_image_mobile != blank -%}
+                            <source
+                              media="(max-width: 749px)"
+                              srcset="{{ slide_image_mobile | image_url: width: 800 }}"
+                            >
+                          {%- endif -%}
+                          <img
+                            class="nw-find__slide-image"
+                            src="{{ slide_image | image_url: width: 1600 }}"
+                            alt="{{ slide_alt }}"
+                            loading="lazy"
+                            width="{{ slide_image.width }}"
+                            height="{{ slide_image.height }}"
+                          >
+                        </picture>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endfor -%}
+              {%- else -%}
+                <div class="swiper-slide">
+                  <div class="nw-find__slide-media">
+                    <div class="nw-find__slide-placeholder">
+                      {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+          <div class="nw-find__counter" data-nw-find-counter aria-hidden="true">1/{{ slide_count }}</div>
+        </div>
+
+        <div
+          class="nw-find__nav{% if section.settings.show_all_labels_mobile %} nw-find__nav--mobile-tap{% endif %}"
+          data-nw-find-nav
+          role="tablist"
+          aria-label="{{ section.settings.heading | strip_html | default: 'Find your fit' | escape }}"
+        >
+          {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks -%}
+              {%- liquid
+                case block.settings.horizontal_alignment
+                  when 'center'
+                    assign item_align = 'center'
+                    assign item_text_align = 'center'
+                  when 'right'
+                    assign item_align = 'flex-end'
+                    assign item_text_align = 'right'
+                  else
+                    assign item_align = 'flex-start'
+                    assign item_text_align = 'left'
+                endcase
+                assign is_first = false
+                if forloop.first
+                  assign is_first = true
+                endif
+                assign nav_delay_frac = forloop.index0 | times: 10 | plus: 35
+                assign nav_anim_delay = '0.' | append: nav_delay_frac | append: 's'
+                assign nav_anim = 'data-cc-animate data-cc-animate-delay="' | append: nav_anim_delay | append: '"'
+
+                case block.settings.meta_alignment
+                  when 'center'
+                    assign meta_text_align = 'center'
+                    assign meta_flex_align = 'center'
+                  when 'right'
+                    assign meta_text_align = 'right'
+                    assign meta_flex_align = 'flex-end'
+                  else
+                    assign meta_text_align = 'left'
+                    assign meta_flex_align = 'flex-start'
+                endcase
+              -%}
+              <div
+                class="nw-find__nav-entry nw-find__nav-entry--{{ item_align }} fade-in-up{% if is_first %} is-active{% endif %}"
+                style="--nw-find-item-align: {{ item_align }}; --nw-find-item-text-align: {{ item_text_align }}; --nw-find-item-margin-top: {{ block.settings.margin_top }}px; --nw-find-item-margin-inline-start: {{ block.settings.margin_inline_start }}px; --nw-find-item-margin-inline-end: {{ block.settings.margin_inline_end }}px;"
+                {{ block.shopify_attributes }}
+                {%- render 'animation-attrs', attrs: nav_anim -%}
+              >
+                {%- capture nw_find_nav_meta -%}
+                  {%- if block.settings.detail_text != blank or block.settings.link_label != blank -%}
+                    <div
+                      class="nw-find__nav-meta"
+                      style="--nw-find-meta-text-align: {{ meta_text_align }}; --nw-find-meta-align: {{ meta_flex_align }};"
+                    >
+                      {%- if block.settings.detail_text_position == 'after_link' -%}
+                        {%- if block.settings.link_label != blank -%}
+                          <a
+                            class="nw-find__nav-link"
+                            href="{% if block.settings.link != blank %}{{ block.settings.link }}{% else %}#{% endif %}"
+                          >
+                            {{- block.settings.link_label | escape -}}
+                          </a>
+                        {%- endif -%}
+                        {%- if block.settings.detail_text != blank -%}
+                          <p class="nw-find__nav-text">{{ block.settings.detail_text | escape }}</p>
+                        {%- endif -%}
+                      {%- else -%}
+                        {%- if block.settings.detail_text != blank -%}
+                          <p class="nw-find__nav-text">{{ block.settings.detail_text | escape }}</p>
+                        {%- endif -%}
+                        {%- if block.settings.link_label != blank -%}
+                          <a
+                            class="nw-find__nav-link"
+                            href="{% if block.settings.link != blank %}{{ block.settings.link }}{% else %}#{% endif %}"
+                          >
+                            {{- block.settings.link_label | escape -}}
+                          </a>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                {%- endcapture -%}
+
+                {%- if block.settings.meta_block_position == 'before_label' -%}
+                  {{- nw_find_nav_meta -}}
+                {%- endif -%}
+
+                <button
+                  type="button"
+                  id="nw-find-tab-{{ section.id }}-{{ block.id }}"
+                  class="nw-find__nav-item{% if is_first %} is-active{% endif %}"
+                  data-nw-find-nav-item
+                  data-nw-find-index="{{ forloop.index0 }}"
+                  role="tab"
+                  aria-selected="{% if is_first %}true{% else %}false{% endif %}"
+                  aria-controls="nw-find-panel-{{ section.id }}-{{ block.id }}"
+                >
+                  {{- block.settings.label | escape -}}
+                </button>
+
+                {%- unless block.settings.meta_block_position == 'before_label' -%}
+                  {{- nw_find_nav_meta -}}
+                {%- endunless -%}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <div class="nw-find__nav-entry is-active">
+              <button
+                type="button"
+                class="nw-find__nav-item is-active"
+                data-nw-find-nav-item
+                data-nw-find-index="0"
+                role="tab"
+                aria-selected="true"
+              >
+                Slow Mornings
+              </button>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <hr
+        class="nw-find__rule-bottom fade-in-up"
+        aria-hidden="true"
+        {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.45s"' -%}
+      >
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Find",
+  "class": "shopify-section--nw-find",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_id",
+      "label": "Custom ID",
+      "info": "Enter a custom ID to identify the section in the DOM. This can be used for styling or scripting."
+    }, 
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Eyebrow",
+      "default": "FIND YOUR FIT FOR ANY OCCASION"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#04022B"
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "label": "Slide transition duration",
+      "min": 200,
+      "max": 1200,
+      "step": 50,
+      "unit": "ms",
+      "default": 500
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay interval",
+      "min": 2000,
+      "max": 9500,
+      "step": 500,
+      "unit": "ms",
+      "default": 4000,
+      "visible_if": "{{ section.settings.enable_autoplay }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_all_labels_mobile",
+      "label": "Show all labels on mobile",
+      "info": "When off, only the active label is shown (swipe to change). When on, all labels are listed for tapping.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "linear_gradient",
+          "label": "Linear gradient"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Weekend Golf"
+        },
+        {
+          "type": "text",
+          "id": "detail_text",
+          "label": "Text",
+          "default": "White midlength / core"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link title",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "meta_block_position",
+          "label": "Text and link position",
+          "default": "after_label",
+          "options": [
+            {
+              "value": "before_label",
+              "label": "Before label"
+            },
+            {
+              "value": "after_label",
+              "label": "After label"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "detail_text_position",
+          "label": "Text position (within block)",
+          "default": "before_link",
+          "options": [
+            {
+              "value": "before_link",
+              "label": "Before link"
+            },
+            {
+              "value": "after_link",
+              "label": "After link"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "meta_alignment",
+          "label": "Text alignment",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image"
+        },
+        {
+          "type": "header",
+          "content": "Label position"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "label": "Spacing above",
+          "min": 0,
+          "max": 200,
+          "step": 2,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_inline_start",
+          "label": "Margin left",
+          "min": 0,
+          "max": 320,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_inline_end",
+          "label": "Margin right",
+          "min": 0,
+          "max": 320,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "select",
+          "id": "horizontal_alignment",
+          "label": "Horizontal alignment",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Find",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Weekend Golf",
+            "detail_text": "White midlength / core",
+            "link_label": "Shop now",
+            "horizontal_alignment": "left",
+            "margin_top": 0
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Slow Mornings",
+            "horizontal_alignment": "right",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "At The Office",
+            "horizontal_alignment": "center",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Gym Days",
+            "horizontal_alignment": "right",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "After Work Drinks",
+            "horizontal_alignment": "right",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Mum Life",
+            "horizontal_alignment": "center",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Travel Days",
+            "horizontal_alignment": "left",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Weekend Sidelines",
+            "horizontal_alignment": "left",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Long Shifts",
+            "horizontal_alignment": "right",
+            "margin_top": 104
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "Always On Your Feet",
+            "horizontal_alignment": "left",
+            "margin_top": 104
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

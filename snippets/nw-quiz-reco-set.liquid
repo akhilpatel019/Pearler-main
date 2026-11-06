@@ -1,0 +1,86 @@
+{%- comment -%}
+  @param gender - mens | womens
+  @param step - block settings object
+  Slot 1 = feather, 2 = core, 3 = cloud (theme editor labels unchanged).
+{%- endcomment -%}
+
+{%- liquid
+  assign reco_type_list = 'feather,core,cloud' | split: ','
+-%}
+
+<ul class="nw-quiz__reco-list" data-reco-gender="{{ gender }}" hidden>
+  {%- for reco_type in reco_type_list -%}
+    {%- liquid
+      assign slot = forloop.index
+      assign prefix = gender | append: '_reco_' | append: slot | append: '_'
+      assign heading_key = prefix | append: 'heading'
+      assign label_key = prefix | append: 'label'
+      assign product_key = prefix | append: 'product'
+      assign image_key = prefix | append: 'image'
+      assign image_mobile_key = prefix | append: 'image_mobile'
+      assign show_desktop_key = prefix | append: 'show_image_desktop'
+      assign show_mobile_key = prefix | append: 'show_image_mobile'
+
+      assign reco_heading = step.settings[heading_key]
+      assign reco_label = step.settings[label_key]
+      assign reco_product = step.settings[product_key]
+      assign reco_image = step.settings[image_key]
+      assign reco_image_mobile = step.settings[image_mobile_key]
+      assign show_desktop = step.settings[show_desktop_key]
+      assign show_mobile = step.settings[show_mobile_key]
+
+      assign img_desktop = reco_image
+      if img_desktop == blank and reco_product != blank and reco_product.featured_image != blank
+        assign img_desktop = reco_product.featured_image
+      endif
+
+      if reco_label == blank and reco_product != blank
+        assign reco_label = reco_product.title
+      endif
+    -%}
+    <li class="nw-quiz__reco-item nw-quiz__reco-item--source" data-reco-type="{{ reco_type }}" hidden>
+      <span class="visually-hidden" data-nw-quiz-reco-heading-default>{{ reco_heading | escape }}</span>
+      {%- if reco_product != blank -%}
+        <a
+          class="nw-quiz__reco-card nw-quiz__reco-card--link"
+          href="{{ reco_product.url }}"
+          {% if reco_label != blank %}
+            aria-label="{{ reco_label | escape }}"
+          {% else %}
+            aria-label="{{ reco_product.title | escape }}"
+          {% endif %}
+        >
+          {%- render 'nw-quiz-option-images',
+            image_desktop: img_desktop,
+            image_mobile: reco_image_mobile,
+            show_image_desktop: show_desktop,
+            show_image_mobile: show_mobile
+          -%}
+          {%- if reco_label != blank -%}
+            <span class="nw-quiz__reco-card-label">{{ reco_label | escape }}</span>
+          {%- endif -%}
+        </a>
+      {%- else -%}
+        <div class="nw-quiz__reco-card">
+          {%- render 'nw-quiz-option-images',
+            image_desktop: img_desktop,
+            image_mobile: reco_image_mobile,
+            show_image_desktop: show_desktop,
+            show_image_mobile: show_mobile
+          -%}
+          {%- if reco_label != blank -%}
+            <span class="nw-quiz__reco-card-label">{{ reco_label | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </li>
+  {%- endfor -%}
+
+  {%- for slot in (1..3) -%}
+    <li class="nw-quiz__reco-item" data-reco-display-slot="{{ slot }}">
+      <h3 class="nw-quiz__reco-heading" data-nw-quiz-reco-heading></h3>
+      <p class="nw-quiz__reco-eyebrow">WE RECOMMEND</p>
+      <div class="nw-quiz__reco-card-mount" data-nw-quiz-reco-card-mount></div>
+    </li>
+  {%- endfor -%}
+</ul>

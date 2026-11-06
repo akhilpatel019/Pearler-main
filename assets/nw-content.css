@@ -1,0 +1,188 @@
+.nw-content {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: var(--nw-content-min-height, auto);
+    color: var(--nw-content-heading-color, var(--primary-color));
+    background: var(--nw-content-background, var(--secondary-color));
+}
+
+.nw-content__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background-color: var(--nw-content-bg-fallback, var(--secondary-color));
+}
+
+.nw-content__media .nw-content__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: var(--nw-content-min-height, auto);
+    object-fit: cover;
+    object-position: var(--nw-content-focal-point, center center);
+}
+
+.nw-content__media .nw-content__image--placeholder {
+    width: 100%;
+    min-height: var(--nw-content-min-height, auto);
+}
+
+.nw-content__media .nw-content__image--mobile {
+    display: none;
+}
+
+.nw-content__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.nw-content__inner {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    gap: 48px;
+    width: 100%;
+    min-height: var(--nw-content-min-height, auto);
+    padding-top: var(--nw-content-padding-top, 80px);
+    padding-bottom: var(--nw-content-padding-bottom, 80px);
+}
+
+.nw-content__text {
+    width: 100%;
+    max-width: 1085px;
+}
+
+.nw-content__heading-wrap {
+    width: 100%;
+    margin: 0;
+    text-align: start;
+}
+
+.nw-content__heading {
+    font-family: var(--nw-content-heading-font-family, var(--font-heading-family));
+    font-size: var(--nw-content-heading-font-size, 70px);
+    font-weight: var(--nw-content-heading-font-weight, 400);
+    line-height: 1;
+    text-transform: none;
+    color: var(--nw-content-heading-color, var(--primary-color));
+}
+
+.nw-content__heading em,
+.nw-content__heading i,
+.nw-content__heading-accent {
+    font-family: var(--font-heading-family-italic);
+    font-style: italic;
+    font-weight: 300;
+}
+
+.nw-content__body {
+    margin: 42px 0 0;
+    font-family: var(--nw-content-subheading-font-family, var(--font-body-family));
+    font-size: var(--nw-content-subheading-font-size, 15px);
+    font-weight: var(--nw-content-subheading-font-weight, 400);
+    line-height: 50px;
+    letter-spacing: 0.01em;
+    color: var(--nw-content-heading-color, var(--primary-color));
+    max-width: 930px;
+}
+
+.nw-content__body strong{
+    font-family: var(--font-heading-family-italic);
+    font-size: 49px;
+    font-weight: 300;
+    line-height: 50px;
+    letter-spacing: -0.01em;
+}
+
+.nw-content-button{
+    width: max-content !important;
+}
+
+.nw-content__body p:first-child {
+    margin-top: 0;
+}
+
+.nw-content__body p:last-child {
+    margin-bottom: 0;
+}
+
+.nw-content__text + .nw-content__actions {
+    margin-top: auto;
+}
+
+.nw-content__actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.nw-content__button-wrap {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+
+.nw-content__body p br:first-child{
+    display: none;
+}
+
+
+@media screen and (max-width: 1023px) {
+    .nw-content__inner {
+        gap: 40px;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .nw-content__media .nw-content__image--desktop {
+        display: none;
+    }
+
+    .nw-content__body{
+        line-height: 30px;
+    }
+
+    .nw-content__body strong{
+        font-size: 29px;
+        line-height: auto;
+    }
+
+    .nw-content__body p br:first-child{
+        display: block;
+    }
+
+    .nw-content__media .nw-content__image--mobile {
+        display: block;
+    }
+
+    .nw-content__inner {
+        gap: 92px;
+        padding-top: var(--nw-content-padding-top, 48px);
+        padding-bottom: var(--nw-content-padding-bottom, 48px);
+        flex-direction: column;
+    }
+
+    .nw-content__heading {
+        letter-spacing: -0.01em;
+    }
+
+    .nw-content__heading em,
+    .nw-content__heading i,
+    .nw-content__heading-accent {
+        font-size: 1em;
+        line-height: 1;
+        letter-spacing: -0.01em;
+    }
+
+    .nw-content__actions,
+    .nw-content__button-wrap {
+        justify-content: center;
+        align-self: center;
+    }
+}

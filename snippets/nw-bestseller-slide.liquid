@@ -1,0 +1,25 @@
+{%- comment -%}
+  Swiper slide wrapper for NW Bestseller — renders shared nw-product-card.
+  Parameters:
+  - product {Product}
+  - animate_delay {String} — e.g. "0.35s"
+  - variant_options {String}
+  - custom_title {String}
+  - shopify_attributes {String}
+{%- endcomment -%}
+
+{%- liquid
+  assign slide_animate_attrs = 'data-cc-animate data-cc-animate-delay="' | append: animate_delay | append: '"'
+-%}
+
+<div
+  class="swiper-slide fade-in-up"
+  {{ shopify_attributes }}
+  {%- render 'animation-attrs', attrs: slide_animate_attrs -%}
+>
+  {%- render 'nw-product-card',
+    product: product,
+    variant_options: variant_options,
+    custom_title: custom_title
+  -%}
+</div>

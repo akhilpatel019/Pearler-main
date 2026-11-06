@@ -1,0 +1,648 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "nw_hero_jJBcXC": {
+      "type": "nw-hero",
+      "disabled": true,
+      "name": "NW Hero",
+      "settings": {
+        "image": "shopify://shop_images/2026-09-14_Pearler_1984_1_1.png",
+        "mobile_image": "shopify://shop_images/392_2_1.png",
+        "background_color": "#04022b",
+        "show_overlay": false,
+        "overlay_color": "#04022b",
+        "overlay_opacity": 0,
+        "heading": "Your size, \nyours <i>exactly.</i>",
+        "heading_color": "#ebe9e2",
+        "show_button": true,
+        "button_label": "Find My Perfect Sock",
+        "button_link": "shopify://products/mens-core",
+        "button_style_desktop": "style_3",
+        "button_style_mobile": "style_4",
+        "min_height_desktop": 500,
+        "min_height_mobile": 700,
+        "padding_top_desktop": 80,
+        "padding_bottom_desktop": 80,
+        "padding_top_mobile": 72,
+        "padding_bottom_mobile": 60
+      }
+    },
+    "slideshow_zbn38x": {
+      "type": "slideshow",
+      "blocks": {
+        "image_kHigBE": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/banner-dsk-man_on_socks.jpg",
+            "mobile_image": "shopify://shop_images/banner-dsk-man_on_socks.jpg",
+            "slide_link": "",
+            "subheading": "",
+            "title": "Socks in your Ex𝘢𝘤𝘵 size",
+            "heading_max_width": 15,
+            "title_size": 84,
+            "title_size_mobile": 46,
+            "use_h1": false,
+            "text": "",
+            "enlarge_text": true,
+            "button_label_1": "Shop Womens",
+            "button_url_1": "shopify://products/womens-sock-core",
+            "button_label_2": "Shop Mens",
+            "button_url_2": "shopify://products/mens-core",
+            "text_alignment": "center center"
+          }
+        },
+        "image_fiDfwN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/banner-dsk-woman_on_socks.jpg",
+            "mobile_image": "shopify://shop_images/banner-mobile-woman_on_socks.jpg",
+            "slide_link": "",
+            "subheading": "",
+            "title": "Socks in your Ex𝘢𝘤𝘵 size",
+            "heading_max_width": 15,
+            "title_size": 84,
+            "title_size_mobile": 46,
+            "use_h1": false,
+            "text": "",
+            "enlarge_text": true,
+            "button_label_1": "Shop Womens",
+            "button_url_1": "shopify://products/womens-sock-core",
+            "button_label_2": "Shop Mens",
+            "button_url_2": "shopify://products/mens-core",
+            "text_alignment": "center center"
+          }
+        }
+      },
+      "block_order": [
+        "image_kHigBE",
+        "image_fiDfwN"
+      ],
+      "name": "Slideshow",
+      "settings": {
+        "height": "fixed",
+        "height_desktop": 600,
+        "height_mobile": 460,
+        "full_width": true,
+        "mobile_overlay_under": true,
+        "overlay_style": "shadow",
+        "transition": "instant",
+        "navigation": "arrows",
+        "autoplay": true,
+        "autoplay_speed": 3,
+        "accessibility_info": ""
+      }
+    },
+    "nw_content_DQB9Ew": {
+      "type": "nw-content",
+      "name": "NW Content",
+      "settings": {
+        "heading": "<p>Ever wondered why everything&nbsp;<br/>in your life is sized exactly to you,<br/>except your socks?<br/><br/>Now, <em>yours</em> are.</p>",
+        "text": "",
+        "heading_color": "#04022b",
+        "heading_font_family": "heading",
+        "heading_font_size_desktop": 70,
+        "heading_font_size_tablet": 56,
+        "heading_font_size_mobile": 38,
+        "heading_font_weight": "400",
+        "subheading_font_family": "body",
+        "subheading_font_size_desktop": 15,
+        "subheading_font_size_tablet": 15,
+        "subheading_font_size_mobile": 15,
+        "subheading_font_weight": "400",
+        "show_button": true,
+        "button_label": "Shop Your Size",
+        "button_link": "shopify://collections/all-products",
+        "button_style_desktop": "style_1",
+        "button_style_mobile": "style_2",
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 152,
+        "padding_bottom_desktop": 116,
+        "padding_top_mobile": 76,
+        "padding_bottom_mobile": 20
+      }
+    },
+    "nw_bestseller_4QTp8F": {
+      "type": "nw-bestseller",
+      "blocks": {
+        "bestseller_product_mU4bCU": {
+          "type": "bestseller_product",
+          "settings": {
+            "product": "women-sock-feather",
+            "variant_options": "6, Midlength, White",
+            "custom_title": "Feather"
+          }
+        },
+        "bestseller_product_LmApxe": {
+          "type": "bestseller_product",
+          "settings": {
+            "product": "mens-core",
+            "variant_options": "6, Ankle, White",
+            "custom_title": "Core"
+          }
+        },
+        "bestseller_product_6NzFCq": {
+          "type": "bestseller_product",
+          "settings": {
+            "product": "womens-sock-cloud",
+            "variant_options": "6 , Midlength, Black",
+            "custom_title": "Cloud"
+          }
+        }
+      },
+      "block_order": [
+        "bestseller_product_mU4bCU",
+        "bestseller_product_LmApxe",
+        "bestseller_product_6NzFCq"
+      ],
+      "name": "NW Bestseller",
+      "settings": {
+        "product_source": "product_list",
+        "collection": "",
+        "max_slides": 12,
+        "heading": "Best Sellers",
+        "heading_color": "#04022b",
+        "text_color": "#04022b",
+        "background_color": "#ebe9e2",
+        "feature_image": "shopify://shop_images/8da12501fd64e46cf21ce398d6905fdd_1_3_1.png",
+        "button_1_label": "Shop Mens",
+        "button_1_link": "shopify://collections/mens",
+        "button_1_style_desktop": "style_1",
+        "button_1_style_mobile": "style_2",
+        "button_2_label": "Shop Womens",
+        "button_2_link": "shopify://collections/womens",
+        "button_2_style_desktop": "style_1",
+        "button_2_style_mobile": "style_2",
+        "padding_top_desktop": 56,
+        "padding_bottom_desktop": 100,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 72
+      }
+    },
+    "nw_card_DfVQ7E": {
+      "type": "nw-card",
+      "blocks": {
+        "card_bTCVea": {
+          "type": "card",
+          "settings": {
+            "tagline": "Three ways to experience Pearler.",
+            "heading": "Discovery Box",
+            "tagline_color": "#ffffff",
+            "heading_color": "#ffffff",
+            "media_type": "image",
+            "image": "shopify://shop_images/Discovery_1728x2238_06c44add-5b7f-486b-9c66-9db126cc3a23.jpg",
+            "show_image_overlay": false,
+            "overlay_color": "#04022b",
+            "teaser_video": "shopify://files/videos/tolstoy_d849a124-8d6c-4bc0-9dbd-fb1cb4dec38c_preview_ccbf08a9-6133-4177-b7a0-fa18b190dd1f.mp4",
+            "main_video": "shopify://files/videos/tolstoy_d849a124-8d6c-4bc0-9dbd-fb1cb4dec38c.webm",
+            "link": "shopify://products/mens-core"
+          }
+        },
+        "card_dKVax8": {
+          "type": "card",
+          "settings": {
+            "tagline": "Find Your Perfect\nPair",
+            "heading": "TAKE THE QUIZ",
+            "tagline_color": "#ebe9e2",
+            "heading_color": "#ebe9e2",
+            "media_type": "image",
+            "image": "shopify://shop_images/Colour_Socks___UNIQLO_Masterpiece_Autumn_Winter_2026___UNIQLO_DK_1_2_1.png",
+            "show_image_overlay": false,
+            "overlay_color": "#04022b",
+            "teaser_video": "shopify://files/videos/tolstoy_4eb047ab-1f59-4b32-b9dc-691d527413ad_preview_fdca6983-0639-48bf-a31a-1af239cdfe33.mp4",
+            "main_video": "shopify://files/videos/tolstoy_4eb047ab-1f59-4b32-b9dc-691d527413ad.webm",
+            "link": "shopify://pages/quiz"
+          }
+        }
+      },
+      "block_order": [
+        "card_bTCVea",
+        "card_dKVax8"
+      ],
+      "name": "NW Card",
+      "settings": {
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 0,
+        "padding_bottom_desktop": 0,
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 0
+      }
+    },
+    "image_with_text_overlay_a3Gmcx": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "subheading_8fmRjB": {
+          "type": "subheading",
+          "disabled": true,
+          "settings": {
+            "subheading": "Tell your story"
+          }
+        },
+        "heading_aeAYa6": {
+          "type": "heading",
+          "settings": {
+            "title": "Mix, Match & Save",
+            "heading_max_width": 15,
+            "title_size": 84,
+            "title_size_mobile": 32,
+            "use_h1": false
+          }
+        },
+        "text_7rNtXN": {
+          "type": "text",
+          "settings": {
+            "text": "<p>As low as $17.45 per pair</p>",
+            "enlarge_text": true
+          }
+        }
+      },
+      "block_order": [
+        "subheading_8fmRjB",
+        "heading_aeAYa6",
+        "text_7rNtXN"
+      ],
+      "name": "Image with text overlay",
+      "settings": {
+        "image": "shopify://shop_images/2026-09-14_Pearler_2562_dc824a58-efad-4f66-b4ec-5a26f340a77c.jpg",
+        "height": "fixed",
+        "height_desktop": 600,
+        "height_mobile": 460,
+        "image_link": "shopify://products/mens-core",
+        "full_width": false,
+        "text_alignment": "center center",
+        "mobile_overlay_under": false,
+        "overlay_style": "shadow"
+      }
+    },
+    "nw_content_EDa3qr": {
+      "type": "nw-content",
+      "name": "NW Content",
+      "settings": {
+        "heading": "<p>WHO WEARS PEARLER</p>",
+        "text": "<p>Real people who value comfort. <br/><br/>Different lives, different interests, <strong>same </strong>feeling at the end of the day.</p>",
+        "heading_color": "#04022b",
+        "heading_font_family": "helvetica",
+        "heading_font_size_desktop": 40,
+        "heading_font_size_tablet": 56,
+        "heading_font_size_mobile": 22,
+        "heading_font_weight": "700",
+        "subheading_font_family": "heading",
+        "subheading_font_size_desktop": 48,
+        "subheading_font_size_tablet": 15,
+        "subheading_font_size_mobile": 30,
+        "subheading_font_weight": "400",
+        "show_button": false,
+        "button_label": "Shop Your Size",
+        "button_link": "",
+        "button_style_desktop": "style_1",
+        "button_style_mobile": "style_2",
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 420,
+        "min_height_mobile": 360,
+        "padding_top_desktop": 124,
+        "padding_bottom_desktop": 200,
+        "padding_top_mobile": 152,
+        "padding_bottom_mobile": 144
+      }
+    },
+    "nw_find_YaEMEV": {
+      "type": "nw-find",
+      "blocks": {
+        "slide_83Pnna": {
+          "type": "slide",
+          "settings": {
+            "label": "Weekend Golf",
+            "detail_text": "White Ankle / core",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/mens-core?variant=67653401706666",
+            "meta_block_position": "after_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "left",
+            "image": "shopify://shop_images/722_x_1228_Weekend_Golf2.png",
+            "margin_top": 0,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "left"
+          }
+        },
+        "slide_AjKrRa": {
+          "type": "slide",
+          "settings": {
+            "label": "Slow Mornings",
+            "detail_text": "White Midlength / CLOUD",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/womens-sock-cloud?variant=67648938737834",
+            "meta_block_position": "before_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "right",
+            "image": "shopify://shop_images/722_x_1228_Slow_mornings_2.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "right"
+          }
+        },
+        "slide_EHpARW": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "label": "Weekend Golf",
+            "detail_text": "White midlength / core",
+            "link_label": "Shop now",
+            "link": "",
+            "meta_block_position": "after_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "left",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "left"
+          }
+        },
+        "slide_G8dqfG": {
+          "type": "slide",
+          "settings": {
+            "label": "At The Office",
+            "detail_text": "WHITE MIDLENGTH / FEATHER",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/women-sock-feather?variant=67647408996522",
+            "meta_block_position": "after_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "left",
+            "image": "shopify://shop_images/722_x_1228_At_the_office2.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "center"
+          }
+        },
+        "slide_CFfMUG": {
+          "type": "slide",
+          "settings": {
+            "label": "Gym Days",
+            "detail_text": "BLACK MIDLENGTH / core",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/mens-core?variant=67653401739434",
+            "meta_block_position": "before_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "right",
+            "image": "shopify://shop_images/Colour_Socks___UNIQLO_Masterpiece_Autumn_Winter_2026___UNIQLO_DK_4_5_1.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "right"
+          }
+        },
+        "slide_6egUpY": {
+          "type": "slide",
+          "settings": {
+            "label": "After Work Drinks",
+            "detail_text": "White Midlength / FEATHER",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/mens-feather?variant=67653400985770",
+            "meta_block_position": "before_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "right",
+            "image": "shopify://shop_images/722_x_1228_After_work_drinks.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "right"
+          }
+        },
+        "slide_zWEdrR": {
+          "type": "slide",
+          "settings": {
+            "label": "Mum Life",
+            "detail_text": "White Ankle / Core",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/womens-sock-core?variant=67648927826090",
+            "meta_block_position": "after_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "left",
+            "image": "shopify://shop_images/722_x_1228_Mum_life.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "center"
+          }
+        },
+        "slide_KcGA7k": {
+          "type": "slide",
+          "settings": {
+            "label": "Travel Days",
+            "detail_text": "White Midlength / CLOUD",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/womens-sock-cloud?variant=67648938999978",
+            "meta_block_position": "after_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "left",
+            "image": "shopify://shop_images/722_x_1228_Travel_days.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "left"
+          }
+        },
+        "slide_WrxPwM": {
+          "type": "slide",
+          "settings": {
+            "label": "Weekends",
+            "detail_text": "White ANKLE / CORE",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/mens-core?variant=67653401641130",
+            "meta_block_position": "after_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "left",
+            "image": "shopify://shop_images/722_x_1228_weekend_sideline.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "left"
+          }
+        },
+        "slide_btgfqk": {
+          "type": "slide",
+          "settings": {
+            "label": "Long Shifts",
+            "detail_text": "White ANKLE / Core",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/mens-core?variant=67653401641130",
+            "meta_block_position": "before_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "right",
+            "image": "shopify://shop_images/722_x_1228_long_shift_2.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "right"
+          }
+        },
+        "slide_hn4tWN": {
+          "type": "slide",
+          "settings": {
+            "label": "Always On Your Feet",
+            "detail_text": "white Midlength / Core",
+            "link_label": "Shop now",
+            "link": "https://pearler.com.au/products/mens-core?variant=67653401706666",
+            "meta_block_position": "after_label",
+            "detail_text_position": "before_link",
+            "meta_alignment": "left",
+            "image": "shopify://shop_images/722_x_1228_Always_on_your_feet.png",
+            "margin_top": 54,
+            "margin_inline_start": 0,
+            "margin_inline_end": 0,
+            "horizontal_alignment": "left"
+          }
+        }
+      },
+      "block_order": [
+        "slide_83Pnna",
+        "slide_AjKrRa",
+        "slide_EHpARW",
+        "slide_G8dqfG",
+        "slide_CFfMUG",
+        "slide_6egUpY",
+        "slide_zWEdrR",
+        "slide_KcGA7k",
+        "slide_WrxPwM",
+        "slide_btgfqk",
+        "slide_hn4tWN"
+      ],
+      "name": "NW Find",
+      "settings": {
+        "custom_id": "who-wears-pearler",
+        "heading": "FIND YOUR FIT FOR ANY OCCASION",
+        "text_color": "#04022b",
+        "transition_duration": 500,
+        "enable_autoplay": true,
+        "autoplay_delay": 4000,
+        "show_all_labels_mobile": false,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(215, 211, 196, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 0,
+        "padding_bottom_desktop": 196,
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 84
+      }
+    },
+    "nw_testimonial_jN6k4i": {
+      "type": "nw-testimonial",
+      "blocks": {
+        "testimonial_MtcJxn": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>“I went straight from an early morning workout to an 8 hour shift, and hadn't thought about my feet once.”</p>",
+            "author": "Jake S.",
+            "author_detail": "(Midlength / core)"
+          }
+        },
+        "testimonial_7Ykawd": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>“I went straight from an early morning workout to an 8 hour shift, and hadn't thought about my feet once.”</p>",
+            "author": "Jake S.",
+            "author_detail": "(Midlength / core)"
+          }
+        },
+        "testimonial_AVH7jV": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>“I went straight from an early morning workout to an 8 hour shift, and hadn't thought about my feet once.”</p>",
+            "author": "Jake S.",
+            "author_detail": "(Midlength / core)"
+          }
+        },
+        "testimonial_rHYgbp": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "<p>“I went straight from an early morning workout to an 8 hour shift, and hadn't thought about my feet once.”</p>",
+            "author": "Jake S.",
+            "author_detail": "(Midlength / core)"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_MtcJxn",
+        "testimonial_7Ykawd",
+        "testimonial_AVH7jV",
+        "testimonial_rHYgbp"
+      ],
+      "name": "NW Testimonial",
+      "settings": {
+        "heading": "What they're saying",
+        "text_color": "#04022b",
+        "transition_duration": 600,
+        "enable_loop": true,
+        "enable_autoplay": true,
+        "autoplay_delay": 5000,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 20,
+        "padding_bottom_desktop": 0,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 0
+      }
+    },
+    "nw_bundle_XeDrVz": {
+      "type": "nw-bundle",
+      "name": "NW Bundle",
+      "settings": {
+        "eyebrow": "THE COMPLETE SET",
+        "heading": "<p>Can’t choose? Try three.</p><p>Feather, Core & Cloud available in 1 Box Set—</p>",
+        "text_color": "#04022b",
+        "product": "midlength-sock-white",
+        "bundle_image": "shopify://shop_images/Sock-Box-Set_1_2_1.png",
+        "show_button": true,
+        "button_label": "Shop Discovery Box",
+        "button_link": "shopify://products/pearler-discovery-box",
+        "button_style_desktop": "style_1",
+        "button_style_mobile": "style_2",
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 116,
+        "padding_bottom_desktop": 108,
+        "padding_top_mobile": 68,
+        "padding_bottom_mobile": 68
+      }
+    }
+  },
+  "order": [
+    "nw_hero_jJBcXC",
+    "slideshow_zbn38x",
+    "nw_content_DQB9Ew",
+    "nw_bestseller_4QTp8F",
+    "nw_card_DfVQ7E",
+    "image_with_text_overlay_a3Gmcx",
+    "nw_content_EDa3qr",
+    "nw_find_YaEMEV",
+    "nw_testimonial_jN6k4i",
+    "nw_bundle_XeDrVz"
+  ]
+}

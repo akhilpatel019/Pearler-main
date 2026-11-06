@@ -1,0 +1,624 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "nw_richtext_XNEMQx": {
+      "type": "nw-richtext",
+      "name": "Offer Text",
+      "settings": {
+        "show_line": false,
+        "line_heading": "YOU MAY ALSO LIKE",
+        "content": "Any 5 Pairs for $99\n+ FREE GIFT",
+        "subheading": "",
+        "text_color": "#ffffff",
+        "subheading_font_family": "helvetica",
+        "subheading_font_size_desktop": 40,
+        "subheading_font_size_mobile": 22,
+        "subheading_line_height_desktop": 48,
+        "subheading_line_height_mobile": 26,
+        "subheading_text_transform": "uppercase",
+        "subheading_letter_spacing_desktop": 2,
+        "subheading_letter_spacing_mobile": 2,
+        "subheading_gap_desktop": 52,
+        "subheading_gap_mobile": 56,
+        "content_font_family": "heading",
+        "content_font_size_desktop": 40,
+        "content_font_size_mobile": 30,
+        "content_line_height_desktop": 45,
+        "content_line_height_mobile": 30,
+        "content_letter_spacing_desktop": -1,
+        "content_letter_spacing_mobile": -1,
+        "content_text_align": "center",
+        "content_max_width_desktop": 447,
+        "content_max_width_mobile": 340,
+        "show_button": true,
+        "button_label": "",
+        "button_link": "",
+        "button_style_desktop": "style_2",
+        "button_style_mobile": "style_2",
+        "button_gap_desktop": 40,
+        "button_gap_mobile": 40,
+        "background_type": "solid",
+        "background_color": "#04022b",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 36,
+        "padding_bottom_desktop": 0,
+        "padding_top_mobile": 16,
+        "padding_bottom_mobile": 0
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "custom_title": "{{ product.metafields.custom.thickness.value }} / [Length] / [Colour]"
+          }
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {
+            "show_in_tab": false,
+            "open_tab": false,
+            "icon": ""
+          }
+        },
+        "nw_gender_links_ynCDg6": {
+          "type": "nw-size-links",
+          "settings": {
+            "womens_label": "Women's Sizes",
+            "womens_product": "women-sock-feather",
+            "mens_label": "Men's Sizes",
+            "mens_product": "mens-feather",
+            "active_size": "women",
+            "enable_size_chart": true,
+            "size_chart_label": "Size guide",
+            "size_chart_variant": "Size",
+            "size_chart_source": "section",
+            "size_chart_page": "",
+            "popup_trigger_id": ""
+          }
+        },
+        "variant-picker": {
+          "type": "variant-picker",
+          "settings": {
+            "show_single": false,
+            "selector_style": "listed",
+            "dynamic_availability": "show",
+            "enable_size_chart": false,
+            "size_chart_label": "Size guide",
+            "size_chart_variant": "Size",
+            "size_chart_source": "section",
+            "size_chart_page": ""
+          }
+        },
+        "nw_thickness_Kmk8QM": {
+          "type": "nw-thickness",
+          "settings": {
+            "heading": "Choose Your Thickness",
+            "description": "",
+            "popup_trigger_id": "pearler-thickness-guide",
+            "option_1_label": "Feather",
+            "option_1_womens_product": "women-sock-feather",
+            "option_1_mens_product": "mens-feather",
+            "option_2_label": "Core",
+            "option_2_womens_product": "womens-sock-core",
+            "option_2_mens_product": "mens-core",
+            "option_3_label": "Cloud",
+            "option_3_womens_product": "womens-sock-cloud",
+            "option_3_mens_product": "mens-cloud",
+            "option_4_label": "",
+            "option_4_womens_product": "",
+            "option_4_mens_product": "",
+            "option_5_label": "",
+            "option_5_womens_product": "",
+            "option_5_mens_product": ""
+          }
+        },
+        "divider": {
+          "type": "divider",
+          "settings": {}
+        },
+        "nw_bundle_save_Dqdqi3": {
+          "type": "nw-bundle-save",
+          "settings": {
+            "heading": "Bundle & Save",
+            "subheading": "Add ANY combination of socks and save",
+            "footer_note": "Discount automatically applied at checkout",
+            "item_1_title": "1 PAIR",
+            "item_1_price": "$34.95",
+            "item_1_discount": "",
+            "item_2_title": "3 PAIRS",
+            "item_2_price": "$26.65 each",
+            "item_2_discount": "SAVE 26%",
+            "item_3_title": "5 PAIRS",
+            "item_3_price": "$19.80 each",
+            "item_3_discount": "SAVE 43%",
+            "item_4_title": "10 PAIRS",
+            "item_4_price": "$18.90 each",
+            "item_4_discount": "SAVE 46%",
+            "item_5_title": "20 PAIRS",
+            "item_5_price": "$17.45 each",
+            "item_5_discount": "SAVE 50%",
+            "item_6_title": "",
+            "item_6_price": "",
+            "item_6_discount": ""
+          }
+        },
+        "price": {
+          "type": "price",
+          "disabled": true,
+          "settings": {
+            "show_installments": false,
+            "show_tax_and_shipping": false,
+            "enable_product_reviews_by_price": true
+          }
+        },
+        "vendor": {
+          "type": "vendor",
+          "disabled": true,
+          "settings": {}
+        },
+        "buy-buttons": {
+          "type": "buy-buttons",
+          "settings": {
+            "show_quantity_selector": true,
+            "button_style_desktop": "style_1",
+            "button_style_mobile": "style_1",
+            "button_footer_text": "30 Day Money-Back Guarantee",
+            "enable_payment_button": false,
+            "show_backorder_text": false,
+            "show_pickup_availability": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "accordion_n36Nqp": {
+          "type": "accordion",
+          "settings": {
+            "title": "Description",
+            "icon": "",
+            "content": "<p></p>{{ product.description }}",
+            "page": "",
+            "custom_liquid": "",
+            "open": false,
+            "variant_content": false
+          }
+        },
+        "accordion_GR6dnd": {
+          "type": "accordion",
+          "settings": {
+            "title": "Our Technology",
+            "icon": "",
+            "content": "<p><strong>THE AIRMAP SYSTEM</strong><br/><br/>Airflow, mapped into every pair.</p><p>Most socks trap heat. Pearler socks have ventilation channels knitted in, so air keeps moving around your foot, even inside a leather shoe. Extra panels absorb sweat where your foot needs it most, so you stay dry from the first meeting to the last.</p><p><strong>AND TWO MORE THINGS YOU WON’T FIND IN ANOTHER SOCK</strong></p><p><strong>Exact sizing.</strong> Made in your size, not a size range. Your size is printed on the sole, under the P. No bunching, no slipping, no stretching out.</p><p><strong>Three thicknesses.</strong> Feather, Core and Cloud, so you choose the cushioning your day needs.</p>",
+            "page": "",
+            "custom_liquid": "",
+            "open": false,
+            "variant_content": false
+          }
+        },
+        "accordion_feUfYx": {
+          "type": "accordion",
+          "settings": {
+            "title": "Materials / Care",
+            "icon": "",
+            "content": "<ul><li><strong>Materials</strong><br/><br/>- 66% cotton, 20% polyester, 10% nylon, 3% spandex.<br/>- Designed in Australia. Made in China.</li></ul><p></p><ul><li><strong>Care</strong><br/><br/>- Cold machine wash with like colours.<br/>- Do not bleach, soak or rub.<br/>- Do not tumble dry. Dry in shade.<br/>- Cool iron.<br/>- Do not dry clean.</li></ul>",
+            "page": "",
+            "custom_liquid": "",
+            "open": false,
+            "variant_content": false
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "description",
+        "nw_gender_links_ynCDg6",
+        "variant-picker",
+        "nw_thickness_Kmk8QM",
+        "divider",
+        "nw_bundle_save_Dqdqi3",
+        "price",
+        "vendor",
+        "buy-buttons",
+        "accordion_n36Nqp",
+        "accordion_GR6dnd",
+        "accordion_feUfYx"
+      ],
+      "custom_css": [
+        "* {text-transform: none !important;}"
+      ],
+      "settings": {
+        "show_breadcrumbs": false,
+        "select_first_variant": false,
+        "show_location_underneath": false,
+        "inventory_transfers_enable": true,
+        "enable_sticky_columns": true,
+        "enable_sticky_atc": false,
+        "sticky_atc_position": "end",
+        "sticky_atc_mobile": true,
+        "sticky_atc_behavior": "add_to_cart",
+        "sticky_atc_button_style": "secondary",
+        "gallery_size": "medium",
+        "gallery_layout": "carousel-under",
+        "hide_product_thumbnails": true,
+        "show_gallery_arrows": true,
+        "show_gallery_dots": true,
+        "collage_highlight_on_variant_change": true,
+        "enable_zoom": false,
+        "show_alt_text": false,
+        "alt_text_icon": "",
+        "show_variant_media_label": true,
+        "enable_video_autoplay": false,
+        "enable_video_looping": false,
+        "enable_media_grouping": false,
+        "media_grouping_option": "Color,Colour,Couleur,Farbe"
+      }
+    },
+    "nw_popup_egUxAy": {
+      "type": "nw-popup",
+      "name": "NW Popup",
+      "settings": {
+        "popup_id": "pearler-thickness-guide",
+        "heading": "Pearler Thickness Guide",
+        "under_heading": "<p><strong>FEATHER</strong><br/>Light. For business shoes, golf shoes and well-fitting shoes.<br/><br/><strong>CORE</strong><br/>Takes you from 5am to 10pm, with whatever your day holds.<br/><br/><strong>CLOUD</strong><br/>That extra comfort for travel days, recovery days or cosy days.</p>",
+        "content": "",
+        "page": "",
+        "enable_row_highlight": false,
+        "show_footer": false,
+        "footer_text": "",
+        "footer_bg_color": "#000000",
+        "footer_text_color": "#ffffff"
+      }
+    },
+    "size_guide_47UzFx": {
+      "type": "size-guide",
+      "blocks": {
+        "size_guide_tab_ALc7ME": {
+          "type": "size-guide-tab",
+          "disabled": true,
+          "settings": {
+            "show_tab": true,
+            "title": "Size guide tab"
+          },
+          "blocks": {
+            "size_guide_table_yRATfw": {
+              "type": "size-guide-table",
+              "settings": {
+                "title": "Sizes",
+                "sticky_row_name": true,
+                "show_unit_converter": false,
+                "default_unit": "metric",
+                "metric_label": "Metric",
+                "imperial_label": "Imperial",
+                "converter_precision": 1,
+                "table_text_size": "",
+                "text_alignment_first": "left",
+                "text_alignment": "left",
+                "table_even_columns": false,
+                "table_text_wrap": false
+              },
+              "blocks": {
+                "size_guide_table_row_hfQnc9": {
+                  "type": "size-guide-table-row",
+                  "settings": {
+                    "is_table_header": true,
+                    "title": "",
+                    "column_1": "Length",
+                    "column_2": "",
+                    "column_3": "",
+                    "column_4": "",
+                    "column_5": "",
+                    "column_6": "",
+                    "column_7": "",
+                    "column_8": "",
+                    "column_9": "",
+                    "column_10": "",
+                    "column_11": "",
+                    "column_12": "",
+                    "column_13": "",
+                    "column_14": "",
+                    "column_15": "",
+                    "column_16": "",
+                    "column_17": "",
+                    "column_18": "",
+                    "column_19": "",
+                    "column_20": ""
+                  },
+                  "blocks": {}
+                },
+                "size_guide_table_row_cEFY4V": {
+                  "type": "size-guide-table-row",
+                  "settings": {
+                    "is_table_header": false,
+                    "title": "S",
+                    "column_1": "10cm",
+                    "column_2": "",
+                    "column_3": "",
+                    "column_4": "",
+                    "column_5": "",
+                    "column_6": "",
+                    "column_7": "",
+                    "column_8": "",
+                    "column_9": "",
+                    "column_10": "",
+                    "column_11": "",
+                    "column_12": "",
+                    "column_13": "",
+                    "column_14": "",
+                    "column_15": "",
+                    "column_16": "",
+                    "column_17": "",
+                    "column_18": "",
+                    "column_19": "",
+                    "column_20": ""
+                  },
+                  "blocks": {}
+                },
+                "size_guide_table_row_aFj9TJ": {
+                  "type": "size-guide-table-row",
+                  "settings": {
+                    "is_table_header": false,
+                    "title": "M",
+                    "column_1": "20cm",
+                    "column_2": "",
+                    "column_3": "",
+                    "column_4": "",
+                    "column_5": "",
+                    "column_6": "",
+                    "column_7": "",
+                    "column_8": "",
+                    "column_9": "",
+                    "column_10": "",
+                    "column_11": "",
+                    "column_12": "",
+                    "column_13": "",
+                    "column_14": "",
+                    "column_15": "",
+                    "column_16": "",
+                    "column_17": "",
+                    "column_18": "",
+                    "column_19": "",
+                    "column_20": ""
+                  },
+                  "blocks": {}
+                },
+                "size_guide_table_row_3M4ri7": {
+                  "type": "size-guide-table-row",
+                  "settings": {
+                    "is_table_header": false,
+                    "title": "L",
+                    "column_1": "30cm",
+                    "column_2": "",
+                    "column_3": "",
+                    "column_4": "",
+                    "column_5": "",
+                    "column_6": "",
+                    "column_7": "",
+                    "column_8": "",
+                    "column_9": "",
+                    "column_10": "",
+                    "column_11": "",
+                    "column_12": "",
+                    "column_13": "",
+                    "column_14": "",
+                    "column_15": "",
+                    "column_16": "",
+                    "column_17": "",
+                    "column_18": "",
+                    "column_19": "",
+                    "column_20": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "size_guide_table_row_hfQnc9",
+                "size_guide_table_row_cEFY4V",
+                "size_guide_table_row_aFj9TJ",
+                "size_guide_table_row_3M4ri7"
+              ]
+            }
+          },
+          "block_order": [
+            "size_guide_table_yRATfw"
+          ]
+        }
+      },
+      "block_order": [
+        "size_guide_tab_ALc7ME"
+      ],
+      "name": "Size guide",
+      "settings": {
+        "associate_with_product": true,
+        "product": "",
+        "visibility": "popup",
+        "full_width": false,
+        "heading": "Size Guide",
+        "under_heading": "<p>For the best fit, select your current shoe size. If you are between sizes, we recommend choosing the smaller size.</p>",
+        "enable_row_highlight": false,
+        "show_footer": false,
+        "footer_text": "Not sure? Feel free to <a href=\"#\">contact</a> our friendly team for help.",
+        "footer_bg_color": "#000000",
+        "footer_text_color": "#ffffff"
+      }
+    },
+    "nw_cta_Wj8AH3": {
+      "type": "nw-cta",
+      "name": "NW CTA",
+      "settings": {
+        "eyebrow": "Designed for",
+        "heading": "People who obsess over details, like things that make them feel good and make their day easier.",
+        "eyebrow_color": "#04022b",
+        "heading_color": "#04022b",
+        "eyebrow_color_mobile": "#04022b",
+        "heading_color_mobile": "#04022b",
+        "show_button": false,
+        "button_label": "Shop now",
+        "button_link": "",
+        "button_style_desktop": "style_3",
+        "button_style_mobile": "style_2",
+        "image": "shopify://shop_images/cta-desktop-2.png",
+        "mobile_image": "shopify://shop_images/cta-mobile-2.png",
+        "background_color": "#ebe9e2",
+        "show_overlay": false,
+        "overlay_color": "#04022b",
+        "overlay_opacity": 25,
+        "min_height_desktop": 520,
+        "card_border_radius": 50,
+        "card_border_radius_mobile": 30,
+        "padding_top_desktop": 0,
+        "padding_bottom_desktop": 0,
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 0
+      }
+    },
+    "nw_related_product_aFKizw": {
+      "type": "nw-related-product",
+      "blocks": {
+        "related_product_xXDWtn": {
+          "type": "related_product",
+          "settings": {
+            "product": "women-sock-feather",
+            "variant_options": "6\nAnkle \nWhite",
+            "custom_title": "[Length] / [Colour]",
+            "custom_description": "",
+            "show_price": false,
+            "show_quantity": false
+          }
+        },
+        "related_product_GCxX7p": {
+          "type": "related_product",
+          "settings": {
+            "product": "mens-cloud",
+            "variant_options": "6, Midlength, Black",
+            "custom_title": "[Length] / [Colour]",
+            "custom_description": "",
+            "show_price": false,
+            "show_quantity": false
+          }
+        },
+        "related_product_FyPypJ": {
+          "type": "related_product",
+          "settings": {
+            "product": "pearler-discovery-box",
+            "variant_options": "",
+            "custom_title": "Pearler Discovery Box",
+            "custom_description": "",
+            "show_price": false,
+            "show_quantity": false
+          }
+        },
+        "related_product_TTRYq9": {
+          "type": "related_product",
+          "settings": {
+            "product": "pearler-wash-bag",
+            "variant_options": "",
+            "custom_title": "",
+            "custom_description": "",
+            "show_price": true,
+            "show_quantity": true
+          }
+        }
+      },
+      "block_order": [
+        "related_product_xXDWtn",
+        "related_product_GCxX7p",
+        "related_product_FyPypJ",
+        "related_product_TTRYq9"
+      ],
+      "name": "NW Related Product",
+      "settings": {
+        "heading": "YOU MAY ALSO LIKE",
+        "text_color": "#04022b",
+        "product_source": "blocks",
+        "context_product": "",
+        "related_metafield_key": "related_products",
+        "max_products": 4,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "padding_top_desktop": 120,
+        "padding_bottom_desktop": 120,
+        "padding_top_mobile": 120,
+        "padding_bottom_mobile": 92
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "title": "You may also like",
+        "show_vendor": false,
+        "grid": 4
+      }
+    },
+    "nw_richtext_cADcFK": {
+      "type": "nw-richtext",
+      "name": "NW Richtext",
+      "settings": {
+        "show_line": false,
+        "line_heading": "YOU MAY ALSO LIKE",
+        "content": "Can't decide \nwhich pair is right for you?",
+        "subheading": "",
+        "text_color": "#04022b",
+        "subheading_font_family": "helvetica",
+        "subheading_font_size_desktop": 40,
+        "subheading_font_size_mobile": 22,
+        "subheading_line_height_desktop": 48,
+        "subheading_line_height_mobile": 26,
+        "subheading_text_transform": "uppercase",
+        "subheading_letter_spacing_desktop": 2,
+        "subheading_letter_spacing_mobile": 2,
+        "subheading_gap_desktop": 52,
+        "subheading_gap_mobile": 44,
+        "content_font_family": "heading",
+        "content_font_size_desktop": 40,
+        "content_font_size_mobile": 30,
+        "content_line_height_desktop": 45,
+        "content_line_height_mobile": 30,
+        "content_letter_spacing_desktop": -1,
+        "content_letter_spacing_mobile": -3,
+        "content_text_align": "center",
+        "content_max_width_desktop": 469,
+        "content_max_width_mobile": 352,
+        "show_button": true,
+        "button_label": "Take The Quiz",
+        "button_link": "shopify://pages/quiz",
+        "button_style_desktop": "style_2",
+        "button_style_mobile": "style_2",
+        "button_gap_desktop": 40,
+        "button_gap_mobile": 40,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 112,
+        "padding_bottom_desktop": 188,
+        "padding_top_mobile": 100,
+        "padding_bottom_mobile": 200
+      }
+    }
+  },
+  "order": [
+    "nw_richtext_XNEMQx",
+    "main",
+    "nw_popup_egUxAy",
+    "size_guide_47UzFx",
+    "nw_cta_Wj8AH3",
+    "nw_related_product_aFKizw",
+    "related-products",
+    "nw_richtext_cADcFK"
+  ]
+}

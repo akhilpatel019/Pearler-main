@@ -1,0 +1,169 @@
+{%- liquid
+  assign cart_subtotal = cart.total_price
+  assign tier_1_cents = settings.nw_cart_tier_1_amount | times: 100 | round
+  assign tier_2_cents = settings.nw_cart_tier_2_amount | times: 100 | round
+  assign tier_3_cents = settings.nw_cart_tier_3_amount | times: 100 | round
+  assign pos_1 = settings.nw_cart_tier_1_position
+  assign pos_2 = settings.nw_cart_tier_2_position
+  assign pos_3 = settings.nw_cart_tier_3_position
+
+  assign nw_tiered_progress = 0
+  if cart_subtotal <= 0
+    assign nw_tiered_progress = 0
+  elsif cart_subtotal >= tier_3_cents
+    assign nw_tiered_progress = pos_3
+  elsif cart_subtotal >= tier_2_cents and tier_3_cents > tier_2_cents
+    assign amount_span = tier_3_cents | minus: tier_2_cents
+    assign pos_span = pos_3 | minus: pos_2
+    assign amount_progress = cart_subtotal | minus: tier_2_cents
+    assign segment_progress = pos_span | times: amount_progress | divided_by: amount_span
+    assign nw_tiered_progress = pos_2 | plus: segment_progress
+  elsif cart_subtotal >= tier_1_cents and tier_2_cents > tier_1_cents
+    assign amount_span = tier_2_cents | minus: tier_1_cents
+    assign pos_span = pos_2 | minus: pos_1
+    assign amount_progress = cart_subtotal | minus: tier_1_cents
+    assign segment_progress = pos_span | times: amount_progress | divided_by: amount_span
+    assign nw_tiered_progress = pos_1 | plus: segment_progress
+  elsif tier_1_cents > 0
+    assign nw_tiered_progress = pos_1 | times: cart_subtotal | divided_by: tier_1_cents
+  endif
+
+  if nw_tiered_progress > 100
+    assign nw_tiered_progress = 100
+  endif
+  if nw_tiered_progress < 0
+    assign nw_tiered_progress = 0
+  endif
+
+  assign tier_1_unlocked = false
+  assign tier_2_unlocked = false
+  assign tier_3_unlocked = false
+  if cart_subtotal >= tier_1_cents and nw_tiered_progress >= pos_1
+    assign tier_1_unlocked = true
+  endif
+  if cart_subtotal >= tier_2_cents and nw_tiered_progress >= pos_2
+    assign tier_2_unlocked = true
+  endif
+  if cart_subtotal >= tier_3_cents and nw_tiered_progress >= pos_3
+    assign tier_3_unlocked = true
+  endif
+
+  assign next_tier_label = blank
+  assign next_tier_difference = 0
+  if cart_subtotal < tier_1_cents
+    assign next_tier_difference = tier_1_cents | minus: cart_subtotal
+    assign next_tier_label = settings.nw_cart_tier_1_label
+  elsif cart_subtotal < tier_2_cents
+    assign next_tier_difference = tier_2_cents | minus: cart_subtotal
+    assign next_tier_label = settings.nw_cart_tier_2_label
+  elsif cart_subtotal < tier_3_cents
+    assign next_tier_difference = tier_3_cents | minus: cart_subtotal
+    assign next_tier_label = settings.nw_cart_tier_3_label
+  endif
+
+  assign nw_tier_1_variant_id = blank
+  assign nw_tier_2_variant_id = blank
+  assign nw_tier_3_variant_id = blank
+  if settings.nw_cart_tier_1_product != blank
+    assign nw_t1_variant = settings.nw_cart_tier_1_product.selected_or_first_available_variant
+    if nw_t1_variant != blank and nw_t1_variant.available
+      assign nw_tier_1_variant_id = nw_t1_variant.id
+    endif
+  endif
+  if settings.nw_cart_tier_2_product != blank
+    assign nw_t2_variant = settings.nw_cart_tier_2_product.selected_or_first_available_variant
+    if nw_t2_variant != blank and nw_t2_variant.available
+      assign nw_tier_2_variant_id = nw_t2_variant.id
+    endif
+  endif
+  if settings.nw_cart_tier_3_product != blank
+    assign nw_t3_variant = settings.nw_cart_tier_3_product.selected_or_first_available_variant
+    if nw_t3_variant != blank and nw_t3_variant.available
+      assign nw_tier_3_variant_id = nw_t3_variant.id
+    endif
+  endif
+-%}
+
+<div
+  class="nw-cart-tiered-bar{% if cart.items == empty %} nw-cart-tiered-bar--empty{% endif %}"
+  data-merge-attributes="nw-tiered-bar"
+>
+  <p class="nw-cart-tiered-bar__message" data-merge="nw-tiered-bar-message" data-merge-cache="{{ cart.total_price }}">
+    {%- if next_tier_label != blank -%}
+      Spend {{ next_tier_difference | money }} to earn <strong>{{ next_tier_label }}</strong>
+    {%- else -%}
+      {{ settings.nw_cart_tiered_all_unlocked_message }}
+    {%- endif -%}
+  </p>
+
+  <div
+    class="nw-cart-tiered-bar__visual"
+    data-merge="nw-tiered-bar-visual"
+    data-merge-cache="{{ cart.total_price }}"
+  >
+    <div
+      class="nw-cart-tiered-bar__track"
+      style="--nw-tiered-progress: {{ nw_tiered_progress }}%;"
+      aria-hidden="true"
+    >
+      <div class="nw-cart-tiered-bar__fill"></div>
+    </div>
+
+    <div class="nw-cart-tiered-bar__tiers">
+      <div class="nw-cart-tiered-bar__tier{% if tier_1_unlocked %} nw-unlocked{% endif %}" style="--nw-tier-position: {{ settings.nw_cart_tier_1_position }}%;">
+        <span class="nw-cart-tiered-bar__pill{% if tier_1_unlocked %} nw-cart-tiered-bar__pill--active{% endif %}">
+          {%- if settings.nw_cart_tier_1_pill_text != blank -%}
+            {{- settings.nw_cart_tier_1_pill_text | escape -}}
+          {%- else -%}
+            {{- tier_1_cents | money_without_trailing_zeros -}}
+          {%- endif -%}
+        </span>
+        <span class="nw-cart-tiered-bar__label">{{ settings.nw_cart_tier_1_reward_label | escape }}</span>
+      </div>
+
+      <div class="nw-cart-tiered-bar__tier{% if tier_2_unlocked %} nw-unlocked{% endif %}" style="--nw-tier-position: {{ settings.nw_cart_tier_2_position }}%;">
+        <span class="nw-cart-tiered-bar__pill{% if tier_2_unlocked %} nw-cart-tiered-bar__pill--active{% endif %}">
+          {%- if settings.nw_cart_tier_2_pill_text != blank -%}
+            {{- settings.nw_cart_tier_2_pill_text | escape -}}
+          {%- else -%}
+            {{- tier_2_cents | money_without_trailing_zeros -}}
+          {%- endif -%}
+        </span>
+        <span class="nw-cart-tiered-bar__label">{{ settings.nw_cart_tier_2_reward_label | escape }}</span>
+      </div>
+
+      <div class="nw-cart-tiered-bar__tier nw-cart-tiered-bar__tier--last{% if tier_3_unlocked %} nw-unlocked{% endif %}" style="--nw-tier-position: {{ settings.nw_cart_tier_3_position }}%;">
+        <span class="nw-cart-tiered-bar__pill{% if tier_3_unlocked %} nw-cart-tiered-bar__pill--active{% endif %}">
+          {%- if settings.nw_cart_tier_3_pill_text != blank -%}
+            {{- settings.nw_cart_tier_3_pill_text | escape -}}
+          {%- else -%}
+            {{- tier_3_cents | money_without_trailing_zeros -}}
+          {%- endif -%}
+        </span>
+        <span class="nw-cart-tiered-bar__label">{{ settings.nw_cart_tier_3_reward_label | escape }}</span>
+      </div>
+    </div>
+
+    <script type="application/json" data-nw-tier-rewards-config>
+      {
+        "tiers": [
+          {
+            "tier": 1,
+            "unlocked": {{ tier_1_unlocked | json }},
+            "variantId": {% if nw_tier_1_variant_id != blank %}{{ nw_tier_1_variant_id }}{% else %}null{% endif %}
+          },
+          {
+            "tier": 2,
+            "unlocked": {{ tier_2_unlocked | json }},
+            "variantId": {% if nw_tier_2_variant_id != blank %}{{ nw_tier_2_variant_id }}{% else %}null{% endif %}
+          },
+          {
+            "tier": 3,
+            "unlocked": {{ tier_3_unlocked | json }},
+            "variantId": {% if nw_tier_3_variant_id != blank %}{{ nw_tier_3_variant_id }}{% else %}null{% endif %}
+          }
+        ]
+      }
+    </script>
+  </div>
+</div>

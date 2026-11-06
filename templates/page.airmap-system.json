@@ -1,0 +1,62 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "show_page_title": true,
+        "full_width": false,
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 80,
+        "padding_bottom_desktop": 80,
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 48
+      }
+    },
+    "nw_innovation_hbf4kq": {
+      "type": "nw-innovation",
+      "name": "NW Innovation",
+      "settings": {
+        "heading": "<p>Socks haven't seen real innovation in decades.</p>",
+        "accent": "<p><em>Until now.</em></p>",
+        "heading_color": "#04022b",
+        "feature_image": "shopify://shop_images/8da12501fd64e46cf21ce398d6905fdd_1_2.png",
+        "feature_image_mobile": "shopify://shop_images/8da12501fd64e46cf21ce398d6905fdd_1_1_1.png",
+        "feature_image_alt": "",
+        "overlay_text": "The Pearler AirMap System",
+        "overlay_color": "#ebe9e2",
+        "show_button": true,
+        "button_label": "Shop The Sock",
+        "button_link": "shopify://products/mens-feather",
+        "button_style_desktop": "style_2",
+        "button_style_mobile": "style_2",
+        "background_type": "solid",
+        "background_color": "#ebe9e2",
+        "background_gradient": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+        "min_height_desktop": 0,
+        "min_height_mobile": 0,
+        "padding_top_desktop": 152,
+        "padding_bottom_desktop": 68,
+        "padding_top_mobile": 64,
+        "padding_bottom_mobile": 60
+      }
+    }
+  },
+  "order": [
+    "main",
+    "nw_innovation_hbf4kq"
+  ]
+}

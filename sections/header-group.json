@@ -1,0 +1,149 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header Group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "e33df8e3-c667-49c7-9da7-a23fac96c44d": {
+          "type": "announcement",
+          "settings": {
+            "text": "<a href=\"#\" title=\"FAQs\">Free shipping</a> on orders over $50",
+            "show_countdown": true,
+            "hide_on_end": false,
+            "end_date": "",
+            "end_time": "",
+            "number_font": "base",
+            "countdown_separator": "box",
+            "use_custom_colors": true,
+            "bg_color": "#232323",
+            "bg_gradient": "",
+            "text_color": "#ffffff"
+          }
+        },
+        "ab92b476-2d4e-4c0c-991e-4f528236c2d9": {
+          "type": "announcement",
+          "settings": {
+            "text": "New eco friendly arrivals. <a href=\"#\" title=\"New In\">Shop the capsule.</a>",
+            "show_countdown": false,
+            "hide_on_end": false,
+            "end_date": "",
+            "end_time": "",
+            "number_font": "base",
+            "countdown_separator": "box",
+            "use_custom_colors": false,
+            "bg_color": "#dd9a1a",
+            "bg_gradient": "",
+            "text_color": "#ffffff"
+          }
+        },
+        "779702cf-d8cf-4f96-b433-b424480b158b": {
+          "type": "announcement",
+          "settings": {
+            "text": "Swim Capsule. Be the first to <a href=\"#\" title=\"New In\">shop the drop</a>.",
+            "show_countdown": false,
+            "hide_on_end": false,
+            "end_date": "",
+            "end_time": "",
+            "number_font": "base",
+            "countdown_separator": "dash",
+            "use_custom_colors": false,
+            "bg_color": "#862714",
+            "bg_gradient": "",
+            "text_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "e33df8e3-c667-49c7-9da7-a23fac96c44d",
+        "ab92b476-2d4e-4c0c-991e-4f528236c2d9",
+        "779702cf-d8cf-4f96-b433-b424480b158b"
+      ],
+      "disabled": true,
+      "settings": {
+        "message_font_size": 12,
+        "announcement_bar_col": "#232323",
+        "announcement_bar_gradient": "",
+        "announcement_text_col": "#ffffff",
+        "show_social_icons": false,
+        "menu": "",
+        "enable_country_selector": true,
+        "enable_language_selector": true
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo": "shopify://shop_images/pearler-logo-2.png",
+        "logo_img_width_int": 155,
+        "mobile_logo_img_width_int": 75,
+        "logo_h1": true,
+        "enable_sticky": true,
+        "enable_transparent": true,
+        "transparent_logo": "shopify://shop_images/pearler-logo.png",
+        "transparent_color": "#ffffff",
+        "transparent_fade": "#000000",
+        "transparent_fade_strength": 25,
+        "transparent_bottom_border": true,
+        "transparent_bottom_border_color": "#ffffff",
+        "transparent_bottom_border_opacity": 50,
+        "menu_linklist": "menu-2",
+        "menu_layout": "inline-menu-center",
+        "nav_featured_link": "Clearance",
+        "enable_legacy_customer_account_link": false,
+        "customer_account_menu": "customer-account-main-menu",
+        "menu_linklist_mobile": "mobile-menu",
+        "mobile_expand_with_entire_link": true,
+        "enable_mobile_promo_carousel": true,
+        "enable_nav_mob_products": true,
+        "nav_mob_products_title": "Best Sellers",
+        "nav_mob_products_collection": "",
+        "enable_search": true,
+        "search_recommendations_title": "",
+        "search_recommendations_menu": "",
+        "icon_strategy": "icon_search_cart_text",
+        "cart_icon": "bag"
+      }
+    },
+    "store-messages": {
+      "type": "store-messages",
+      "blocks": {
+        "message_ey38Gx": {
+          "type": "message",
+          "settings": {
+            "heading": "Store message",
+            "subheading": "Add important information here",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "message_ey38Gx"
+      ],
+      "disabled": true,
+      "settings": {
+        "head_not_home_only": false,
+        "head_not_col_bg": "#f4f6f8",
+        "head_not_col_txt1": "#171717",
+        "head_not_col_txt2": "#4c4c4b",
+        "head_not_mob_show": false,
+        "head_not_mob_text": "Free shipping on orders over $50",
+        "head_not_mob_url": ""
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header",
+    "store-messages"
+  ]
+}

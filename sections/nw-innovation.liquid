@@ -1,0 +1,410 @@
+{{ 'nw-innovation.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign feature_focal_point = 'center bottom'
+  if section.settings.feature_image != blank and section.settings.feature_image.presentation.focal_point
+    assign feature_focal_point = section.settings.feature_image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  assign feature_image = section.settings.feature_image
+  assign feature_image_mobile = section.settings.feature_image_mobile
+  if feature_image_mobile == blank
+    assign feature_image_mobile = feature_image
+  endif
+
+  assign feature_image_alt = section.settings.feature_image_alt
+  if feature_image_alt == blank and feature_image != blank
+    assign feature_image_alt = feature_image.alt
+  endif
+  assign feature_image_alt = feature_image_alt | default: '' | escape
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-innovation {
+    --nw-innovation-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-innovation-bg-fallback: {{ section.settings.background_color }};
+    --nw-innovation-background: {{ section_background }};
+    --nw-innovation-focal-point: {{ focal_point }};
+    --nw-innovation-feature-focal-point: {{ feature_focal_point }};
+    --nw-innovation-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-innovation-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-innovation-heading-color: {{ section.settings.heading_color }};
+    --nw-innovation-overlay-color: {{ section.settings.overlay_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-innovation {
+      --nw-innovation-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-innovation-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-innovation-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-innovation">
+  {%- if show_media -%}
+    <div
+      class="nw-innovation__media-bg fade-in-up"
+      aria-hidden="true"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"', always: true -%}
+    >
+      {%- liquid
+        assign section_image = section.settings.image
+        assign section_image_mobile = section.settings.mobile_image
+      -%}
+      {%- if section_image == blank -%}
+        <div class="nw-innovation__media-bg-image nw-innovation__media-bg-image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ section_image | image_url: width: 2560 }}"
+          alt=""
+          class="nw-innovation__media-bg-image nw-innovation__media-bg-image--desktop"
+          loading="{{ loading }}"
+          width="{{ section_image.width }}"
+          height="{{ section_image.height }}"
+        >
+        {%- if section_image_mobile != blank -%}
+          <img
+            src="{{ section_image_mobile | image_url: width: 1500 }}"
+            alt=""
+            class="nw-innovation__media-bg-image nw-innovation__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image_mobile.width }}"
+            height="{{ section_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ section_image | image_url: width: 1500 }}"
+            alt=""
+            class="nw-innovation__media-bg-image nw-innovation__media-bg-image--mobile"
+            loading="{{ loading }}"
+            width="{{ section_image.width }}"
+            height="{{ section_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="nw-innovation__content">
+    <div class="nw-innovation__inner">
+      {%- if section.settings.heading != blank or section.settings.accent != blank -%}
+        <div class="nw-innovation__intro">
+          <h1
+            class="nw-innovation__heading fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"', always: true -%}
+          >
+            {%- if section.settings.heading != blank -%}
+              <span class="nw-innovation__heading-part rte">{{ section.settings.heading }}</span>
+            {%- endif -%}
+            {%- if section.settings.heading != blank and section.settings.accent != blank -%}
+              {{- ' ' -}}
+            {%- endif -%}
+            {%- if section.settings.accent != blank -%}
+              <span class="nw-innovation__heading-accent rte">{{ section.settings.accent }}</span>
+            {%- endif -%}
+          </h1>
+        </div>
+      {%- endif -%}
+
+      <figure class="nw-innovation__figure  fade-in-up{% if feature_image == blank %} nw-innovation__figure--placeholder{% endif %}"
+        aria-hidden="true"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.35s"', always: true -%}
+      >
+        {%- if feature_image == blank -%}
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        {%- else -%}
+          <img
+            class="nw-innovation__feature-image nw-innovation__feature-image--desktop"
+            src="{{ feature_image | image_url: width: 1600 }}"
+            alt="{{ feature_image_alt }}"
+            loading="{{ loading }}"
+            width="{{ feature_image.width }}"
+            height="{{ feature_image.height }}"
+          >
+          {%- if feature_image_mobile != blank -%}
+            <img
+              class="nw-innovation__feature-image nw-innovation__feature-image--mobile"
+              src="{{ feature_image_mobile | image_url: width: 800 }}"
+              alt="{{ feature_image_alt }}"
+              loading="{{ loading }}"
+              width="{{ feature_image_mobile.width }}"
+              height="{{ feature_image_mobile.height }}"
+            >
+          {%- endif -%}
+        {%- endif -%}
+        {%- if section.settings.overlay_text != blank -%}
+          <p
+            class="nw-innovation__overlay fade-in-up"
+            {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.4s"', always: true -%}
+          >
+            {{- section.settings.overlay_text | escape -}}
+          </p>
+        {%- endif -%}
+      </figure>
+
+      {%- if section.settings.show_button -%}
+        <div
+          class="nw-innovation__cta fade-in-up"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.45s"', always: true -%}
+        >
+          {%- render 'nw-button',
+            label: section.settings.button_label,
+            url: section.settings.button_link,
+            style_desktop: section.settings.button_style_desktop,
+            style_mobile: section.settings.button_style_mobile
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Innovation",
+  "class": "shopify-section--nw-innovation",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Socks haven't seen real innovation in decades.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "accent",
+      "label": "Accent line",
+      "default": "<p><em>Until now.</em></p>"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#04022B"
+    },
+    {
+      "type": "image_picker",
+      "id": "feature_image",
+      "label": "Feature image"
+    },
+    {
+      "type": "image_picker",
+      "id": "feature_image_mobile",
+      "label": "Feature image mobile",
+      "info": "Optional. Uses desktop image when empty."
+    },
+    {
+      "type": "text",
+      "id": "feature_image_alt",
+      "label": "Feature image alt text"
+    },
+    {
+      "type": "text",
+      "id": "overlay_text",
+      "label": "Image overlay text",
+      "default": "The Pearler AirMap System"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay text color",
+      "default": "#EBE9E2"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop The Sock",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Button style desktop",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        { "value": "style_1", "label": "Solid navy" },
+        { "value": "style_2", "label": "Outline navy" },
+        { "value": "style_3", "label": "Outline cream" },
+        { "value": "style_4", "label": "Solid cream" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Button style mobile",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        { "value": "style_1", "label": "Solid navy" },
+        { "value": "style_2", "label": "Outline navy" },
+        { "value": "style_3", "label": "Outline cream" },
+        { "value": "style_4", "label": "Solid cream" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "solid", "label": "Solid color" },
+        { "value": "linear_gradient", "label": "Linear gradient" },
+        { "value": "none", "label": "None" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Innovation"
+    }
+  ]
+}
+{% endschema %}

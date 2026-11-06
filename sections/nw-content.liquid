@@ -1,0 +1,577 @@
+{{ 'nw-content.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign loading = 'lazy'
+  if section.index == 1
+    assign loading = 'eager'
+  endif
+
+  assign focal_point = 'center center'
+  if section.settings.image != blank and section.settings.image.presentation.focal_point
+    assign focal_point = section.settings.image.presentation.focal_point
+  endif
+
+  assign section_background = 'transparent'
+  assign show_media = false
+
+  case section.settings.background_type
+    when 'image'
+      assign section_background = section.settings.background_color
+      assign show_media = true
+    when 'solid'
+      assign section_background = section.settings.background_color
+    when 'linear_gradient'
+      assign section_background = section.settings.background_gradient
+    when 'none'
+      assign section_background = 'transparent'
+  endcase
+
+  case section.settings.heading_font_family
+    when 'body'
+      assign heading_font_family = 'var(--font-body-family)'
+    when 'heading_italic'
+      assign heading_font_family = 'var(--font-heading-family-italic)'
+    when 'helvetica'
+      assign heading_font_family = 'var(--font-helvetica-family)'
+    else
+      assign heading_font_family = 'var(--font-heading-family)'
+  endcase
+
+  case section.settings.subheading_font_family
+    when 'heading'
+      assign subheading_font_family = 'var(--font-heading-family)'
+    when 'heading_italic'
+      assign subheading_font_family = 'var(--font-heading-family-italic)'
+    when 'helvetica'
+      assign subheading_font_family = 'var(--font-helvetica-family)'
+    else
+      assign subheading_font_family = 'var(--font-body-family)'
+  endcase
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .nw-content {
+    --nw-content-min-height: {{ section.settings.min_height_desktop }}px;
+    --nw-content-bg-fallback: {{ section.settings.background_color }};
+    --nw-content-background: {{ section_background }};
+    --nw-content-focal-point: {{ focal_point }};
+    --nw-content-padding-top: {{ section.settings.padding_top_desktop }}px;
+    --nw-content-padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    --nw-content-heading-color: {{ section.settings.heading_color }};
+    --nw-content-heading-font-family: {{ heading_font_family }};
+    --nw-content-heading-font-size: {{ section.settings.heading_font_size_desktop }}px;
+    --nw-content-heading-font-weight: {{ section.settings.heading_font_weight }};
+    --nw-content-subheading-font-family: {{ subheading_font_family }};
+    --nw-content-subheading-font-size: {{ section.settings.subheading_font_size_desktop }}px;
+    --nw-content-subheading-font-weight: {{ section.settings.subheading_font_weight }};
+  }
+
+  @media screen and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} .nw-content {
+      --nw-content-heading-font-size: {{ section.settings.heading_font_size_tablet }}px;
+      --nw-content-subheading-font-size: {{ section.settings.subheading_font_size_tablet }}px;
+    }
+  }
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .nw-content {
+      --nw-content-min-height: {{ section.settings.min_height_mobile }}px;
+      --nw-content-padding-top: {{ section.settings.padding_top_mobile }}px;
+      --nw-content-padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+      --nw-content-heading-font-size: {{ section.settings.heading_font_size_mobile }}px;
+      --nw-content-subheading-font-size: {{ section.settings.subheading_font_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="nw-content">
+  {%- if show_media -%}
+    <div
+      class="nw-content__media fade-in-up"
+      aria-hidden="true"
+      {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.1s"' -%}
+    >
+      {%- liquid
+        assign content_image = section.settings.image
+        assign content_image_mobile = section.settings.mobile_image
+        assign content_img_alt = content_image.alt | default: '' | escape
+        assign content_img_mobile_alt = content_image_mobile.alt | default: content_img_alt | escape
+      -%}
+      {%- if content_image == blank -%}
+        <div class="nw-content__image nw-content__image--placeholder">
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        </div>
+      {%- else -%}
+        <img
+          src="{{ content_image | image_url: width: 2560 }}"
+          alt="{{ content_img_alt }}"
+          class="nw-content__image nw-content__image--desktop"
+          loading="{{ loading }}"
+          width="{{ content_image.width }}"
+          height="{{ content_image.height }}"
+        >
+        {%- if content_image_mobile != blank -%}
+          <img
+            src="{{ content_image_mobile | image_url: width: 1500 }}"
+            alt="{{ content_img_mobile_alt }}"
+            class="nw-content__image nw-content__image--mobile"
+            loading="{{ loading }}"
+            width="{{ content_image_mobile.width }}"
+            height="{{ content_image_mobile.height }}"
+          >
+        {%- else -%}
+          <img
+            src="{{ content_image | image_url: width: 1500 }}"
+            alt="{{ content_img_alt }}"
+            class="nw-content__image nw-content__image--mobile"
+            loading="{{ loading }}"
+            width="{{ content_image.width }}"
+            height="{{ content_image.height }}"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="container">
+    <div class="nw-content__content">
+      <div class="nw-content__inner">
+      {%- if section.settings.heading != blank or section.settings.text != blank -%}
+        <div
+          class="nw-content__text fade-in-up"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.2s"' -%}
+        >
+          {%- if section.settings.heading != blank -%}
+            <div class="nw-content__heading-wrap">
+              <h2 class="nw-content__heading rte">
+                {{- section.settings.heading -}}
+              </h2>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.text != blank -%}
+            <div class="nw-content__body rte">
+              {{- section.settings.text -}}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_button -%}
+        <div
+          class="nw-content__actions fade-in-up nw-content-button"
+          {%- render 'animation-attrs', attrs: 'data-cc-animate data-cc-animate-delay="0.45s"' -%}
+        >
+          {%- render 'nw-button',
+            label: section.settings.button_label,
+            url: section.settings.button_link,
+            style_desktop: section.settings.button_style_desktop,
+            style_mobile: section.settings.button_style_mobile,
+            wrap_class: 'nw-content__button-wrap'
+          -%}
+        </div>
+      {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NW Content",
+  "class": "shopify-section--nw-content",
+  "disabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "alpha": true,
+      "default": "#04022B"
+    },
+    {
+      "type": "header",
+      "content": "Heading typography"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_family",
+      "label": "Font family",
+      "default": "heading",
+      "options": [
+        {
+          "value": "heading",
+          "label": "Heading (Francisco Serial)"
+        },
+        {
+          "value": "heading_italic",
+          "label": "Heading italic (Antonia)"
+        },
+        {
+          "value": "body",
+          "label": "Body (Neue Haas Grotesk)"
+        },
+        {
+          "value": "helvetica",
+          "label": "Helvetica"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "Font size desktop",
+      "min": 24,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_tablet",
+      "label": "Font size tablet",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Font size mobile",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Font weight",
+      "default": "400",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light (300)"
+        },
+        {
+          "value": "400",
+          "label": "Regular (400)"
+        },
+        {
+          "value": "500",
+          "label": "Medium (500)"
+        },
+        {
+          "value": "600",
+          "label": "Semibold (600)"
+        },
+        {
+          "value": "700",
+          "label": "Bold (700)"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Subheading typography"
+    },
+    {
+      "type": "select",
+      "id": "subheading_font_family",
+      "label": "Font family",
+      "default": "body",
+      "options": [
+        {
+          "value": "heading",
+          "label": "Heading (Francisco Serial)"
+        },
+        {
+          "value": "heading_italic",
+          "label": "Heading italic (Antonia)"
+        },
+        {
+          "value": "body",
+          "label": "Body (Neue Haas Grotesk)"
+        },
+        {
+          "value": "helvetica",
+          "label": "Helvetica"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_desktop",
+      "label": "Font size desktop",
+      "min": 10,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_tablet",
+      "label": "Font size tablet",
+      "min": 10,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_mobile",
+      "label": "Font size mobile",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "subheading_font_weight",
+      "label": "Font weight",
+      "default": "400",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light (300)"
+        },
+        {
+          "value": "400",
+          "label": "Regular (400)"
+        },
+        {
+          "value": "500",
+          "label": "Medium (500)"
+        },
+        {
+          "value": "600",
+          "label": "Semibold (600)"
+        },
+        {
+          "value": "700",
+          "label": "Bold (700)"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Your Size",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "visible_if": "{{ section.settings.show_button }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Button style desktop",
+      "default": "style_1",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Button style mobile",
+      "default": "style_2",
+      "visible_if": "{{ section.settings.show_button }}",
+      "options": [
+        {
+          "value": "style_1",
+          "label": "Solid navy"
+        },
+        {
+          "value": "style_2",
+          "label": "Outline navy"
+        },
+        {
+          "value": "style_3",
+          "label": "Outline cream"
+        },
+        {
+          "value": "style_4",
+          "label": "Solid cream"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "default": "solid",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "solid",
+          "label": "Solid color"
+        },
+        {
+          "value": "linear_gradient",
+          "label": "Linear gradient"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EBE9E2",
+      "visible_if": "{{ section.settings.background_type == 'image' or section.settings.background_type == 'solid' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, rgba(235, 233, 226, 1), rgba(255, 255, 255, 1) 100%)",
+      "visible_if": "{{ section.settings.background_type == 'linear_gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum height desktop",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 420
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height mobile",
+      "min": 0,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "NW Content"
+    }
+  ]
+}
+{% endschema %}
