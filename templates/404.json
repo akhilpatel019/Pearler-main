@@ -1,1 +1,77 @@
-{"sections":{"main":{"type":"main-404","settings":{}}},"order":["main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {}
+    },
+    "nw_bestseller_BMgiWr": {
+      "type": "nw-bestseller",
+      "blocks": {
+        "bestseller_product_QQJc94": {
+          "type": "bestseller_product",
+          "settings": {
+            "product": "",
+            "variant_options": "",
+            "custom_title": ""
+          }
+        },
+        "bestseller_product_9LxpVF": {
+          "type": "bestseller_product",
+          "settings": {
+            "product": "",
+            "variant_options": "",
+            "custom_title": ""
+          }
+        },
+        "bestseller_product_QFgFV4": {
+          "type": "bestseller_product",
+          "settings": {
+            "product": "",
+            "variant_options": "",
+            "custom_title": ""
+          }
+        }
+      },
+      "block_order": [
+        "bestseller_product_QQJc94",
+        "bestseller_product_9LxpVF",
+        "bestseller_product_QFgFV4"
+      ],
+      "name": "NW Bestseller",
+      "settings": {
+        "product_source": "collection",
+        "collection": "",
+        "max_slides": 12,
+        "heading": "Best Sellers",
+        "heading_color": "#04022B",
+        "text_color": "#04022B",
+        "background_color": "#EBE9E2",
+        "button_1_label": "Shop Mens",
+        "button_1_link": "",
+        "button_1_style_desktop": "style_1",
+        "button_1_style_mobile": "style_1",
+        "button_2_label": "Shop Womens",
+        "button_2_link": "",
+        "button_2_style_desktop": "style_1",
+        "button_2_style_mobile": "style_2",
+        "padding_top_desktop": 56,
+        "padding_bottom_desktop": 56,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "nw_bestseller_BMgiWr"
+  ]
+}
