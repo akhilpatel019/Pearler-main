@@ -204,7 +204,7 @@
             "image": "shopify://shop_images/Discovery_1728x2238_06c44add-5b7f-486b-9c66-9db126cc3a23.jpg",
             "show_image_overlay": false,
             "overlay_color": "#04022b",
-            "teaser_video": "shopify://files/videos/tolstoy_d849a124-8d6c-4bc0-9dbd-fb1cb4dec38c_preview_ccbf08a9-6133-4177-b7a0-fa18b190dd1f.mp4",
+            "teaser_video": "",
             "main_video": "",
             "link": "shopify://products/mens-core"
           }
@@ -220,8 +220,8 @@
             "image": "shopify://shop_images/Colour_Socks___UNIQLO_Masterpiece_Autumn_Winter_2026___UNIQLO_DK_1_2_1.png",
             "show_image_overlay": false,
             "overlay_color": "#04022b",
-            "teaser_video": "shopify://files/videos/tolstoy_4eb047ab-1f59-4b32-b9dc-691d527413ad_preview_fdca6983-0639-48bf-a31a-1af239cdfe33.mp4",
-            "main_video": "shopify://files/videos/tolstoy_4eb047ab-1f59-4b32-b9dc-691d527413ad.webm",
+            "teaser_video": "",
+            "main_video": "",
             "link": "shopify://pages/quiz"
           }
         }
